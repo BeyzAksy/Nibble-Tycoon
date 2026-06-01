@@ -7,25 +7,27 @@
 
 extends GutTest
 
-var economy : Node
-var manager : Node
-var chef    : Node
+const EconomySystem = preload("res://scripts/systems/EconomySystem.gd")
+const OrderManager  = preload("res://scripts/systems/OrderManager.gd")
+const ChefSystem    = preload("res://scripts/systems/ChefSystem.gd")
+
+var economy : EconomySystem
+var manager : OrderManager
+var chef    : ChefSystem
 
 func before_each() -> void:
-	economy = preload("res://scripts/systems/EconomySystem.gd").new()
+	economy = EconomySystem.new()
 	add_child_autofree(economy)
 	economy.coins = 0.0
 
-	manager = preload("res://scripts/systems/OrderManager.gd").new()
+	manager = OrderManager.new()
 	add_child_autofree(manager)
 
-	chef = preload("res://scripts/systems/ChefSystem.gd").new()
+	chef = ChefSystem.new()
 	add_child_autofree(chef)
 
-	## Two-way reference setup
+	## Economy injected; chef left disconnected so tests can drive state manually
 	manager.economy_system = economy
-	manager.chef_system    = chef
-	chef.order_manager     = manager
 
 
 # ── FULL ORDER CYCLE (REGULAR) ────────────────────────────────────────────────

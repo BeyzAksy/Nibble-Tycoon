@@ -4,14 +4,17 @@
 
 extends GutTest
 
-var chef    : Node
-var manager : Node
+const ChefSystem   = preload("res://scripts/systems/ChefSystem.gd")
+const OrderManager = preload("res://scripts/systems/OrderManager.gd")
+
+var chef    : ChefSystem
+var manager : OrderManager
 
 func before_each() -> void:
-	manager = preload("res://scripts/systems/OrderManager.gd").new()
+	manager = OrderManager.new()
 	add_child_autofree(manager)
 
-	chef = preload("res://scripts/systems/ChefSystem.gd").new()
+	chef = ChefSystem.new()
 	add_child_autofree(chef)
 	chef.order_manager = manager
 	manager.chef_system = chef

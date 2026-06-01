@@ -4,13 +4,13 @@
 
 extends GutTest
 
-var save_sys : Node
-
-## Testlerde kullanılan geçici kayıt yolu — orijinal kayıt dosyasına dokunmaz.
+const SaveSystem     = preload("res://scripts/systems/SaveSystem.gd")
 const TEST_SAVE_PATH := "user://gut_test_save.json"
 
+var save_sys : SaveSystem
+
 func before_each() -> void:
-	save_sys = preload("res://scripts/systems/SaveSystem.gd").new()
+	save_sys = SaveSystem.new()
 	add_child_autofree(save_sys)
 	## Her testten önce test dosyasını temizle
 	if FileAccess.file_exists(TEST_SAVE_PATH):
@@ -44,9 +44,9 @@ func _load() -> Dictionary:
 		return {}
 	var content := file.get_as_text()
 	file.close()
-	var parsed := JSON.parse_string(content)
-	if parsed is Dictionary:
-		return parsed
+	var json := JSON.new()
+	if json.parse(content) == OK and json.get_data() is Dictionary:
+		return json.get_data() as Dictionary
 	return {}
 
 

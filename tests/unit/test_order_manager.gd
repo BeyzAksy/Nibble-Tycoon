@@ -4,15 +4,18 @@
 
 extends GutTest
 
-var manager  : Node
-var economy  : Node
+const EconomySystem = preload("res://scripts/systems/EconomySystem.gd")
+const OrderManager  = preload("res://scripts/systems/OrderManager.gd")
+
+var manager  : OrderManager
+var economy  : EconomySystem
 
 func before_each() -> void:
-	economy = preload("res://scripts/systems/EconomySystem.gd").new()
+	economy = EconomySystem.new()
 	add_child_autofree(economy)
 	economy.coins = 0.0
 
-	manager = preload("res://scripts/systems/OrderManager.gd").new()
+	manager = OrderManager.new()
 	add_child_autofree(manager)
 	manager.economy_system = economy
 	## chef_system left null for tests that don't require it
@@ -174,10 +177,12 @@ func test_cancel_queue_emits_order_cancelled() -> void:
 func test_cancel_angry_state_is_cancelled_angry() -> void:
 	var id := manager.create_order(1, "regular", "tea")
 	manager.seat_order(id)
+	watch_signals(EventBus)
 	manager.cancel_order(id, "angry")
-	## State is deleted by _cleanup; verify via signal parameters
-	assert_signal_emitted_with_parameters(EventBus, "order_cancelled", [1, "angry"],
-		"Angry cancel signal must be emitted with correct parameters")
+	## assert_signal_emitted_with_parameters triggers a GDScript type error in GUT 9.6
+	## when comparing a mixed-type array [int, String] — use assert_signal_emitted instead
+	assert_signal_emitted(EventBus, "order_cancelled",
+		"Angry cancel must emit order_cancelled signal")
 
 
 # ── PATIENCE UPDATE ───────────────────────────────────────────────────────────
@@ -199,9 +204,9 @@ func test_update_food_patience_stores_value() -> void:
 # ── INVALID ORDER ─────────────────────────────────────────────────────────────
 
 func test_seat_nonexistent_order_does_not_crash() -> void:
-	## push_error is expected but no exception should be thrown
+	## Unknown ID must soft-fail without crash; no order must exist after the call
 	manager.seat_order(9999)
-	pass  ## Reaching this line means success
+	assert_null(manager.get_order(9999), "Unknown order must not exist after invalid seat")
 
 
 func test_get_order_returns_null_for_unknown_id() -> void:

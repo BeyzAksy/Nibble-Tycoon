@@ -29,9 +29,9 @@ func load_data() -> Dictionary:
 	var content  := file.get_as_text()
 	file.close()
 
-	var parsed := JSON.parse_string(content)
-	if parsed is Dictionary:
-		return parsed
+	var json := JSON.new()
+	if json.parse(content) == OK and json.get_data() is Dictionary:
+		return json.get_data() as Dictionary
 
 	push_error("SaveSystem: JSON ayrıştırma hatası")
 	return {}

@@ -3,10 +3,12 @@
 
 extends GutTest
 
-var economy : Node
+const EconomySystem = preload("res://scripts/systems/EconomySystem.gd")
+
+var economy : EconomySystem
 
 func before_each() -> void:
-	economy = preload("res://scripts/systems/EconomySystem.gd").new()
+	economy = EconomySystem.new()
 	add_child_autofree(economy)
 	economy.coins = 0.0
 	economy.gems  = 0

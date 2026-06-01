@@ -208,6 +208,7 @@ Bir issue "Done" sayılmadan önce tüm maddeler geçmeli:
 
 - [ ] Tüm AC'ler karşılandı
 - [ ] GUT testi yazıldı (public fonksiyonlar için)
+- [ ] `make test` çalıştırıldı — tüm testler geçiyor (0 failure, 0 risky)
 - [ ] Linter hatasız (`gdlint` veya Godot parser)
 - [ ] Magic number yok, her sayı `Constants.gd`'de
 - [ ] Direkt sistem çağrısı yok (EventBus kullanıldı)
@@ -238,7 +239,65 @@ Jira'nın GitHub entegrasyonu açıkken commit otomatik olarak ticket'a bağlan�
 
 ---
 
-## 9. Jira Board Akışı
+## 9. Geliştirme Log Standardı (Jira Comment)
+
+Issue "Done"a taşınırken Jira'ya bir comment eklenir. Bu comment gelecekteki debugging, onboarding ve sprint review için referans olur.
+
+### Zorunlu Bölümler
+
+```
+## Geliştirme Tamamlandı — [Sistem/Özellik Adı]
+
+Commit: <hash(ler)> | Branch: <branch> | Tarih: <gün ay yıl>
+
+### Ne Yapıldı
+[1–2 cümle. Ne eklendi / ne değişti / ne kaldırıldı — oyuncu/sistem perspektifinden.]
+
+### [Yeni Sistem Adı] — Ne Yapar
+- [sorumluluk 1]
+- [sorumluluk 2]
+- [sorumluluk N]
+
+### [Etkilenen Dosya] — Kaldırılanlar
+- [silinen değişken / fonksiyon / mantık]
+
+### [Etkilenen Dosya] — Değişenler
+- [güncellenen bağlantı / çağrı / format]
+
+### Veri / Kayıt Format Değişikliği   ← sadece save formatı değiştiyse
+Eski: { "key": value, ... }
+Yeni: { "nested": { "key": value }, ... }
+Migration: [nasıl geriye dönük uyumlu tutuldu]
+
+### Test Coverage (X/X)
+- [test senaryosu 1]
+- [test senaryosu N]
+
+### Sinyal / Veri Akışı
+[A()] → EventBus.signal → [B()] → [C()] → [sonuç]
+```
+
+### Bölüm Kuralları
+
+| Bölüm | Zorunlu mu? | Ne Zaman Eklenir? |
+|-------|-------------|-------------------|
+| Ne Yapıldı | Her zaman | — |
+| Sistem — Ne Yapar | Yeni sistem eklendiyse | `ProgressionSystem`, `OfflineSystem` vb. |
+| Kaldırılanlar | Kod silindiyse | Extract, refactor, cleanup |
+| Değişenler | Mevcut dosya güncellendiyse | Her zaman hemen hemen |
+| Veri/Format Değişikliği | Save formatı değiştiyse | Migration yazıldıysa |
+| Test Coverage | Her zaman | Kaç test, hangi senaryolar |
+| Sinyal/Veri Akışı | Yeni sinyal bağlantısı kurulduysa | EventBus chain değiştiyse |
+
+### Neyi Yazmazsın
+
+- "Şu şu satır değiştirildi" düzeyinde diff özeti — commit geçmişi zaten bunu gösterir
+- "TODO: ileride şunu yap" — bunlar yeni issue açılır
+- Belirsiz ifadeler ("bazı düzeltmeler yapıldı") — her madde somut ve doğrulanabilir olur
+
+---
+
+## 10. Jira Board Akışı
 
 ```
 Backlog → Sprint Backlog → In Progress → In Review → Done

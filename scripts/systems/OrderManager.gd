@@ -27,7 +27,7 @@ class Order:
 	var customer_type : String   ## "regular" | "impatient" | "tourist"
 	var item_id       : String
 	var base_price    : int
-	var state         : OrderManager.OrderState = OrderManager.OrderState.QUEUED
+	var state         : int = OrderState.QUEUED
 	var queue_patience_ratio  : float = 1.0
 	var food_patience_ratio   : float = 1.0
 	var created_at    : float = 0.0
@@ -159,15 +159,16 @@ func update_food_patience(order_id: int, ratio: float) -> void:
 # ── CHEF HELPERS ──────────────────────────────────────────────────────────────
 func get_next_order_for_chef(chef_level: int) -> Order:
 	## GDD §7.2 — Impatient priority bump (active at Chef Experience 4)
+	## Searches _orders dict since seated orders are removed from _order_queue
 	if chef_level >= 4:
-		for id in _order_queue:
-			var o : Order = _orders.get(id)
-			if o and o.customer_type == "impatient" and o.food_patience_ratio < 0.25:
+		for id in _orders:
+			var o : Order = _orders[id]
+			if o and o.state == OrderState.SEATED and o.customer_type == "impatient" and o.food_patience_ratio < 0.25:
 				return o
 
-	## Default FIFO
-	for id in _order_queue:
-		var o : Order = _orders.get(id)
+	## Default FIFO — _orders preserves insertion order in Godot 4
+	for id in _orders:
+		var o : Order = _orders[id]
 		if o and o.state == OrderState.SEATED:
 			return o
 	return null
@@ -189,7 +190,7 @@ func get_order(order_id: int) -> Order:
 # ── HELPERS ───────────────────────────────────────────────────────────────────
 func _get_order(order_id: int) -> Order:
 	if not _orders.has(order_id):
-		push_error("OrderManager: Sipariş bulunamadı: %d" % order_id)
+		push_warning("OrderManager: Sipariş bulunamadı: %d" % order_id)
 		return null
 	return _orders[order_id]
 
