@@ -37,7 +37,7 @@ func _on_order_cancelled(_customer_id: int, reason: String) -> void:
 	_apply_delta(-Constants.SATISFACTION_PENALTY_ANGRY)
 
 
-## xp_gained sinyali gelince (tamamlanan sipariş) skoru SATISFACTION_RECOVERY_PER_ORDER kadar artırır.
+## xp_gained sinyali gelince skoru SATISFACTION_RECOVERY_PER_ORDER kadar artırır.
 ##
 ## Args:
 ##   _amount: Kullanılmaz.
