@@ -155,7 +155,7 @@ const SATISFACTION_INITIAL       := 100   ## Oyun başlangıç skoru
 const SATISFACTION_MIN           := 0
 const SATISFACTION_MAX           := 100
 const SATISFACTION_PENALTY_ANGRY := 10    ## CANCELLED_ANGRY başına düşüş
-const SATISFACTION_RECOVERY_PER_ORDER := 1  ## Tamamlanan sipariş başına artış
+const SATISFACTION_RECOVERY_PER_ORDER := 2  ## Tamamlanan sipariş başına artış
 
 ## Level eşikleri (toplam tamamlanan sipariş)
 const LEVEL_THRESHOLDS := {
