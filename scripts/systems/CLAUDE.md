@@ -49,11 +49,9 @@ func take_order() -> void:
 - `_on_patience_timeout()` → sabır bitti → cancel
 
 **Extension noktaları:**
-- Yeni müşteri tipi → `Constants.CUSTOMER_TYPES` dict'e ekle, `_try_spawn()` loop okur
-- Özel spawn mantığı → `_pick_item_for_type()` match'e ekle
+- Yeni müşteri tipi → `Constants.CUSTOMER_TYPES`'a satır ekle; spawn, sabır, coin/tip mults otomatik
+- Özel item tercihi → `item_pool`, `preferred_item`, `preferred_weight` alanları ile data-driven
 - Kapasite artışı (tabure/kuyruk) → `max_stools`, `max_queue` UpgradeSystem tarafından set edilir
-
-**Planlanan:** `Constants.CUSTOMER_TYPES` dict okunarak spawn intervalleri ve sabır değerleri dinamik alınacak. Şu an hardcoded Constants sabitler kullanılıyor.
 
 ---
 

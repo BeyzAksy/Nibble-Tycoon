@@ -50,7 +50,6 @@ const BOOST_MULTIPLIER := 0.5   ## cooking time ×0.5 (halved)
 
 | Yapı | Açıklama | Öncelik |
 |------|---------|---------|
-| `CUSTOMER_TYPES` dict | Tüm müşteri tipleri (şu an inline Constants sabitleri) | Yüksek |
 | `STAGE_TRANSITIONS` dict | Geçiş koşulları her aşama için | Kafe öncesi |
 
 ### Düzenleme Yasağı

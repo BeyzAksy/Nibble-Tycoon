@@ -60,17 +60,13 @@ func process_order_done(
 	customer_type: String
 ) -> void:
 	## GDD §5.2 formülleri
+	var type_def : Dictionary = Constants.CUSTOMER_TYPES.get(
+			customer_type, Constants.CUSTOMER_TYPES["regular"])
 	var order_value := Constants.calc_order_value(base_price, chef_quality)
-
-	## Impatient customer coin multiplier
-	if customer_type == "impatient":
-		order_value *= Constants.COIN_MULT_IMPATIENT
+	order_value     *= type_def["coin_mult"]
 
 	var tip := Constants.calc_tip(base_price, patience_ratio, chef_quality)
-
-	## Tourist tip bonus
-	if customer_type == "tourist":
-		tip *= Constants.TIP_MULT_TOURIST
+	tip     *= type_def["tip_mult"]
 
 	## Sinirli müşteri bahşiş düşürme (GDD §2.3)
 	if patience_ratio < Constants.PATIENCE_NEUTRAL_THRESHOLD:
@@ -102,12 +98,11 @@ func calculate_hourly_rate(upgrade_system: Node) -> float:
 
 
 func _get_avg_spawn_interval(_us: Node) -> float:
-	## Simple average — Regular + Impatient + Tourist mix at Lv3
-	return (
-		Constants.SPAWN_INTERVAL_REGULAR
-		+ Constants.SPAWN_INTERVAL_IMPATIENT
-		+ Constants.SPAWN_INTERVAL_TOURIST
-	) / 3.0
+	## CUSTOMER_TYPES'taki tüm tiplerin spawn_interval ortalaması
+	var total : float = 0.0
+	for type_key in Constants.CUSTOMER_TYPES:
+		total += Constants.CUSTOMER_TYPES[type_key]["spawn_interval"]
+	return total / float(Constants.CUSTOMER_TYPES.size())
 
 
 func _get_avg_order_value(_us: Node) -> float:

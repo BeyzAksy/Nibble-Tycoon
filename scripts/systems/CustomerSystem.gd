@@ -20,13 +20,13 @@ var _next_id     : int        = 1
 var _queue_ids   : Array      = []   ## Sıradaki customer_id'ler
 var _seated_ids  : Array      = []   ## Oturan customer_id'ler
 
-## Spawn timers
-var _timer_regular   : float = 0.0
-var _timer_impatient : float = 0.0
-var _timer_tourist   : float = 0.0
+## customer_type → saniye (CUSTOMER_TYPES'tan otomatik başlatılır)
+var _spawn_timers : Dictionary = {}
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
+	for type_key in Constants.CUSTOMER_TYPES:
+		_spawn_timers[type_key] = 0.0
 	EventBus.order_seated.connect(_on_order_seated)
 	EventBus.order_served.connect(_on_order_served)
 	EventBus.order_cancelled.connect(_on_order_cancelled)
@@ -39,25 +39,16 @@ func _process(delta: float) -> void:
 
 # ── SPAWN ─────────────────────────────────────────────────────────────────────
 func _update_spawn_timers(delta: float) -> void:
-	## Regular — her level'da aktif
-	_timer_regular += delta
-	if _timer_regular >= Constants.SPAWN_INTERVAL_REGULAR:
-		_timer_regular = 0.0
-		_try_spawn("regular")
-
-	## Impatient — Level 2+
-	if current_level >= 2:
-		_timer_impatient += delta
-		if _timer_impatient >= Constants.SPAWN_INTERVAL_IMPATIENT:
-			_timer_impatient = 0.0
-			_try_spawn("impatient")
-
-	## Tourist — Level 3+
-	if current_level >= 3:
-		_timer_tourist += delta
-		if _timer_tourist >= Constants.SPAWN_INTERVAL_TOURIST:
-			_timer_tourist = 0.0
-			_try_spawn("tourist")
+	## CUSTOMER_TYPES'tan unlock_level ve spawn_interval okunur.
+	## Yeni tip = sadece Constants.CUSTOMER_TYPES'a satır.
+	for type_key in Constants.CUSTOMER_TYPES:
+		var def : Dictionary = Constants.CUSTOMER_TYPES[type_key]
+		if current_level < def["unlock_level"]:
+			continue
+		_spawn_timers[type_key] += delta
+		if _spawn_timers[type_key] >= def["spawn_interval"]:
+			_spawn_timers[type_key] = 0.0
+			_try_spawn(type_key)
 
 
 func _try_spawn(customer_type: String) -> void:
@@ -104,29 +95,39 @@ func _try_seat_next() -> void:
 
 	## Sipariş oluştur
 	var item_id := _pick_item_for_type(node.customer_type)
-	var order_id := order_manager.create_order(id, node.customer_type, item_id)
+	var order_id : int = order_manager.create_order(id, node.customer_type, item_id)
 
 	node.on_seated(order_id)
 	order_manager.seat_order(order_id)
 
 
 func _pick_item_for_type(customer_type: String) -> String:
-	## GDD §3 — Hangi müşteri ne sipariş eder
-	match customer_type:
-		"impatient":
-			## Only fast items: tea, pastry, sandwich
-			var fast := ["tea", "pastry"]
-			if _is_menu_unlocked("sandwich"):
-				fast.append("sandwich")
-			return fast[randi() % fast.size()]
-		"tourist":
-			## Prefers tea + sausage
-			if _is_menu_unlocked("sausage") and randf() < 0.6:
-				return "sausage"
-			return "tea"
-		_:  ## regular
-			var available := _get_available_items()
-			return available[randi() % available.size()]
+	## GDD §3 — CUSTOMER_TYPES[type]["item_pool"] ve preferred_item'dan okur.
+	##
+	## item_pool boş   → tüm unlocked itemlar (regular davranışı)
+	## preferred_weight > 0 → first=preferred, last=fallback (tourist davranışı)
+	## weight = 0       → pool'dan rastgele (impatient davranışı)
+	var def    : Dictionary = Constants.CUSTOMER_TYPES.get(customer_type, {})
+	var pool   : Array      = def.get("item_pool", [])
+	var weight : float      = def.get("preferred_weight", 0.0)
+
+	if pool.is_empty():
+		var available := _get_available_items()
+		return available[randi() % available.size()]
+
+	if weight > 0.0:
+		## Preferred + fallback: pool[0] tercih, pool[-1] geri dönüş
+		var preferred : String = pool[0]
+		var fallback  : String = pool[-1]
+		if _is_menu_unlocked(preferred) and randf() < weight:
+			return preferred
+		return fallback
+
+	## Kısıtlı pool — unlock'lu olanlardan rastgele
+	var unlocked := pool.filter(func(i: String) -> bool: return _is_menu_unlocked(i))
+	if unlocked.is_empty():
+		return _get_available_items().front()
+	return unlocked[randi() % unlocked.size()]
 
 
 func _get_available_items() -> Array:
