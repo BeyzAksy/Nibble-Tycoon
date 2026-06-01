@@ -8,9 +8,6 @@ extends Node
 var coins : float = 0.0
 var gems  : int   = 0
 
-# ── SIGNALS ───────────────────────────────────────────────────────────────────
-## Not: Geniş sinyal ihtiyacı EventBus'ta tanımlı. Burada lokal UI güncellemesi:
-signal balance_changed(coins: float, gems: int)
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -23,7 +20,7 @@ func _ready() -> void:
 # ── COIN ─────────────────────────────────────────────────────────────────────
 func earn_coins(amount: float, source: String = "") -> void:
 	coins += amount
-	balance_changed.emit(coins, gems)
+	EventBus.balance_changed.emit(coins, gems)
 	EventBus.coin_earned.emit(amount, source)
 
 
@@ -33,7 +30,7 @@ func spend_coins(amount: float, target: String = "") -> bool:
 		EventBus.toast_requested.emit("Yeterli coin yok! 🪙", "error")
 		return false
 	coins -= amount
-	balance_changed.emit(coins, gems)
+	EventBus.balance_changed.emit(coins, gems)
 	EventBus.coin_spent.emit(amount, target)
 	return true
 
@@ -41,7 +38,7 @@ func spend_coins(amount: float, target: String = "") -> bool:
 # ── GEM ──────────────────────────────────────────────────────────────────────
 func earn_gems(amount: int, source: String = "") -> void:
 	gems += amount
-	balance_changed.emit(coins, gems)
+	EventBus.balance_changed.emit(coins, gems)
 	EventBus.gem_earned.emit(amount, source)
 
 
@@ -50,7 +47,7 @@ func spend_gems(amount: int, target: String = "") -> bool:
 		EventBus.toast_requested.emit("Yeterli gem yok! 💎", "error")
 		return false
 	gems -= amount
-	balance_changed.emit(coins, gems)
+	EventBus.balance_changed.emit(coins, gems)
 	EventBus.gem_spent.emit(amount, target)
 	return true
 

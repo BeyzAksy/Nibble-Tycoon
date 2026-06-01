@@ -131,13 +131,16 @@ SEATED → CANCELLED_ANGRY
 ---
 
 ### SaveSystem.gd — GDD §10.2
-**Sorumluluk:** JSON kayıt/yükleme.
+**Sorumluluk:** JSON kayıt/yükleme ve save versiyonlama.
 
 - `save(data: Dictionary)` → user://lezzet_save.json
-- `load_data()` → Dictionary (boş dict yoksa)
+- `load_data()` → migrate(data) sonrası Dictionary; dosya yoksa {}
+- `migrate(data: Dictionary) -> Dictionary` → CURRENT_SAVE_VERSION'a yükseltir
+- `_migrate_v0_to_v1(data)` → permanent_bonuses: {} ekler (AchievementSystem scaffold)
 - `delete_save()` → sıfırlama
 
-**Versiyon kuralı:** Her yeni field için `"version"` güncelle + migration yaz. Bkz. `ARCHITECTURE.md §5`.
+**Versiyonlama kuralı:** Yeni save field eklenince `Constants.CURRENT_SAVE_VERSION` arttırılır,
+`_migrate_vX_to_vY()` metodu eklenir, `migrate()` içine if bloğu eklenir. Bkz. `ARCHITECTURE.md §5`.
 
 **Extension noktaları:**
 - Cloud save → `save()` signature değişmez, içeride ek remote call

@@ -78,9 +78,9 @@ func test_purchase_locked_upgrade_fails() -> void:
 	assert_false(ok, "Locked upgrade must not be purchasable")
 
 func test_purchase_emits_signal() -> void:
-	watch_signals(upgrade)
+	watch_signals(EventBus)
 	upgrade.try_purchase("KIT_01", 1)
-	assert_signal_emitted(upgrade, "upgrade_ui_refresh_needed")
+	assert_signal_emitted(EventBus, "upgrade_purchased")
 
 # ── EFFECT APPLICATION ────────────────────────────────────────────────────────
 

@@ -28,10 +28,6 @@ const BOOST_MULTIPLIER := 0.5     ## Pişirme süresi ×0.5 (yarıya iner)
 ## Referanslar
 var order_manager : Node = null
 
-# ── SIGNALS ───────────────────────────────────────────────────────────────────
-signal slot_started_cooking(slot_index: int, order_id: int, item_id: String, cook_time: float)
-signal slot_finished(slot_index: int, order_id: int)
-signal boost_tick(remaining: float)
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -48,7 +44,7 @@ func _process(delta: float) -> void:
 	## Boost timer countdown
 	if _boost_active:
 		_boost_remaining -= delta
-		boost_tick.emit(_boost_remaining)
+		EventBus.chef_boost_tick.emit(_boost_remaining)
 		if _boost_remaining <= 0.0:
 			_boost_active = false
 			EventBus.toast_requested.emit("Hız Bostu bitti!", "warning")
@@ -74,7 +70,7 @@ func _start_cooking_slot(slot_index: int, order) -> void:
 	var base_time : float = Constants.MENU_ITEMS.get(order.item_id, {}).get("cook_time", 10.0)
 	var effective : float = _calc_cook_time(base_time, order.item_id)
 
-	slot_started_cooking.emit(slot_index, order.id, order.item_id, effective)
+	EventBus.chef_slot_started_cooking.emit(slot_index, order.id, order.item_id, effective)
 
 	## Timer ile bekleme
 	await get_tree().create_timer(effective).timeout
@@ -84,7 +80,7 @@ func _start_cooking_slot(slot_index: int, order) -> void:
 func _finish_slot(slot_index: int, order_id: int) -> void:
 	_cooking_slots[slot_index] = null
 	order_manager.mark_ready(order_id)
-	slot_finished.emit(slot_index, order_id)
+	EventBus.chef_slot_finished.emit(slot_index, order_id)
 
 	## Hemen yeni sıra kontrol
 	try_take_order()

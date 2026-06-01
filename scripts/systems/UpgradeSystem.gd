@@ -21,8 +21,6 @@ var economy_system  : Node = null
 var offline_system  : Node = null
 var customer_system : Node = null
 
-# ── SIGNALS ───────────────────────────────────────────────────────────────────
-signal upgrade_ui_refresh_needed()
 
 # ── UPGRADE DEFINITIONS ───────────────────────────────────────────────────────
 ## Her upgrade: id, maliyet, unlock_level, unlock_cond (opsiyonel), efekt
@@ -89,7 +87,6 @@ func try_purchase(upgrade_id: String, current_level: int) -> bool:
 	EventBus.upgrade_purchased.emit(upgrade_id)
 	EventBus.chef_stats_updated.emit(speed_multiplier, chef_quality, slot_count)
 	EventBus.toast_requested.emit("%s aktif! ✅" % def["name"], "success")
-	upgrade_ui_refresh_needed.emit()
 
 	return true
 

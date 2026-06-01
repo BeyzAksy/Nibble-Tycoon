@@ -98,6 +98,9 @@ const ANIM_PATIENCE_SHAKE_AMP_CRIT := 4.0   ## px, %10 altı
 const SPLASH_DURATION      := 2.5   ## Saniye — sonra main scene'e geç
 const SPLASH_FADE_DURATION := 0.4   ## Fade-out süresi
 
+# ── SAVE VERSIONING ───────────────────────────────────────────────────────────
+const CURRENT_SAVE_VERSION := 1
+
 # ── BUFFET STAGE CONSTANTS (GDD §14) ─────────────────────────────────────────
 
 ## Kapasite

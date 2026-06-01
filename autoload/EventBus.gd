@@ -21,6 +21,20 @@ signal coin_earned(amount: float, source: String)
 signal coin_spent(amount: float, target: String)
 signal gem_earned(amount: int, source: String)
 signal gem_spent(amount: int, target: String)
+## Yayıldığı zaman: Her coin/gem bakiye değişiminde
+## Dinleyenler: HUDBar
+signal balance_changed(coins: float, gems: int)
+
+# ── CHEF SIGNALS ──────────────────────────────────────────────────────────────
+## Yayıldığı zaman: Bir ocak slotu pişirmeye başladığında
+## Dinleyenler: BufeScene (StoveSlot görseli)
+signal chef_slot_started_cooking(slot_index: int, order_id: int, item_id: String, cook_time: float)
+## Yayıldığı zaman: Bir ocak slotu pişirmeyi tamamladığında
+## Dinleyenler: BufeScene (StoveSlot görseli)
+signal chef_slot_finished(slot_index: int, order_id: int)
+## Yayıldığı zaman: Hız bostu aktifken her frame
+## Dinleyenler: HUDBar (boost timer göstergesi)
+signal chef_boost_tick(remaining: float)
 
 # ── UPGRADE SIGNALS ───────────────────────────────────────────────────────────
 signal upgrade_purchased(upgrade_id: String)
