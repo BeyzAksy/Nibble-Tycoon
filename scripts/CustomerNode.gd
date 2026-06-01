@@ -28,8 +28,8 @@ var _queue_patience : float = 1.0   ## 0.0 → 1.0
 var _food_patience  : float = 1.0
 var _queue_timer    : float = 0.0
 var _food_timer     : float = 0.0
-var _queue_max      : float = Constants.PATIENCE_QUEUE_REGULAR
-var _food_max       : float = Constants.PATIENCE_FOOD_REGULAR
+var _queue_max      : float = 0.0
+var _food_max       : float = 0.0
 
 var _is_seated      : bool  = false
 var _is_eating      : bool  = false
@@ -63,17 +63,11 @@ func setup(
 	_customer_system = p_customer_system
 	_base_position  = position
 
-	## Set patience durations based on customer type
-	match customer_type:
-		"impatient":
-			_queue_max = Constants.PATIENCE_QUEUE_IMPATIENT
-			_food_max  = Constants.PATIENCE_FOOD_IMPATIENT
-		"tourist":
-			_queue_max = Constants.PATIENCE_QUEUE_TOURIST
-			_food_max  = Constants.PATIENCE_FOOD_TOURIST
-		_:
-			_queue_max = Constants.PATIENCE_QUEUE_REGULAR
-			_food_max  = Constants.PATIENCE_FOOD_REGULAR
+	## CUSTOMER_TYPES dict'inden sabır sürelerini oku
+	var def    := Constants.CUSTOMER_TYPES.get(
+			customer_type, Constants.CUSTOMER_TYPES["regular"])
+	_queue_max = def["patience_queue"]
+	_food_max  = def["patience_food"]
 
 	## Sprite animasyonunu başlat
 	_update_sprite()

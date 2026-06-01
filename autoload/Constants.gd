@@ -123,26 +123,58 @@ const ORDER_QUALITY_MULT := 0.04
 const EATING_DURATION_SEC := 15.0
 const PICKUP_DELAY_SEC    := 2.5
 
-## Müşteri spawn aralıkları (saniye)
-const SPAWN_INTERVAL_REGULAR   := 25.0
-const SPAWN_INTERVAL_IMPATIENT := 30.0
-const SPAWN_INTERVAL_TOURIST   := 35.0
+## Sabır eşikleri — paylaşımlı (CustomerNode renk mantığı)
+const PATIENCE_HAPPY_THRESHOLD   := 0.65
+const PATIENCE_NEUTRAL_THRESHOLD := 0.35
 
-## Müşteri sabır süreleri (saniye)
-const PATIENCE_QUEUE_REGULAR   := 40.0
-const PATIENCE_QUEUE_IMPATIENT := 18.0
-const PATIENCE_QUEUE_TOURIST   := 65.0
-const PATIENCE_FOOD_REGULAR    := 30.0
-const PATIENCE_FOOD_IMPATIENT  := 15.0
-const PATIENCE_FOOD_TOURIST    := 55.0
-
-## Sabır eşikleri (oran 0.0–1.0)
-const PATIENCE_HAPPY_THRESHOLD  := 0.65
-const PATIENCE_NEUTRAL_THRESHOLD:= 0.35
-
-## Coin çarpanları (müşteri tipine göre)
-const COIN_MULT_IMPATIENT := 1.20
-const TIP_MULT_TOURIST    := 1.30
+## Müşteri tipleri — GDD §2.1
+## Dict'e yeni satır = yeni tip; CustomerSystem/CustomerNode kodu değişmez.
+##
+## Alanlar:
+##   unlock_level:     Hangi oyun level'ında spawn başlar
+##   spawn_interval:   Kaç saniyede bir spawn (sn)
+##   patience_queue:   Sıra sabrı süresi (sn)
+##   patience_food:    Yemek sabrı süresi (sn)
+##   coin_mult:        Sipariş değeri çarpanı
+##   tip_mult:         Bahşiş çarpanı
+##   item_pool:        Sipariş edebileceği item ID'leri (boş = tüm unlocked)
+##   preferred_item:   Öncelikli item ID (boş = öncelik yok)
+##   preferred_weight: preferred_item seçilme olasılığı (0.0 = rastgele)
+const CUSTOMER_TYPES := {
+	"regular": {
+		"unlock_level":    1,
+		"spawn_interval":  25.0,
+		"patience_queue":  40.0,
+		"patience_food":   30.0,
+		"coin_mult":       1.00,
+		"tip_mult":        1.00,
+		"item_pool":       [],
+		"preferred_item":  "",
+		"preferred_weight": 0.0,
+	},
+	"impatient": {
+		"unlock_level":    2,
+		"spawn_interval":  30.0,
+		"patience_queue":  18.0,
+		"patience_food":   15.0,
+		"coin_mult":       1.20,
+		"tip_mult":        1.00,
+		"item_pool":       ["tea", "pastry", "sandwich"],
+		"preferred_item":  "",
+		"preferred_weight": 0.0,
+	},
+	"tourist": {
+		"unlock_level":    3,
+		"spawn_interval":  35.0,
+		"patience_queue":  65.0,
+		"patience_food":   55.0,
+		"coin_mult":       1.00,
+		"tip_mult":        1.30,
+		"item_pool":       ["sausage", "tea"],
+		"preferred_item":  "sausage",
+		"preferred_weight": 0.6,
+	},
+}
 
 ## Menü itemları — base fiyat (₺) ve pişirme süresi (sn)
 const MENU_ITEMS := {
