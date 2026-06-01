@@ -55,7 +55,7 @@ Senior Godot/GDScript game developer. Tek kişiyle (operatör) partner olarak ç
 **Kritik dosyalar:**
 - `autoload/Constants.gd` — tüm sayısal değerler
 - `autoload/EventBus.gd` — sinyal merkezi
-- `scripts/systems/` — 7 core sistem
+- `scripts/systems/` — 8 core sistem
 - `docs/bufe_asama_gdd.md` — tasarım kaynağı
 
 ## Yasak Davranışlar

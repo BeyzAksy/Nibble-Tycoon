@@ -348,5 +348,4 @@ Yeni özellik eklerken şu soruları sor:
 | AchievementSystem mimarisi | Belirsiz | GDD §11 var, kod yok |
 | SatisfactionSystem | Sinyal var, sistem yok | Sprint 2 |
 | ReklamSystem adaptörü | Yok | Platforma göre abstract interface |
-| ProgressionSystem (level/XP) | OrderManager'da inline | Ayrı sisteme taşı |
 | Günün Özelliği | Constants'ta placeholder | Level 5 impl sırasında |

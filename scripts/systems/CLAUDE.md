@@ -116,6 +116,20 @@ SEATED → CANCELLED_ANGRY
 
 ---
 
+### ProgressionSystem.gd — GDD §12
+**Sorumluluk:** XP ve level ilerleme takibi.
+
+- `_on_xp_gained(amount, _total)` → `total_orders` artır + level kontrolü
+- `_check_level_up()` → LEVEL_THRESHOLDS eşiği geçildiyse `level_up` emit et (recursive, multi-level)
+- `get_xp_ratio()` → mevcut level içindeki ilerleme oranı (0.0–1.0)
+- `serialize()` / `deserialize()` → save/load
+
+**Extension noktaları:**
+- XP kaynakları (achievements, bonuslar) → `_on_xp_gained` zaten amount parametresini okur
+- Level cap artırma → `Constants.LEVEL_THRESHOLDS`'a yeni key ekle, kod değişmez
+
+---
+
 ### SaveSystem.gd — GDD §10.2
 **Sorumluluk:** JSON kayıt/yükleme.
 
