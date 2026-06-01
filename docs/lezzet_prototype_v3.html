@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Lezzet İmparatorluğu — Prototype v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFF6EC;--cream2:#FBEEDD;--card:#fff;
+  --ink:#3E3238;--inks:#8A7E84;--line:#F0E2D2;
+  --coral:#FF8A6B;--corald:#F2714F;--coralsh:#cf5638;
+  --mint:#A8E6CF;--mintd:#5CC39A;--mintsh:#3f9c79;
+  --butter:#FFE08A;--butterd:#F2B705;--buttersh:#c99200;
+  --sky:#A5D8F3;--skyd:#4FA8DF;
+  --plum:#9B6FC4;--lav:#CBB6E8;--peach:#FFC9B5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#1A1A2E;font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px 60px;gap:14px;}
+.top{color:#fff;text-align:center;}
+.top h1{font-family:'Fredoka',sans-serif;font-size:1.4rem;font-weight:600;}
+.top p{font-size:.78rem;opacity:.45;margin-top:2px;}
+.viewer{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.stitle{color:rgba(255,255,255,.5);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;}
+.phone{width:300px;height:640px;border-radius:32px;overflow:hidden;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 2px rgba(255,255,255,.06);}
+.nav-row{display:flex;align-items:center;gap:10px;}
+.nb{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:10px;padding:7px 18px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;transition:background .15s;}
+.nb:hover{background:rgba(255,255,255,.2);}
+.nb:disabled{opacity:.22;cursor:default;}
+.nc{color:rgba(255,255,255,.38);font-size:.75rem;min-width:58px;text-align:center;}
+
+/* ═══ SHARED COMPONENTS ═══ */
+.sbar{position:absolute;top:0;left:0;right:0;height:28px;background:rgba(255,246,236,.96);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:9px;font-weight:800;color:var(--inks);border-bottom:1px solid var(--line);z-index:20;}
+.sbar-brand{font-family:'Fredoka',sans-serif;font-size:7.5px;font-weight:600;color:var(--coral);letter-spacing:.08em;}
+.hud{position:absolute;top:28px;left:0;right:0;height:44px;background:rgba(255,246,236,.98);border-bottom:1.5px solid var(--line);display:flex;align-items:center;padding:0 8px;gap:5px;box-shadow:0 3px 12px rgba(62,50,56,.08);z-index:19;}
+.chip{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:3px 8px 3px 5px;border:1.5px solid;font-weight:800;font-size:10px;cursor:pointer;}
+.chip-c{background:rgba(255,224,138,.2);border-color:rgba(242,183,5,.4);color:var(--butterd);}
+.chip-g{background:rgba(155,111,196,.12);border-color:rgba(155,111,196,.35);color:var(--plum);}
+.hsp{flex:1;}
+.lvb{display:flex;align-items:center;gap:4px;background:rgba(255,224,138,.15);border:1.5px solid rgba(242,183,5,.3);border-radius:999px;padding:3px 8px 3px 4px;}
+.lvc{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--butter),var(--coral));display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;font-family:'Fredoka',sans-serif;}
+.lvw{display:flex;flex-direction:column;gap:1px;}
+.lvl{font-size:6.5px;font-weight:800;color:var(--butterd);}
+.xpt{width:32px;height:3px;background:var(--line);border-radius:999px;}
+.xpf{height:100%;border-radius:999px;background:var(--mintd);}
+.cfg{width:26px;height:26px;border-radius:7px;background:var(--cream2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;}
+
+/* bottom nav */
+.bnav{position:absolute;bottom:0;left:0;right:0;height:60px;background:var(--card);border-top:1.5px solid var(--line);display:flex;z-index:20;box-shadow:0 -4px 20px rgba(62,50,56,.1);}
+.nt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;}
+.nt .nbg{position:absolute;inset:4px 5px;background:rgba(255,138,107,.12);border:1.5px solid rgba(255,138,107,.3);border-radius:10px;display:none;}
+.nt.act .nbg{display:block;}
+.nic{font-size:16px;position:relative;z-index:1;}
+.nlb{font-size:7.5px;font-weight:700;color:var(--ink);font-family:'Fredoka',sans-serif;position:relative;z-index:1;}
+.nt.act .nic,.nt.act .nlb{color:var(--coral);}
+.nt:not(.act) .nic,.nt:not(.act) .nlb{opacity:.38;}
+.ndot{position:absolute;top:6px;right:10px;width:6px;height:6px;background:var(--mintd);border-radius:50%;border:1.5px solid #fff;z-index:2;}
+
+/* content area */
+.content{position:absolute;top:72px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;}
+.content::-webkit-scrollbar{width:3px;}
+.content::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
+
+/* ═══ GAME WORLD ═══ */
+.gworld{position:absolute;inset:0;background:#F0E8D0;overflow:hidden;}
+.floor{position:absolute;inset:0;background-image:linear-gradient(rgba(180,150,100,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(180,150,100,.07) 1px,transparent 1px);background-size:24px 24px;background-color:#F0E8D0;}
+.wall{position:absolute;top:0;left:0;right:0;height:52px;background:linear-gradient(180deg,#E8C9A0,#D4B07A);border-bottom:3px solid #B8954A;}
+.wdeco{position:absolute;top:8px;left:0;right:0;display:flex;justify-content:space-around;align-items:center;padding:0 16px;}
+.wsign{background:#fff;border:2px solid #B8954A;border-radius:6px;padding:3px 10px;font-family:'Fredoka',sans-serif;font-size:7.5px;font-weight:600;color:var(--corald);}
+.ctrtop{position:absolute;top:52px;left:0;right:0;height:6px;background:linear-gradient(180deg,#C8A060,#A07840);}
+.ctr{position:absolute;top:58px;left:0;right:0;height:38px;background:linear-gradient(180deg,#8B6A3A,#6B4F28);border-bottom:3px solid #4A3520;display:flex;align-items:center;justify-content:space-around;padding:0 8px;}
+.chef-c{display:flex;flex-direction:column;align-items:center;animation:chefbr 2.5s ease-in-out infinite;}
+.chef-f{font-size:19px;line-height:1;}
+.chef-n{font-size:5.5px;font-weight:800;color:var(--butterd);font-family:'Fredoka',sans-serif;}
+.ocak{width:40px;height:30px;background:linear-gradient(180deg,#555,#333);border-radius:6px;border:2px solid #222;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 3px 0 #111;}
+.ocak.on::before{content:'🔥';font-size:11px;position:absolute;top:-14px;animation:flame .6s ease-in-out infinite alternate;}
+.otimer{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.72);color:#fff;border-radius:5px;padding:1px 4px;font-size:6.5px;font-weight:800;font-family:'Fredoka',sans-serif;white-space:nowrap;}
+.opb{position:absolute;bottom:-7px;left:2px;right:2px;height:4px;background:rgba(255,255,255,.18);border-radius:999px;overflow:hidden;}
+.opf{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--corald));}
+.ready-item{display:flex;flex-direction:column;align-items:center;gap:1px;animation:rpulse .8s ease-in-out infinite;}
+.rg{width:28px;height:28px;border-radius:50%;background:rgba(92,195,154,.3);display:flex;align-items:center;justify-content:center;border:2px solid var(--mintd);font-size:14px;}
+.rl{font-size:5.5px;font-weight:800;color:var(--mintd);font-family:'Fredoka',sans-serif;}
+.stools{position:absolute;top:96px;left:0;right:0;display:flex;justify-content:center;gap:6px;padding:4px 8px;}
+.stool{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#D4A060,#8B5A2A);border:2px solid #6B4520;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 0 rgba(0,0,0,.3);}
+.stool.emp{opacity:.45;}
+.cseated{position:absolute;top:-36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:1px;}
+.csf{font-size:14px;line-height:1;}
+.pb2{width:36px;height:5px;background:rgba(0,0,0,.1);border-radius:999px;overflow:hidden;border:1px solid rgba(0,0,0,.06);}
+.pbf{height:100%;border-radius:999px;}
+.pbg{background:linear-gradient(90deg,#A8E6CF,#5CC39A);}
+.pby{background:linear-gradient(90deg,#FFE08A,#F2B705);}
+.pbr{background:linear-gradient(90deg,#FFC9B5,#FF8A6B);animation:shk .15s ease-in-out infinite;}
+.ordb{background:#fff;border:2px solid;border-radius:7px;padding:2px 5px;display:inline-flex;align-items:center;gap:3px;font-size:7.5px;font-weight:800;font-family:'Fredoka',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.14);margin-bottom:1px;white-space:nowrap;}
+.qarea{position:absolute;top:138px;left:4px;right:4px;}
+.qrow{display:flex;align-items:flex-end;gap:6px;padding:2px 8px;}
+.ciq{display:flex;flex-direction:column;align-items:center;gap:1px;position:relative;}
+.cqf{font-size:18px;animation:sway 3s ease-in-out infinite;}
+.cqf.ac{animation:imp .8s ease-in-out infinite;}
+.emo{font-size:9px;text-align:center;}
+.coinfloat{position:absolute;font-family:'Fredoka',sans-serif;font-size:10px;font-weight:700;color:var(--butterd);background:rgba(255,224,138,.92);border-radius:9px;padding:2px 6px;box-shadow:0 2px 8px rgba(242,183,5,.35);animation:cfly 1.8s ease-out forwards;pointer-events:none;z-index:25;}
+.boostbadge{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.58);border-radius:7px;padding:2px 6px;font-size:6.5px;font-weight:800;font-family:'Fredoka',sans-serif;color:var(--butterd);backdrop-filter:blur(4px);z-index:15;}
+
+/* ═══ SPLASH ═══ */
+.splash{width:100%;height:100%;background:linear-gradient(160deg,#FFF6EC,#FBEEDD 60%,#F5E4C8);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.sp1{position:absolute;width:200px;height:200px;border-radius:50%;background:var(--coral);opacity:.07;top:-40px;left:-50px;}
+.sp2{position:absolute;width:160px;height:160px;border-radius:50%;background:var(--mint);opacity:.09;bottom:-30px;right:-30px;}
+.logo{width:90px;height:90px;border-radius:50%;background:#fff;border:3px solid var(--line);box-shadow:0 10px 30px rgba(255,138,107,.2),0 0 0 5px rgba(255,224,138,.14);display:flex;align-items:center;justify-content:center;font-size:42px;margin-bottom:12px;animation:lfloat 3s ease-in-out infinite;}
+.sptitle{font-family:'Fredoka',sans-serif;font-size:21px;font-weight:600;color:var(--ink);text-align:center;line-height:1.1;margin-bottom:5px;}
+.spsub{font-size:10px;color:var(--inks);text-align:center;line-height:1.5;margin-bottom:20px;padding:0 20px;}
+.ldt{width:158px;height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:5px;}
+.ldf{height:100%;width:70%;background:linear-gradient(90deg,var(--coral),var(--corald));border-radius:999px;}
+.ldtxt{font-size:9px;color:var(--inks);font-weight:700;}
+.spver{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:9px;color:var(--inks);font-weight:700;}
+.spline{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--corald));}
+
+/* ═══ ONBOARDING ═══ */
+.onbg{position:absolute;inset:0;}
+.dim{position:absolute;inset:0;background:rgba(20,10,0,.52);z-index:10;pointer-events:none;}
+.spot{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16) 0%,transparent 70%);z-index:11;pointer-events:none;}
+.gtip{position:absolute;bottom:70px;left:10px;right:10px;background:#fff;border-radius:14px;padding:10px 11px;border-left:3px solid var(--coral);box-shadow:0 8px 28px rgba(0,0,0,.24);z-index:14;display:flex;gap:8px;align-items:flex-start;}
+.tn{width:23px;height:23px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--coral),var(--corald));display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:600;font-size:11px;color:#fff;margin-top:1px;}
+.tt{font-family:'Fredoka',sans-serif;font-weight:600;font-size:11.5px;color:var(--ink);margin-bottom:2px;}
+.tb{font-size:9px;color:var(--inks);line-height:1.5;}
+.sdots{position:absolute;bottom:56px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:13;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);}
+.dot.on{width:9px;height:9px;background:var(--coral);}
+.onb-next{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:var(--coral);border:none;border-radius:20px;padding:7px 28px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:11px;color:#fff;cursor:pointer;z-index:14;box-shadow:0 4px 0 var(--coralsh);}
+
+/* ═══ MENÜ ═══ */
+.menu-wrap{padding:10px;display:flex;flex-direction:column;gap:8px;}
+.menu-sec{font-family:'Fredoka',sans-serif;font-size:9px;font-weight:600;color:var(--inks);letter-spacing:.1em;text-transform:uppercase;padding:4px 2px;border-bottom:1px solid var(--line);margin-bottom:4px;}
+.menu-item{background:var(--card);border-radius:12px;border:1px solid var(--line);padding:10px;display:flex;align-items:center;gap:9px;box-shadow:0 2px 8px rgba(180,120,90,.07);}
+.menu-item.locked{opacity:.55;background:var(--cream2);}
+.mi-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.mi-info{flex:1;}
+.mi-name{font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:var(--ink);}
+.mi-row{display:flex;gap:8px;margin-top:3px;flex-wrap:wrap;}
+.mi-tag{font-size:8px;font-weight:700;padding:2px 6px;border-radius:999px;}
+.mi-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.mi-price{font-family:'Fredoka',sans-serif;font-size:13px;font-weight:700;color:var(--butterd);}
+.mi-unlock{font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;padding:5px 10px;border-radius:8px;border:none;cursor:pointer;}
+.mi-unlock.buy{background:linear-gradient(180deg,var(--coral),var(--corald));color:#fff;box-shadow:0 3px 0 var(--coralsh);}
+.mi-unlock.dis{background:var(--cream2);color:var(--inks);cursor:not-allowed;}
+.daily-badge{background:linear-gradient(135deg,var(--lav),var(--plum));border-radius:999px;padding:2px 8px;font-size:7.5px;font-weight:800;color:#fff;font-family:'Fredoka',sans-serif;}
+.customers-row{display:flex;gap:4px;flex-wrap:wrap;}
+.ct{font-size:7.5px;font-weight:700;padding:2px 6px;border-radius:999px;}
+.ct-all{background:rgba(165,216,243,.3);color:var(--skyd);}
+.ct-r{background:rgba(165,216,243,.3);color:var(--skyd);}
+.ct-a{background:rgba(255,138,107,.2);color:var(--corald);}
+.ct-t{background:rgba(168,230,207,.3);color:var(--mintd);}
+
+/* ═══ ACHIEVEMENT ═══ */
+.ach-wrap{padding:10px;display:flex;flex-direction:column;gap:6px;}
+.ach-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 2px;}
+.ach-title{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--ink);}
+.ach-points{background:linear-gradient(135deg,var(--butter),var(--butterd));border-radius:999px;padding:4px 10px;font-family:'Fredoka',sans-serif;font-size:10px;font-weight:700;color:#7B4A00;}
+.ach-card{background:var(--card);border-radius:12px;border:1px solid var(--line);padding:10px;display:flex;gap:9px;align-items:flex-start;box-shadow:0 2px 8px rgba(180,120,90,.06);}
+.ach-card.done{background:linear-gradient(135deg,rgba(92,195,154,.07),transparent);border-color:rgba(92,195,154,.3);}
+.ach-card.hidden{background:var(--cream2);border-style:dashed;}
+.ach-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ach-body{flex:1;}
+.ach-name{font-family:'Fredoka',sans-serif;font-size:11px;font-weight:600;color:var(--ink);}
+.ach-desc{font-size:8.5px;color:var(--inks);margin:2px 0 5px;line-height:1.4;}
+.ach-prog-track{height:6px;background:#EFE3D6;border-radius:999px;overflow:hidden;margin-bottom:4px;}
+.ach-prog-fill{height:100%;border-radius:999px;}
+.ach-bottom{display:flex;align-items:center;justify-content:space-between;}
+.ach-rew{font-size:8px;font-weight:700;color:var(--butterd);}
+.ach-status{font-size:7.5px;font-weight:800;padding:2px 6px;border-radius:999px;text-transform:uppercase;}
+.s-done{background:rgba(92,195,154,.2);color:#1d7a56;}
+.s-prog{background:rgba(165,216,243,.3);color:var(--skyd);}
+.s-lock{background:var(--cream2);color:var(--inks);}
+.s-hid{background:rgba(155,111,196,.15);color:var(--plum);}
+
+/* ═══ UPGRADE ═══ */
+.upg-screen{width:100%;height:100%;position:relative;background:linear-gradient(160deg,#FFF6EC,#FBEEDD);overflow:hidden;}
+.upg-peek{height:34%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-size:10px;color:var(--inks);border-bottom:1px solid var(--line);background:linear-gradient(160deg,#FFF6EC,#FBEEDD);flex-direction:column;gap:4px;}
+.upg-sheet{position:absolute;bottom:0;left:0;right:0;top:34%;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -8px 32px rgba(62,50,56,.12);border-top:1px solid var(--line);display:flex;flex-direction:column;}
+.drag{width:32px;height:4px;background:rgba(62,50,56,.18);border-radius:2px;margin:8px auto 9px;}
+.sh-tabs{display:flex;gap:4px;padding:0 10px;margin-bottom:7px;}
+.sh-tab{flex:1;padding:6px 2px;border-radius:8px;border:none;cursor:pointer;font-family:'Fredoka',sans-serif;font-size:8px;font-weight:600;position:relative;transition:all .15s;}
+.sh-tab.act{background:var(--coral);color:#fff;}
+.sh-tab:not(.act){background:var(--cream2);color:var(--inks);border:1px solid var(--line);}
+.tdot{position:absolute;top:3px;right:3px;width:5px;height:5px;background:var(--mintd);border-radius:50%;border:1px solid #fff;}
+.sh-list{flex:1;overflow-y:auto;padding:0 10px 10px;display:flex;flex-direction:column;gap:6px;}
+.sh-list::-webkit-scrollbar{width:3px;}
+.sh-list::-webkit-scrollbar-thumb{background:var(--line);}
+.uc{background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px;display:flex;gap:8px;box-shadow:0 2px 7px rgba(180,120,90,.07);}
+.uc.av{border-left:3px solid var(--mintd);}
+.uc.dn{background:linear-gradient(135deg,rgba(92,195,154,.07),transparent);}
+.uc.lk{opacity:.6;}
+.ui{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ui.av{background:rgba(168,230,207,.3);}
+.ui.dn{background:rgba(92,195,154,.18);}
+.ui.lk{background:var(--cream2);}
+.ub{flex:1;}
+.un{font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;color:var(--ink);}
+.uid{font-size:7.5px;font-weight:800;color:var(--inks);opacity:.6;margin-bottom:1px;}
+.ue{font-size:8px;color:var(--inks);margin:2px 0 5px;}
+.uf{display:flex;align-items:center;justify-content:space-between;gap:5px;}
+.utag{font-size:6.5px;font-weight:800;padding:2px 5px;border-radius:999px;text-transform:uppercase;}
+.t-av{background:rgba(168,230,207,.4);color:#27795a;}
+.t-dn{background:rgba(92,195,154,.22);color:#1d7a56;}
+.t-lk{background:var(--cream2);color:var(--inks);}
+.ubtn{padding:4px 9px;border-radius:7px;border:none;cursor:pointer;font-family:'Fredoka',sans-serif;font-size:8.5px;font-weight:700;}
+.ubuy{background:linear-gradient(180deg,var(--coral),var(--corald));color:#fff;box-shadow:0 2px 0 var(--coralsh);}
+.udis{background:#E7DCD2;color:#B3A599;cursor:not-allowed;}
+
+/* ═══ OFFLINE MODAL ═══ */
+.off-wrap{position:absolute;inset:0;background:linear-gradient(160deg,#FFF6EC,#FBEEDD);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.off-gbg{position:absolute;inset:0;background:#F0E8D0;filter:blur(3px);opacity:.65;}
+.off-dim{position:absolute;inset:0;background:rgba(30,20,10,.52);}
+.off-modal{background:#fff;border-radius:20px;border:1px solid var(--line);padding:18px 16px;width:252px;text-align:center;position:relative;z-index:2;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+.oc{font-size:44px;margin-bottom:6px;animation:chefbr 2.5s ease-in-out infinite;}
+.ot{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.os{font-size:9.5px;color:var(--inks);margin-bottom:10px;}
+.oamt{background:rgba(255,224,138,.18);border:1.5px solid rgba(242,183,5,.3);border-radius:12px;padding:10px;margin-bottom:10px;}
+.onum{font-family:'Fredoka',sans-serif;font-size:24px;font-weight:600;color:var(--butterd);}
+.onums{font-size:8px;color:var(--inks);margin-top:1px;}
+.oxpt{height:10px;background:#EFE3D6;border-radius:999px;overflow:hidden;margin-bottom:3px;}
+.oxpf{height:100%;background:linear-gradient(90deg,var(--mint),var(--mintd));border-radius:999px;width:62%;}
+.oxpl{display:flex;justify-content:space-between;font-size:7.5px;color:var(--inks);font-weight:700;margin-bottom:12px;}
+.bp{width:100%;padding:10px;border-radius:11px;border:none;cursor:pointer;background:linear-gradient(180deg,var(--coral),var(--corald));box-shadow:0 4px 0 var(--coralsh);font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:#fff;margin-bottom:6px;transition:transform .08s;}
+.bp:active{transform:translateY(3px);}
+.bm{width:100%;padding:8px;border-radius:11px;border:none;cursor:pointer;background:linear-gradient(180deg,var(--mint),var(--mintd));box-shadow:0 3px 0 var(--mintsh);font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;color:var(--ink);transition:transform .08s;}
+
+/* ═══ SCREEN CONTAINER ═══ */
+.scr{display:none;width:100%;height:100%;position:absolute;top:0;left:0;}
+.scr.show{display:block;}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes chefbr{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.03) translateY(-1px)}}
+@keyframes sway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+@keyframes imp{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-2px)}}
+@keyframes flame{0%{transform:scaleY(1) rotate(-3deg)}100%{transform:scaleY(1.15) rotate(3deg)}}
+@keyframes rpulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.07);filter:brightness(1.1)}}
+@keyframes cfly{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-38px) scale(1.1)}100%{opacity:0;transform:translateY(-65px) scale(.8)}}
+@keyframes lfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+@keyframes spawn{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<div class="top"><h1>🍽️ Lezzet İmparatorluğu</h1><p>Prototype v3 · Tüm ekranlar interaktif · ← → veya nav tablarına tıkla</p></div>
+
+<div class="viewer">
+<div class="stitle" id="stitle">01 · Splash</div>
+<div class="phone" id="phone">
+
+<!-- ══════════════════════════════════════════════
+  1. SPLASH
+══════════════════════════════════════════════ -->
+<div class="scr show" id="s0">
+  <div class="splash">
+    <div class="sp1"></div><div class="sp2"></div>
+    <div class="logo">🍽️</div>
+    <div class="sptitle">Lezzet<br>İmparatorluğu</div>
+    <div class="spsub">Küçük bir büfeden<br>büyük bir imparatorluğa!</div>
+    <div class="ldt"><div class="ldf"></div></div>
+    <div class="ldtxt">Yükleniyor... %70</div>
+    <div class="spver">v1.0 · Büfe Aşaması</div>
+    <div class="spline"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  2-7. ONBOARDING SCREENS
+══════════════════════════════════════════════ -->
+<!-- ONB helper macro: shared game bg -->
+<div class="scr" id="s1">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="onbg" style="top:28px;height:calc(100% - 28px);">
+    <div class="gworld">
+      <div class="floor"></div>
+      <div class="wall"><div class="wdeco"><span>🪴</span><div class="wsign">🍽️ Lezzet Büfesi</div><span>🪴</span></div></div>
+      <div class="ctrtop"></div>
+      <div class="ctr">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div><div class="chef-n">ŞEF</div></div>
+        <div class="ocak"><span style="font-size:12px;">⬛</span></div>
+        <div class="ocak"><span style="font-size:12px;">⬛</span></div>
+      </div>
+      <div class="stools"><div class="stool emp"></div><div class="stool emp"></div></div>
+      <div class="qarea">
+        <div class="qrow" style="padding-left:16px;">
+          <div class="ciq" style="animation:spawn .5s ease-out;">
+            <div class="ordb" style="border-color:var(--skyd);color:var(--skyd);">⏳ Sırada</div>
+            <div class="cqf">🧍</div>
+            <div class="emo">😊</div>
+            <div class="pb2"><div class="pbf pbg" style="width:96%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dim"></div>
+    <div class="spot" style="width:110px;height:130px;left:10px;top:138px;"></div>
+    <div class="gtip">
+      <div class="tn">1</div>
+      <div><div class="tt">İlk müşteri geldi! 👋</div><div class="tb">Regular müşteri (sıra sabrı: 40 sn) otomatik sıraya girdi. Şef bitmeden tabure boşalmaz.</div></div>
+    </div>
+    <div class="sdots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <button class="onb-next" onclick="go(1)">Devam →</button>
+  </div>
+</div>
+
+<div class="scr" id="s2">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="onbg" style="top:28px;height:calc(100% - 28px);">
+    <div class="gworld">
+      <div class="floor"></div>
+      <div class="wall"><div class="wdeco"><span>🪴</span><div class="wsign">🍽️ Lezzet Büfesi</div><span>🪴</span></div></div>
+      <div class="ctrtop"></div>
+      <div class="ctr">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div><div class="chef-n" style="color:var(--coral);">PİŞİRİYOR</div></div>
+        <div class="ocak on" style="border-color:var(--coral);">
+          <span style="font-size:13px;">🫖</span>
+          <div class="otimer">8sn</div>
+          <div class="opb"><div class="opf" style="width:55%;"></div></div>
+        </div>
+        <div class="ocak"><span style="font-size:12px;">⬛</span></div>
+      </div>
+      <div class="stools">
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--corald);color:var(--corald);font-size:7px;">🔥 pişiyor</div>
+            <div class="csf">🧍</div>
+            <div class="pb2"><div class="pbf pby" style="width:65%;"></div></div>
+          </div>
+        </div>
+        <div class="stool emp"></div>
+      </div>
+    </div>
+    <div class="dim"></div>
+    <div class="spot" style="width:150px;height:90px;left:55px;top:56px;border-radius:50%;"></div>
+    <div class="gtip">
+      <div class="tn">2</div>
+      <div><div class="tt">Şef otomatik pişiriyor! 🔥</div><div class="tb">Çay: 8 sn. Ocak hızı upgrade alınca bu süre kısalır. Müşteri yemek sabrı sayıyor (sarı bar).</div></div>
+    </div>
+    <div class="sdots"><div class="dot"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <button class="onb-next" onclick="go(1)">Devam →</button>
+  </div>
+</div>
+
+<div class="scr" id="s3">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b id="c3">25</b></div>
+    <div class="chip chip-g">💎 <b>0</b></div><div class="hsp"></div>
+    <div class="lvb"><div class="lvc">1</div><div class="lvw"><div class="lvl">LV 1</div><div class="xpt"><div class="xpf" style="width:15%;"></div></div></div></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div class="onbg" style="top:72px;height:calc(100% - 72px);">
+    <div class="gworld" style="top:0;">
+      <div class="floor"></div>
+      <div class="wall"><div class="wdeco"><span>🪴</span><div class="wsign">🍽️ Lezzet Büfesi</div><span>🪴</span></div></div>
+      <div class="ctrtop"></div>
+      <div class="ctr">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:1px;animation:rpulse .8s ease-in-out infinite;">
+          <div class="rg">🫖</div><div class="rl">HAZIR!</div>
+        </div>
+        <div class="ocak"><span style="font-size:12px;">⬛</span></div>
+      </div>
+      <div class="stools">
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--mintd);color:var(--mintd);font-size:7px;">✅ alıyor</div>
+            <div class="csf">🧍</div>
+            <div class="pb2"><div class="pbf pbg" style="width:82%;"></div></div>
+          </div>
+        </div>
+        <div class="stool emp"></div>
+      </div>
+    </div>
+    <div class="coinfloat" style="left:88px;top:90px;">+25 🪙</div>
+    <div class="coinfloat" style="left:110px;top:100px;animation-delay:.35s;font-size:8.5px;background:rgba(168,230,207,.9);color:var(--mintd);">+3 ☕ bahşiş</div>
+    <div class="dim" style="opacity:.42;"></div>
+    <div class="gtip">
+      <div class="tn">3</div>
+      <div><div class="tt">Coin kazandın! +25₺ 🎉</div><div class="tb">Müşteri mutlu (😊 %82 sabır) → bahşiş 1.0×. Coin sayacına uçuyor. Bahşiş = 25 × 0.82 × 0.15 ≈ 3₺</div></div>
+    </div>
+    <div class="sdots"><div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <button class="onb-next" onclick="go(1)">Devam →</button>
+  </div>
+</div>
+
+<div class="scr" id="s4">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>340</b></div><div class="chip chip-g">💎 <b>0</b></div><div class="hsp"></div>
+    <div class="lvb"><div class="lvc">1</div><div class="lvw"><div class="lvl">LV 1</div><div class="xpt"><div class="xpf" style="width:38%;"></div></div></div></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div class="onbg" style="top:72px;height:calc(100% - 72px);">
+    <div class="gworld" style="top:0;">
+      <div class="floor"></div>
+      <div class="wall"><div class="wdeco"><span>🪴</span><div class="wsign">🍽️ Lezzet Büfesi</div><span>🪴</span></div></div>
+      <div class="ctrtop"></div>
+      <div class="ctr">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div></div>
+        <div class="ocak on" style="border-color:var(--coral);">
+          <span style="font-size:13px;">🍞</span>
+          <div class="otimer">12sn</div>
+          <div class="opb"><div class="opf" style="width:30%;"></div></div>
+        </div>
+        <div class="ocak"><span style="font-size:12px;">⬛</span></div>
+      </div>
+      <div class="stools">
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--corald);color:var(--corald);font-size:6.5px;animation:shk .15s infinite;">😠 sinirli!</div>
+            <div class="csf" style="animation:shk .12s infinite;">🏃</div>
+            <div class="pb2"><div class="pbf pbr" style="width:18%;"></div></div>
+            <div class="pb2"><div class="pbf pby" style="width:45%;"></div></div>
+          </div>
+        </div>
+        <div class="stool">
+          <div class="cseated">
+            <div class="csf">📷</div>
+            <div class="pb2"><div class="pbf pbg" style="width:88%;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="qarea" style="top:130px;">
+        <div class="qrow" style="padding-left:10px;gap:8px;">
+          <div class="ciq">
+            <div class="ordb" style="border-color:var(--skyd);color:var(--skyd);">⏳</div>
+            <div class="cqf">🧍</div>
+            <div class="emo">😐</div>
+            <div class="pb2"><div class="pbf pby" style="width:55%;"></div></div>
+          </div>
+          <div class="ciq">
+            <div class="ordb" style="border-color:var(--corald);color:var(--corald);">⚡</div>
+            <div class="cqf ac">🏃</div>
+            <div class="emo" style="color:var(--coral);">😠</div>
+            <div class="pb2"><div class="pbf pbr" style="width:12%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dim" style="opacity:.48;"></div>
+    <div class="spot" style="width:100px;height:100px;left:6px;top:96px;"></div>
+    <div class="gtip">
+      <div class="tn">4</div>
+      <div><div class="tt">Müşteri sinirlanıyor! 😠</div><div class="tb">Kırmızı bar + titreme = kritik eşik (&lt;%35). Biter → ödeme yok, −10 memnuniyet. ⬆️ Ocak Hızı al!</div></div>
+    </div>
+    <div class="sdots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <button class="onb-next" onclick="go(1)">Devam →</button>
+  </div>
+</div>
+
+<div class="scr" id="s5">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>850</b></div><div class="chip chip-g">💎 <b>0</b></div><div class="hsp"></div>
+    <div class="lvb"><div class="lvc">1</div><div class="lvw"><div class="lvl">LV 1</div><div class="xpt"><div class="xpf" style="width:55%;"></div></div></div></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div style="position:absolute;top:72px;bottom:60px;left:0;right:0;overflow:hidden;">
+    <div style="height:33%;background:linear-gradient(160deg,#FFF6EC,#FBEEDD);display:flex;align-items:center;justify-content:center;opacity:.5;font-size:9px;color:var(--inks);font-family:'Fredoka',sans-serif;">🍽️ Oyun devam ediyor...</div>
+    <div style="position:absolute;bottom:0;left:0;right:0;top:33%;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -8px 28px rgba(62,50,56,.12);border-top:1px solid var(--line);">
+      <div class="drag"></div>
+      <div class="sh-tabs">
+        <button class="sh-tab act" style="position:relative;">🍳 Mutfak<span class="tdot"></span></button>
+        <button class="sh-tab" style="position:relative;">🪑 Tezgah<span class="tdot"></span></button>
+        <button class="sh-tab">👨‍🍳 Şef</button>
+        <button class="sh-tab">💤 Idle</button>
+      </div>
+      <div style="padding:0 10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;max-height:230px;">
+        <div class="uc av" style="box-shadow:0 0 0 1.5px rgba(92,195,154,.4);">
+          <div class="ui av">🔥</div>
+          <div class="ub">
+            <div class="uid">KIT_01</div>
+            <div class="un">Ocak Hızı 1</div>
+            <div class="ue">Pişirme −%15 · speed_mult: 1.00→1.15</div>
+            <div class="uf"><span class="utag t-av">ALINABİLİR</span><button class="ubtn ubuy">300 🪙</button></div>
+          </div>
+        </div>
+        <div class="uc lk">
+          <div class="ui lk">🔒</div>
+          <div class="ub">
+            <div class="uid">KIT_02</div>
+            <div class="un" style="color:var(--inks);">Ocak Hızı 2</div>
+            <div class="ue">Pişirme −%15 daha · ×1.30</div>
+            <div class="uf"><span class="utag t-lk">KİLİTLİ · Lv2</span><button class="ubtn udis">1.200 🪙</button></div>
+          </div>
+        </div>
+        <div class="uc lk">
+          <div class="ui lk">🔒</div>
+          <div class="ub">
+            <div class="uid">KIT_03</div>
+            <div class="un" style="color:var(--inks);">2. Ocak Slotu</div>
+            <div class="ue">Paralel 2 sipariş · 2 cooking slot</div>
+            <div class="uf"><span class="utag t-lk">KİLİTLİ · Lv3</span><button class="ubtn udis">3.500 🪙</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="nt" onclick="goTo('s7')"><div class="nic">🏠</div><div class="nlb">Restoran</div></div>
+    <div class="nt" onclick="goTo('s_menu')"><div class="nic">🍽️</div><div class="nlb">Menü</div></div>
+    <div class="nt act"><div class="nbg"></div><div class="nic">⬆️</div><div class="nlb">Upgrade</div></div>
+    <div class="nt" onclick="goTo('s_ach')"><div class="nic">🏆</div><div class="nlb">Başarım</div></div>
+  </div>
+  <div class="sdots" style="bottom:68px;"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div><div class="dot"></div></div>
+  <button class="onb-next" style="bottom:68px;" onclick="go(1)">Devam →</button>
+</div>
+
+<div class="scr" id="s6">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="onbg" style="top:28px;height:calc(100% - 28px);">
+    <div class="gworld">
+      <div class="floor"></div>
+      <div class="wall"><div class="wdeco"><span>🪴</span><div class="wsign">🍽️ Lezzet Büfesi</div><span>🪴</span></div></div>
+      <div class="ctrtop"></div>
+      <div class="ctr">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div><div class="chef-n">UYUYOR</div></div>
+      </div>
+    </div>
+    <div class="dim"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:12;padding:12px;">
+      <div style="background:#fff;border-radius:18px;padding:14px;width:240px;text-align:center;box-shadow:0 14px 36px rgba(0,0,0,.28);">
+        <div style="font-size:30px;margin-bottom:5px;">🌙</div>
+        <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;">Çıksan da şef çalışır!</div>
+        <div style="font-size:8.5px;color:var(--inks);margin-bottom:10px;line-height:1.5;">Level 1: 4 saat offline maks · ~1.350₺/saat<br>Offline Paketi upgrade ile 12 saate çıkar</div>
+        <div style="display:flex;gap:4px;margin-bottom:9px;">
+          <div style="flex:1;background:var(--cream2);border-radius:8px;padding:7px 3px;text-align:center;"><div style="font-size:18px;">📱</div><div style="font-size:7px;font-weight:700;color:var(--inks);margin-top:2px;">Kapat</div></div>
+          <div style="display:flex;align-items:center;color:var(--inks);font-size:12px;">→</div>
+          <div style="flex:1;background:rgba(255,138,107,.1);border:1.5px solid rgba(255,138,107,.3);border-radius:8px;padding:7px 3px;text-align:center;"><div style="font-size:18px;">👨‍🍳</div><div style="font-size:7px;font-weight:700;color:var(--corald);margin-top:2px;">Çalışır</div></div>
+          <div style="display:flex;align-items:center;color:var(--inks);font-size:12px;">→</div>
+          <div style="flex:1;background:rgba(255,224,138,.2);border-radius:8px;padding:7px 3px;text-align:center;"><div style="font-size:18px;">🪙</div><div style="font-size:7px;font-weight:700;color:var(--butterd);margin-top:2px;">Kazan!</div></div>
+        </div>
+        <div style="background:rgba(255,224,138,.2);border:1.5px solid rgba(242,183,5,.3);border-radius:8px;padding:5px;margin-bottom:10px;font-size:8px;font-weight:700;color:var(--butterd);">⏰ Lv1: 4 saat · Lv5: 12 saat</div>
+        <button class="bp" style="margin-bottom:0;font-size:11px;padding:9px;" onclick="goTo('s7')">Haydi Başla! 🍽️</button>
+      </div>
+    </div>
+    <div class="sdots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot on"></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  8. ANA OYUN — BÜFE SAHNESİ
+══════════════════════════════════════════════ -->
+<div class="scr" id="s7">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>12.540</b></div>
+    <div class="chip chip-g">💎 <b>8</b></div>
+    <div class="hsp"></div>
+    <div class="lvb"><div class="lvc">3</div><div class="lvw"><div class="lvl">LV 3 · 156/250</div><div class="xpt"><div class="xpf" style="width:62%;"></div></div></div></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <!-- game world -->
+  <div style="position:absolute;top:72px;left:0;right:0;bottom:60px;overflow:hidden;">
+    <div class="gworld" style="top:0;bottom:0;position:absolute;">
+      <div class="floor"></div>
+      <!-- wall -->
+      <div class="wall">
+        <div class="wdeco">
+          <span>🪴</span>
+          <div class="wsign">🍽️ Lezzet Büfesi · Lv3</div>
+          <span style="font-size:14px;">🖼️</span>
+        </div>
+      </div>
+      <div class="ctrtop"></div>
+      <!-- counter -->
+      <div class="ctr" style="gap:6px;">
+        <div class="chef-c"><div class="chef-f">🧑‍🍳</div><div class="chef-n" style="color:var(--butterd);">MEHMET</div></div>
+        <!-- ocak 1 active -->
+        <div class="ocak on" style="border-color:var(--coral);">
+          <span style="font-size:12px;">🍞</span>
+          <div class="otimer">12sn</div>
+          <div class="opb"><div class="opf" style="width:40%;"></div></div>
+        </div>
+        <!-- ocak 2 almost done -->
+        <div class="ocak on" style="border-color:var(--coral);">
+          <span style="font-size:12px;">🫖</span>
+          <div class="otimer">3sn</div>
+          <div class="opb"><div class="opf" style="width:87%;"></div></div>
+        </div>
+        <!-- ready item -->
+        <div class="ready-item">
+          <div class="rg">🌭</div>
+          <div class="rl">HAZIR!</div>
+        </div>
+      </div>
+      <!-- stools: 4 capacity, 3 used -->
+      <div class="stools" style="gap:5px;">
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--mintd);color:var(--mintd);font-size:6.5px;">😊 yiyor</div>
+            <div class="csf">🧍</div>
+            <div class="pb2"><div class="pbf pbg" style="width:80%;"></div></div>
+          </div>
+        </div>
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--skyd);color:var(--skyd);font-size:6.5px;">⏳ bekliyor</div>
+            <div class="csf" style="animation:imp .8s ease-in-out infinite;">🏃</div>
+            <div class="pb2"><div class="pbf pby" style="width:42%;"></div></div>
+          </div>
+        </div>
+        <div class="stool">
+          <div class="cseated">
+            <div class="ordb" style="border-color:var(--mintd);color:var(--mintd);font-size:6.5px;">😊 yiyor</div>
+            <div class="csf">📷</div>
+            <div class="pb2"><div class="pbf pbg" style="width:92%;"></div></div>
+          </div>
+        </div>
+        <div class="stool emp"></div>
+      </div>
+      <!-- queue -->
+      <div class="qarea" style="top:136px;">
+        <div class="qrow" style="gap:7px;padding-left:10px;">
+          <div class="ciq">
+            <div class="ordb" style="border-color:var(--skyd);color:var(--skyd);">⏳ 1.</div>
+            <div class="cqf">🧍</div>
+            <div class="emo">😊</div>
+            <div class="pb2"><div class="pbf pbg" style="width:78%;"></div></div>
+          </div>
+          <div class="ciq">
+            <div class="ordb" style="border-color:var(--corald);color:var(--corald);">⚡ 2.</div>
+            <div class="cqf ac">🏃</div>
+            <div class="emo" style="color:var(--coral);">😠</div>
+            <div class="pb2"><div class="pbf pbr" style="width:20%;"></div></div>
+          </div>
+          <div class="ciq">
+            <div class="ordb" style="border-color:var(--mintd);color:var(--mintd);">📷 3.</div>
+            <div class="cqf" style="animation:sway 4s ease-in-out infinite;">📷</div>
+            <div class="emo">😊</div>
+            <div class="pb2"><div class="pbf pbg" style="width:91%;"></div></div>
+          </div>
+        </div>
+        <!-- achievement notification -->
+        <div style="position:absolute;bottom:-40px;left:8px;right:8px;background:var(--card);border-radius:10px;border-left:3px solid var(--butterd);padding:7px 10px;display:flex;gap:7px;align-items:center;box-shadow:0 3px 12px rgba(0,0,0,.14);">
+          <span style="font-size:16px;">🏆</span>
+          <div>
+            <div style="font-family:'Fredoka',sans-serif;font-size:9.5px;font-weight:600;color:var(--ink);">Hızlı Aşçı tamamlandı!</div>
+            <div style="font-size:7.5px;color:var(--inks);">5 siparişi 3 dk içinde · +300₺ kazandın</div>
+          </div>
+        </div>
+      </div>
+      <!-- coin float -->
+      <div class="coinfloat" style="left:55px;top:94px;">+40 🪙</div>
+      <!-- boost badge -->
+      <div class="boostbadge">⚡ BOOST 3:42</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="nt act"><div class="nbg"></div><div class="nic">🏠</div><div class="nlb">Restoran</div></div>
+    <div class="nt" onclick="goTo('s_menu')"><div class="nic">🍽️</div><div class="nlb">Menü</div></div>
+    <div class="nt" onclick="goTo('s_upg')" style="position:relative;"><div class="nic">⬆️</div><div class="nlb">Upgrade</div><div class="ndot"></div></div>
+    <div class="nt" onclick="goTo('s_ach')"><div class="nic">🏆</div><div class="nlb">Başarım</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  MENÜ EKRANI
+══════════════════════════════════════════════ -->
+<div class="scr" id="s_menu">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>12.540</b></div>
+    <div class="chip chip-g">💎 <b>8</b></div><div class="hsp"></div>
+    <div style="font-family:'Fredoka',sans-serif;font-size:12px;font-weight:600;color:var(--ink);">🍽️ Menü</div>
+    <div class="hsp"></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div class="content">
+    <div class="menu-wrap">
+      <div class="menu-sec">🔓 Açık Ürünler</div>
+
+      <!-- Çay -->
+      <div class="menu-item">
+        <div class="mi-icon" style="background:rgba(165,216,243,.2);border:1.5px solid rgba(79,168,223,.3);">🫖</div>
+        <div class="mi-info">
+          <div class="mi-name">Çay</div>
+          <div class="mi-row">
+            <span class="mi-tag" style="background:rgba(92,195,154,.2);color:var(--mintd);">✓ Lv1</span>
+            <span class="mi-tag" style="background:rgba(242,183,5,.15);color:var(--butterd);">⏱ 8 sn</span>
+          </div>
+          <div class="customers-row" style="margin-top:4px;"><span class="ct ct-all">Herkes</span></div>
+        </div>
+        <div class="mi-right">
+          <div class="mi-price">25 ₺</div>
+          <div style="font-size:7.5px;color:var(--inks);text-align:right;">+bahşiş<br>1.0×→0.2×</div>
+        </div>
+      </div>
+
+      <!-- Poğaça -->
+      <div class="menu-item">
+        <div class="mi-icon" style="background:rgba(255,224,138,.2);border:1.5px solid rgba(242,183,5,.3);">🥐</div>
+        <div class="mi-info">
+          <div class="mi-name">Poğaça</div>
+          <div class="mi-row">
+            <span class="mi-tag" style="background:rgba(92,195,154,.2);color:var(--mintd);">✓ Lv1</span>
+            <span class="mi-tag" style="background:rgba(242,183,5,.15);color:var(--butterd);">⏱ 12 sn</span>
+          </div>
+          <div class="customers-row" style="margin-top:4px;"><span class="ct ct-all">Herkes</span></div>
+        </div>
+        <div class="mi-right">
+          <div class="mi-price">40 ₺</div>
+          <div style="font-size:7.5px;color:var(--inks);text-align:right;">+bahşiş</div>
+        </div>
+      </div>
+
+      <!-- Tost - unlocked at Lv2 -->
+      <div class="menu-item">
+        <div class="mi-icon" style="background:rgba(255,138,107,.15);border:1.5px solid rgba(242,113,79,.3);">🍞</div>
+        <div class="mi-info">
+          <div class="mi-name">Tost</div>
+          <div class="mi-row">
+            <span class="mi-tag" style="background:rgba(92,195,154,.2);color:var(--mintd);">✓ Lv2</span>
+            <span class="mi-tag" style="background:rgba(242,183,5,.15);color:var(--butterd);">⏱ 15 sn</span>
+          </div>
+          <div class="customers-row" style="margin-top:4px;"><span class="ct ct-r">Regular</span><span class="ct ct-a">Aceleci</span></div>
+        </div>
+        <div class="mi-right">
+          <div class="mi-price">65 ₺</div>
+          <div style="font-size:7.5px;color:var(--inks);text-align:right;">+%20 coin<br>(Aceleci)</div>
+        </div>
+      </div>
+
+      <div class="menu-sec" style="margin-top:8px;">🔒 Kilitli Ürünler</div>
+
+      <!-- Sosisli -->
+      <div class="menu-item locked">
+        <div class="mi-icon" style="background:var(--cream2);">🌭</div>
+        <div class="mi-info">
+          <div class="mi-name" style="color:var(--inks);">Sosisli Sandviç</div>
+          <div class="mi-row">
+            <span class="mi-tag" style="background:rgba(242,113,79,.15);color:var(--corald);">🔒 Lv3 · 2.000₺</span>
+            <span class="mi-tag" style="background:rgba(242,183,5,.15);color:var(--butterd);">⏱ 14 sn</span>
+          </div>
+          <div class="customers-row" style="margin-top:4px;"><span class="ct ct-all">Herkes</span><span class="ct ct-t">Turist fav ⭐</span></div>
+        </div>
+        <div class="mi-right">
+          <div class="mi-price" style="color:var(--inks);">75 ₺</div>
+          <button class="mi-unlock dis">🔒 Lv3</button>
+        </div>
+      </div>
+
+      <!-- Günün Özelliği -->
+      <div class="menu-item locked">
+        <div class="mi-icon" style="background:rgba(155,111,196,.15);">⭐</div>
+        <div class="mi-info">
+          <div class="mi-name" style="color:var(--inks);">Günün Özelliği</div>
+          <div class="mi-row">
+            <span class="mi-tag" style="background:rgba(155,111,196,.15);color:var(--plum);">🔒 Lv5 · Otomatik açılır</span>
+          </div>
+          <div style="font-size:8px;color:var(--inks);margin-top:3px;">Günlük mevcut item × 1.3 fiyat · Bildirim gönderir</div>
+        </div>
+        <div class="mi-right">
+          <div class="daily-badge">Günlük</div>
+        </div>
+      </div>
+
+      <!-- info box -->
+      <div style="background:rgba(165,216,243,.15);border:1px solid rgba(79,168,223,.25);border-radius:10px;padding:9px 11px;margin-top:4px;">
+        <div style="font-family:'Fredoka',sans-serif;font-size:10px;font-weight:600;color:var(--skyd);margin-bottom:4px;">ℹ️ Sipariş Kuralları</div>
+        <div style="font-size:8px;color:var(--inks);line-height:1.5;">
+          Aceleci → Sadece hızlı itemler (Çay, Poğaça, Tost)<br>
+          Turist → Çay + Sosisli Sandviç tercih eder (+%30 bahşiş)<br>
+          Günün Özelliği → Herkes sipariş edebilir
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="nt" onclick="goTo('s7')"><div class="nic">🏠</div><div class="nlb">Restoran</div></div>
+    <div class="nt act"><div class="nbg"></div><div class="nic">🍽️</div><div class="nlb">Menü</div></div>
+    <div class="nt" onclick="goTo('s_upg')" style="position:relative;"><div class="nic">⬆️</div><div class="nlb">Upgrade</div><div class="ndot"></div></div>
+    <div class="nt" onclick="goTo('s_ach')"><div class="nic">🏆</div><div class="nlb">Başarım</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  UPGRADE EKRANI — 4 working tabs
+══════════════════════════════════════════════ -->
+<div class="scr" id="s_upg">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>12.540</b></div><div class="chip chip-g">💎 <b>8</b></div><div class="hsp"></div>
+    <div class="lvb"><div class="lvc">3</div><div class="lvw"><div class="lvl">LV 3</div><div class="xpt"><div class="xpf" style="width:62%;"></div></div></div></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div style="position:absolute;top:72px;bottom:60px;left:0;right:0;">
+    <div class="upg-peek">
+      <div style="font-size:22px;opacity:.5;">🧑‍🍳 🔥 🍞 🫖</div>
+      <div style="font-size:9px;color:var(--inks);">← Büfe devam ediyor</div>
+    </div>
+    <div class="upg-sheet">
+      <div class="drag"></div>
+      <div class="sh-tabs" id="upg-tabs">
+        <button class="sh-tab act" onclick="switchUpg(0)" style="position:relative;">🍳 Mutfak<span class="tdot"></span></button>
+        <button class="sh-tab" onclick="switchUpg(1)" style="position:relative;">🪑 Tezgah<span class="tdot"></span></button>
+        <button class="sh-tab" onclick="switchUpg(2)">👨‍🍳 Şef</button>
+        <button class="sh-tab" onclick="switchUpg(3)">💤 Idle</button>
+      </div>
+      <div class="sh-list" id="upg-list"></div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="nt" onclick="goTo('s7')"><div class="nic">🏠</div><div class="nlb">Restoran</div></div>
+    <div class="nt" onclick="goTo('s_menu')"><div class="nic">🍽️</div><div class="nlb">Menü</div></div>
+    <div class="nt act"><div class="nbg"></div><div class="nic">⬆️</div><div class="nlb">Upgrade</div></div>
+    <div class="nt" onclick="goTo('s_ach')"><div class="nic">🏆</div><div class="nlb">Başarım</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  BAŞARIM EKRANI
+══════════════════════════════════════════════ -->
+<div class="scr" id="s_ach">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="hud">
+    <div class="chip chip-c">🪙 <b>12.540</b></div><div class="chip chip-g">💎 <b>8</b></div><div class="hsp"></div>
+    <div style="font-family:'Fredoka',sans-serif;font-size:11px;font-weight:600;color:var(--ink);">🏆 Başarımlar</div>
+    <div class="hsp"></div>
+    <div class="cfg">⚙️</div>
+  </div>
+  <div class="content">
+    <div class="ach-wrap">
+      <div class="ach-header">
+        <div class="ach-title">Büfe Ustası</div>
+        <div class="ach-points">🏆 1.200 puan</div>
+      </div>
+
+      <!-- done -->
+      <div class="ach-card done">
+        <div class="ach-icon" style="background:rgba(92,195,154,.2);">🍽️</div>
+        <div class="ach-body">
+          <div class="ach-name">İlk Sipariş — ACH_01</div>
+          <div class="ach-desc">1 sipariş tamamla</div>
+          <div class="ach-bottom"><div class="ach-rew">🏆 +100₺ · rozet</div><span class="ach-status s-done">✅ Tamamlandı</span></div>
+        </div>
+      </div>
+      <div class="ach-card done">
+        <div class="ach-icon" style="background:rgba(92,195,154,.2);">⬆️</div>
+        <div class="ach-body">
+          <div class="ach-name">İlk Yükseltme — ACH_02</div>
+          <div class="ach-desc">İlk upgrade'i satın al</div>
+          <div class="ach-bottom"><div class="ach-rew">🏆 +200₺ · 2💎</div><span class="ach-status s-done">✅ Tamamlandı</span></div>
+        </div>
+      </div>
+
+      <!-- in progress -->
+      <div class="ach-card">
+        <div class="ach-icon" style="background:rgba(165,216,243,.2);">⚡</div>
+        <div class="ach-body">
+          <div class="ach-name">Hızlı Aşçı — ACH_03</div>
+          <div class="ach-desc">5 siparişi 3 dakika içinde servis et</div>
+          <div class="ach-prog-track"><div class="ach-prog-fill" style="width:60%;background:linear-gradient(90deg,var(--sky),var(--skyd));"></div></div>
+          <div class="ach-bottom"><div class="ach-rew">+300₺</div><span class="ach-status s-prog">3/5 sipariş</span></div>
+        </div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon" style="background:rgba(168,230,207,.2);">🎯</div>
+        <div class="ach-body">
+          <div class="ach-name">Sıfır İptal — ACH_04</div>
+          <div class="ach-desc">20 siparişi art arda iptalsiz tamamla</div>
+          <div class="ach-prog-track"><div class="ach-prog-fill" style="width:35%;background:linear-gradient(90deg,var(--mint),var(--mintd));"></div></div>
+          <div class="ach-bottom"><div class="ach-rew">+500₺ · dekor item</div><span class="ach-status s-prog">7/20</span></div>
+        </div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon" style="background:rgba(255,224,138,.2);">🫖</div>
+        <div class="ach-body">
+          <div class="ach-name">Çay Ustası — ACH_06</div>
+          <div class="ach-desc">50 çay servis et (çay pişirme −%10 kalıcı)</div>
+          <div class="ach-prog-track"><div class="ach-prog-fill" style="width:72%;background:linear-gradient(90deg,var(--butter),var(--butterd));"></div></div>
+          <div class="ach-bottom"><div class="ach-rew">+300₺ · kalıcı bonus</div><span class="ach-status s-prog">36/50</span></div>
+        </div>
+      </div>
+
+      <!-- locked -->
+      <div class="ach-card">
+        <div class="ach-icon" style="background:var(--cream2);">🌙</div>
+        <div class="ach-body">
+          <div class="ach-name">İlk Uyku — ACH_05</div>
+          <div class="ach-desc">2 saat offline bekle · offline kalıcı +%5</div>
+          <div class="ach-bottom"><div class="ach-rew">1💎 · kalıcı offline+%5</div><span class="ach-status s-lock">Kilitli</span></div>
+        </div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon" style="background:var(--cream2);">💯</div>
+        <div class="ach-body">
+          <div class="ach-name">Tam Dolu — ACH_07</div>
+          <div class="ach-desc">Tüm tabure + sıra aynı anda dolu</div>
+          <div class="ach-bottom"><div class="ach-rew">+500₺</div><span class="ach-status s-lock">Kilitli · Lv3</span></div>
+        </div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon" style="background:var(--cream2);">📋</div>
+        <div class="ach-body">
+          <div class="ach-name">Menü Tamamlandı — ACH_08</div>
+          <div class="ach-desc">4 menü itemının tümünü aç</div>
+          <div class="ach-bottom"><div class="ach-rew">+1.000₺ · 5💎</div><span class="ach-status s-lock">Kilitli · Lv3</span></div>
+        </div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon" style="background:var(--cream2);">🏅</div>
+        <div class="ach-body">
+          <div class="ach-name">Büfe Emektarı — ACH_09</div>
+          <div class="ach-desc">500 sipariş tamamla · "Büfe Ustası" unvanı</div>
+          <div class="ach-prog-track"><div class="ach-prog-fill" style="width:31%;background:var(--line);"></div></div>
+          <div class="ach-bottom"><div class="ach-rew">+2.000₺ · unvan</div><span class="ach-status s-lock">156/500</span></div>
+        </div>
+      </div>
+
+      <!-- hidden -->
+      <div class="ach-card hidden">
+        <div class="ach-icon" style="background:rgba(155,111,196,.12);">❓</div>
+        <div class="ach-body">
+          <div class="ach-name" style="color:var(--plum);">Gizli Başarım — ACH_10</div>
+          <div class="ach-desc" style="color:var(--lav);">??? Gece yarısı özel koşul...</div>
+          <div class="ach-bottom"><div class="ach-rew" style="color:var(--plum);">Gizli ödül 🎁</div><span class="ach-status s-hid">Gizli</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="nt" onclick="goTo('s7')"><div class="nic">🏠</div><div class="nlb">Restoran</div></div>
+    <div class="nt" onclick="goTo('s_menu')"><div class="nic">🍽️</div><div class="nlb">Menü</div></div>
+    <div class="nt" onclick="goTo('s_upg')" style="position:relative;"><div class="nic">⬆️</div><div class="nlb">Upgrade</div><div class="ndot"></div></div>
+    <div class="nt act"><div class="nbg"></div><div class="nic">🏆</div><div class="nlb">Başarım</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+  OFFLİNE MODAL
+══════════════════════════════════════════════ -->
+<div class="scr" id="s_off">
+  <div class="sbar"><span>9:41</span><span class="sbar-brand">LEZZET İMPARATORLUĞU</span><span>🔋</span></div>
+  <div class="off-wrap" style="top:28px;height:calc(100% - 28px);">
+    <div class="off-gbg"><div class="floor" style="position:absolute;inset:0;"></div></div>
+    <div class="off-dim"></div>
+    <div class="off-modal">
+      <div class="oc">🧑‍🍳</div>
+      <div class="ot">Büfe seni bekliyordu!</div>
+      <div class="os">6 saat 24 dakika çalıştı · Lv3</div>
+      <div class="oamt">
+        <div class="onum">+38.304 🪙</div>
+        <div class="onums">Offline kazanç · 8 saat maks · verim %38</div>
+      </div>
+      <div class="oxpt"><div class="oxpf"></div></div>
+      <div class="oxpl"><span>Lv3 · 156/250 sipariş</span><span>Lv4'e: 94 kaldı</span></div>
+      <button class="bp" onclick="goTo('s7')">🪙 Topla</button>
+      <button class="bm">📺 2× İzle → 76.608 🪙</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<div class="nav-row">
+  <button class="nb" id="pb" onclick="go(-1)" disabled>← Geri</button>
+  <span class="nc" id="nc">1 / 10</span>
+  <button class="nb" id="nb" onclick="go(1)">İleri →</button>
+</div>
+<div style="color:rgba(255,255,255,.22);font-size:.68rem;text-align:center;">← → · Nav tabları · Butonlara tıkla</div>
+</div>
+
+<script>
+// ── upgrade data ─────────────────────────────────────────
+const UPG = [
+  [ // Mutfak
+    {id:'KIT_01',ic:'🔥',n:'Ocak Hızı 1',e:'Pişirme −%15 · speed_mult: 1.00→1.15',cost:'300 🪙',st:'av'},
+    {id:'KIT_02',ic:'🔥',n:'Ocak Hızı 2',e:'Pişirme −%15 daha · mult: 1.15→1.30',cost:'1.200 🪙',st:'lk',lv:'Lv2'},
+    {id:'KIT_03',ic:'🍳',n:'2. Ocak Slotu',e:'Paralel 2 item · 2 cooking slot aktif',cost:'3.500 🪙',st:'lk',lv:'Lv3'},
+    {id:'KIT_04',ic:'🥩',n:'Malzeme Kalitesi 1',e:'Bahşiş çarpanı +%8 · tip_mult artışı',cost:'8.000 🪙',st:'lk',lv:'Lv4'},
+    {id:'KIT_05',ic:'⭐',n:'Özel Tarif',e:'Tüm item base_price +%15 kalıcı',cost:'20.000 🪙',st:'lk',lv:'Lv5'},
+  ],
+  [ // Tezgah
+    {id:'CNT_01',ic:'🪑',n:'2. Tabure',e:'max_stools: 2→3 · 1 müşteri daha oturur',cost:'250 🪙',st:'dn'},
+    {id:'CNT_02',ic:'🪑',n:'3. Tabure',e:'max_stools: 3→4 (Büfe max kapasitesi)',cost:'900 🪙',st:'av'},
+    {id:'CNT_03',ic:'🚶',n:'Sıra Genişletme 1',e:'max_queue: 3→5 kişi',cost:'700 🪙',st:'lk',lv:'Lv2'},
+    {id:'CNT_04',ic:'🚶',n:'Sıra Genişletme 2',e:'max_queue: 5→7 kişi (Büfe max)',cost:'4.000 🪙',st:'lk',lv:'Lv4'},
+  ],
+  [ // Şef
+    {id:'CHF_01',ic:'👨‍🍳',n:'Şef Deneyimi 1',e:'Hız +%10 · chef_quality: 1→2',cost:'400 🪙',st:'dn'},
+    {id:'CHF_02',ic:'👨‍🍳',n:'Şef Deneyimi 2',e:'Hız +%10 · chef_quality: 2→3',cost:'1.500 🪙',st:'av'},
+    {id:'CHF_03',ic:'👨‍🍳',n:'Şef Deneyimi 3',e:'Hız +%10 · chef_quality: 3→4',cost:'4.000 🪙',st:'lk',lv:'Lv3'},
+    {id:'CHF_04',ic:'🏅',n:'Şef Deneyimi 4',e:'chef_quality: 4→6 · Aceleci priority bump',cost:'10.000 🪙',st:'lk',lv:'Lv4'},
+    {id:'CHF_05',ic:'🏆',n:'Şef Ustalaşma',e:'Büfe items −%20 süre · chef_quality: 6→8',cost:'25.000 🪙',st:'lk',lv:'Lv5'},
+  ],
+  [ // Idle
+    {id:'IDL_01',ic:'🌙',n:'Offline Paketi 1',e:'max_offline_hours: 4→6 · +2 saat',cost:'500 🪙',st:'av'},
+    {id:'IDL_02',ic:'🌙',n:'Offline Paketi 2',e:'max_offline_hours: 6→8 · verim +%4',cost:'2.000 🪙',st:'lk',lv:'Lv3'},
+    {id:'IDL_03',ic:'📈',n:'Offline Verim 1',e:'offline_efficiency +%5 · daha fazla kazanç',cost:'3.000 🪙',st:'lk',lv:'Lv3'},
+    {id:'IDL_04',ic:'🌙',n:'Offline Paketi 3',e:'max_offline_hours: 8→10',cost:'7.000 🪙',st:'lk',lv:'Lv4'},
+    {id:'IDL_05',ic:'🌙',n:'Offline Paketi 4',e:'max_offline_hours: 10→12 · verim +%3',cost:'15.000 🪙',st:'lk',lv:'Lv5'},
+    {id:'IDL_06',ic:'📈',n:'Offline Verim 2',e:'efficiency +%5 (büfe max: %45)',cost:'12.000 🪙',st:'lk',lv:'Lv5'},
+  ]
+];
+
+function renderUpg(idx){
+  const list=document.getElementById('upg-list');
+  list.innerHTML=UPG[idx].map(u=>{
+    if(u.st==='dn') return `
+      <div class="uc dn">
+        <div class="ui dn">${u.ic}</div>
+        <div class="ub">
+          <div class="uid">${u.id}</div>
+          <div class="un">${u.n}</div>
+          <div class="ue">${u.e}</div>
+          <div class="uf"><span class="utag t-dn">TAMAMLANDI</span><span style="font-size:8px;color:var(--inks);">${u.cost}</span></div>
+        </div>
+      </div>`;
+    if(u.st==='av') return `
+      <div class="uc av" style="box-shadow:0 0 0 2px rgba(92,195,154,.3);">
+        <div class="ui av">${u.ic}</div>
+        <div class="ub">
+          <div class="uid">${u.id}</div>
+          <div class="un">${u.n}</div>
+          <div class="ue">${u.e}</div>
+          <div class="uf"><span class="utag t-av">ALINABİLİR</span><button class="ubtn ubuy">${u.cost}</button></div>
+        </div>
+      </div>`;
+    return `
+      <div class="uc lk">
+        <div class="ui lk">🔒</div>
+        <div class="ub">
+          <div class="uid">${u.id}</div>
+          <div class="un" style="color:var(--inks);">${u.n}</div>
+          <div class="ue">${u.e}</div>
+          <div class="uf"><span class="utag t-lk">KİLİTLİ · ${u.lv||''}</span><button class="ubtn udis">${u.cost}</button></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function switchUpg(idx){
+  document.querySelectorAll('#upg-tabs .sh-tab').forEach((t,i)=>{
+    t.classList.toggle('act',i===idx);
+  });
+  renderUpg(idx);
+}
+
+// ── screen router ──────────────────────────────────────────
+const LINEAR=['s0','s1','s2','s3','s4','s5','s6','s7','s_menu','s_upg','s_ach','s_off'];
+const TITLES={
+  s0:'01 · Splash / Açılış',
+  s1:'02 · ONB-1 İlk Müşteri',
+  s2:'03 · ONB-2 Şef Pişiriyor',
+  s3:'04 · ONB-3 İlk Coin',
+  s4:'05 · ONB-4 Sabır Sistemi',
+  s5:'06 · ONB-5 İlk Upgrade',
+  s6:'07 · ONB-6 Offline',
+  s7:'08 · ANA OYUN — Büfe',
+  s_menu:'09 · Menü Ekranı',
+  s_upg:'10 · Upgrade Paneli',
+  s_ach:'11 · Başarımlar',
+  s_off:'12 · Offline Modal',
+};
+let cur=0;
+function showScreen(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  document.getElementById('stitle').textContent=TITLES[id]||id;
+  cur=LINEAR.indexOf(id);
+  if(cur<0)cur=7;
+  document.getElementById('nc').textContent=`${LINEAR.indexOf(id)+1} / ${LINEAR.length}`;
+  document.getElementById('pb').disabled=cur<=0;
+  document.getElementById('nb').disabled=cur>=LINEAR.length-1;
+  if(id==='s_upg'){renderUpg(0);switchUpg(0);}
+}
+function goTo(id){showScreen(id);}
+function go(d){
+  const nxt=Math.max(0,Math.min(LINEAR.length-1,cur+d));
+  showScreen(LINEAR[nxt]);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')go(1);
+  if(e.key==='ArrowLeft')go(-1);
+});
+
+// init
+showScreen('s0');
+</script>
+</body>
+</html>

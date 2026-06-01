@@ -1,0 +1,31 @@
+# Godot 4 generated files
+.godot/
+
+# Godot export builds
+builds/
+export/
+
+# Godot import cache (safe to regenerate)
+*.import
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# VS Code / Cursor
+.vscode/
+.cursor/
+
+# JetBrains
+.idea/
+
+# Logs
+*.log
+
+# Local Claude Code settings
+.claude/settings.local.json

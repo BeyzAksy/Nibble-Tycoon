@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://bottom_nav"]
+
+[ext_resource type="Script" path="res://scripts/ui/BottomNav.gd" id="1_bn"]
+
+[sub_resource type="StyleBoxFlat" id="SB_nav"]
+bg_color = Color(1.0, 1.0, 1.0, 1.0)
+border_width_top = 2
+border_color = Color(0.941, 0.886, 0.824, 1.0)
+shadow_color = Color(0.243, 0.196, 0.216, 0.1)
+shadow_size = 20
+shadow_offset = Vector2(0, -4)
+
+[sub_resource type="StyleBoxFlat" id="SB_tab_active"]
+bg_color = Color(1.0, 0.541, 0.420, 0.12)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.541, 0.420, 0.3)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="SB_tab_empty"]
+
+[node name="BottomNav" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -120.0
+theme_override_styles/panel = SubResource("SB_nav")
+script = ExtResource("1_bn")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TabRestoran" type="Button" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "🏠\nRestoran"
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("SB_tab_active")
+theme_override_styles/hover = SubResource("SB_tab_active")
+theme_override_styles/pressed = SubResource("SB_tab_active")
+
+[node name="TabMenu" type="Button" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "🍽️\nMenü"
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("SB_tab_empty")
+theme_override_styles/hover = SubResource("SB_tab_empty")
+theme_override_styles/pressed = SubResource("SB_tab_empty")
+
+[node name="TabUpgrade" type="Button" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "⬆️\nUpgrade"
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("SB_tab_empty")
+theme_override_styles/hover = SubResource("SB_tab_empty")
+theme_override_styles/pressed = SubResource("SB_tab_empty")
+
+## Yeni upgrade badge noktası
+[node name="NewDot" type="Control" parent="HBox/TabUpgrade"]
+layout_mode = 0
+offset_right = 14.0
+offset_bottom = 14.0
+anchor_left = 1.0
+anchor_right = 1.0
+## ColorRect daire — editörde eklenecek, yeşil mint noktası
+
+[node name="TabBasarim" type="Button" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "🏆\nBaşarım"
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("SB_tab_empty")
+theme_override_styles/hover = SubResource("SB_tab_empty")
+theme_override_styles/pressed = SubResource("SB_tab_empty")

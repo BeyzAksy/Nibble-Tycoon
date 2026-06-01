@@ -1,0 +1,88 @@
+[gd_scene load_steps=2 format=3 uid="uid://customer_node"]
+
+[ext_resource type="Script" path="res://scripts/CustomerNode.gd" id="1_cust"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.310, 0.659, 0.875, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="CustomerNode" type="Node2D"]
+script = ExtResource("1_cust")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+## SpriteFrames editörde atanacak
+## Animasyonlar:
+##   regular_idle   — 2sn döngü, hafif sallantı
+##   aceleci_idle   — 0.8sn döngü, sabırsız hareket
+##   turist_idle    — 4sn döngü, yavaş sallantı
+##   eating         — yeme animasyonu
+## Placeholder: Kenney karakter asset'leri
+
+[node name="OrderBubble" type="Control" parent="."]
+layout_mode = 0
+offset_left   = -40.0
+offset_top    = -80.0
+offset_right  =  40.0
+offset_bottom = -52.0
+## Baloncuk arka planı
+
+[node name="BubbleBG" type="PanelContainer" parent="OrderBubble"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bubble")
+
+[node name="HBox" type="HBoxContainer" parent="OrderBubble/BubbleBG"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StatusIcon" type="Label" parent="OrderBubble/BubbleBG/HBox"]
+layout_mode = 2
+text = "⏳"
+theme_override_font_sizes/font_size = 18
+
+[node name="TimerLabel" type="Label" parent="OrderBubble/BubbleBG/HBox"]
+layout_mode = 2
+text = "Sırada"
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.310, 0.659, 0.875, 1)
+
+[node name="PatienceBarContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left   = -26.0
+offset_top    = -100.0
+offset_right  =  26.0
+offset_bottom = -88.0
+theme_override_constants/separation = 3
+
+[node name="QueueBar" type="TextureProgressBar" parent="PatienceBarContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(52, 6)
+value = 100.0
+## TextureProgress, TextureUnder editörde atanacak
+## Renk Constants.MINT_DEEP, BUTTER_DEEP, CORAL değişir
+
+[node name="FoodBar" type="TextureProgressBar" parent="PatienceBarContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(52, 6)
+value = 100.0
+visible = false
+
+[node name="EmotionLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left   = -14.0
+offset_top    = -118.0
+offset_right  =  14.0
+offset_bottom = -100.0
+text = "😊"
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
