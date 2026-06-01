@@ -176,18 +176,33 @@ SEATED → CANCELLED_ANGRY
 
 ---
 
+### SatisfactionSystem.gd — GDD §2.2
+**Sorumluluk:** Müşteri memnuniyet skoru (0–100) takibi.
+
+- `_on_order_cancelled(_id, reason)` → reason="angry" → `_apply_delta(-PENALTY_ANGRY)`
+- `_on_order_completed(_amount, _total)` → `_apply_delta(+RECOVERY_PER_ORDER)`
+- `_apply_delta(delta)` → clamp → `EventBus.satisfaction_changed.emit(score, actual_delta)`
+- `serialize()` / `deserialize()` → save/load
+
+**Extension noktaları:**
+- Skor mekanik etki (coin/spawn çarpanı) → `_apply_delta()` sonrası EventBus dinleyicisi
+- UI gösterimi → `satisfaction_changed` sinyalini HUDBar'da dinle
+
+---
+
 ## Sistem Bağımlılık Özeti
 
 ```
-CustomerSystem  →[sinyal]→  OrderManager
-OrderManager    →[inject]→  ChefSystem
-OrderManager    →[inject]→  EconomySystem
-ChefSystem      →[inject]→  OrderManager
-UpgradeSystem   →[inject]→  EconomySystem
-UpgradeSystem   →[inject]→  ChefSystem (stats)
-UpgradeSystem   →[inject]→  CustomerSystem (capacity)
-UpgradeSystem   →[inject]→  OfflineSystem (efficiency)
-OfflineSystem   →[inject]→  EconomySystem
+CustomerSystem      →[sinyal]→  OrderManager
+OrderManager        →[inject]→  ChefSystem
+OrderManager        →[inject]→  EconomySystem
+ChefSystem          →[inject]→  OrderManager
+UpgradeSystem       →[inject]→  EconomySystem
+UpgradeSystem       →[inject]→  ChefSystem (stats)
+UpgradeSystem       →[inject]→  CustomerSystem (capacity)
+UpgradeSystem       →[inject]→  OfflineSystem (efficiency)
+OfflineSystem       →[inject]→  EconomySystem
+SatisfactionSystem  →[sinyal]→  (bağımsız — EventBus dinler, inject yok)
 ```
 
 Inject = BufeScene._ready() içinde `system.ref = other_system`.

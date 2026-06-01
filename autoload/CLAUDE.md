@@ -115,7 +115,6 @@ signal achievement_unlocked(achievement_id: String)
 | Sinyal | Açıklama | Eklenme zamanı |
 |--------|---------|----------------|
 | `achievement_unlocked(id)` | Achievement sistemi implementasyonunda | AchievementSystem |
-| `satisfaction_changed(score, delta)` | SatisfactionSystem kurulumunda | SatisfactionSystem |
 | `stage_transition_ready(from, to)` | Kafe geçişi implementasyonunda | Kafe öncesi |
 | `ad_reward_granted(reward_type, value)` | ReklamSystem kurulumunda | Büfe sonu |
 | `daily_special_changed(item_id)` | Günün Özelliği Level 5 | Level 5 |

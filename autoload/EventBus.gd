@@ -31,6 +31,11 @@ signal customer_spawned(customer_id: int, customer_type: String)
 signal customer_patience_changed(customer_id: int, ratio: float)
 signal customer_left(customer_id: int)
 
+# ── SATISFACTION ──────────────────────────────────────────────────────────────
+## Yayıldığı zaman: Her satisfaction skoru değiştiğinde
+## Dinleyenler: HUDBar (ileride), AchievementSystem (ileride)
+signal satisfaction_changed(score: int, delta: int)
+
 # ── LEVEL / PROGRESS ──────────────────────────────────────────────────────────
 signal level_up(new_level: int)
 signal xp_gained(amount: int, total: int)

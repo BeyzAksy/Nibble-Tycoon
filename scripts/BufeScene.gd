@@ -30,7 +30,9 @@
 ##       ├── EconomySystem
 ##       ├── UpgradeSystem
 ##       ├── OfflineSystem
-##       └── SaveSystem
+##       ├── SaveSystem
+##       ├── ProgressionSystem
+##       └── SatisfactionSystem
 
 extends Node2D
 
@@ -56,7 +58,8 @@ extends Node2D
 @onready var upgrade_system     : Node = $Systems/UpgradeSystem
 @onready var offline_system     : Node = $Systems/OfflineSystem
 @onready var save_system        : Node = $Systems/SaveSystem
-@onready var progression_system : Node = $Systems/ProgressionSystem
+@onready var progression_system    : Node = $Systems/ProgressionSystem
+@onready var satisfaction_system   : Node = $Systems/SatisfactionSystem
 
 var _pending_offline_earnings : float = 0.0
 
@@ -134,6 +137,10 @@ func _load_save() -> void:
 	})
 	progression_system.deserialize(prog_data)
 
+	## Satisfaction
+	if satisfaction_system:
+		satisfaction_system.deserialize(data.get("satisfaction", {}))
+
 	## Upgrade
 	if upgrade_system and data.has("upgrades"):
 		upgrade_system.deserialize(data["upgrades"])
@@ -146,10 +153,11 @@ func _save_game() -> void:
 	var offline_data := offline_system.save_close_data(hourly) if offline_system else {}
 
 	var data := {
-		"coins":       economy_system.coins if economy_system else 0.0,
-		"gems":        economy_system.gems  if economy_system else 0,
-		"progression": progression_system.serialize() if progression_system else {},
-		"upgrades":    upgrade_system.serialize() if upgrade_system else {},
+		"coins":        economy_system.coins if economy_system else 0.0,
+		"gems":         economy_system.gems  if economy_system else 0,
+		"progression":  progression_system.serialize()   if progression_system   else {},
+		"satisfaction": satisfaction_system.serialize()  if satisfaction_system  else {},
+		"upgrades":     upgrade_system.serialize()       if upgrade_system       else {},
 	}
 	data.merge(offline_data)
 	save_system.save(data)
