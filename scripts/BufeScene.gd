@@ -49,17 +49,15 @@ extends Node2D
 @onready var welcome_modal      : Control = $UILayer/WelcomeModal
 
 ## Sistemler
-@onready var customer_system  : Node = $Systems/CustomerSystem
-@onready var order_manager    : Node = $Systems/OrderManager
-@onready var chef_system      : Node = $Systems/ChefSystem
-@onready var economy_system   : Node = $Systems/EconomySystem
-@onready var upgrade_system   : Node = $Systems/UpgradeSystem
-@onready var offline_system   : Node = $Systems/OfflineSystem
-@onready var save_system      : Node = $Systems/SaveSystem
+@onready var customer_system    : Node = $Systems/CustomerSystem
+@onready var order_manager      : Node = $Systems/OrderManager
+@onready var chef_system        : Node = $Systems/ChefSystem
+@onready var economy_system     : Node = $Systems/EconomySystem
+@onready var upgrade_system     : Node = $Systems/UpgradeSystem
+@onready var offline_system     : Node = $Systems/OfflineSystem
+@onready var save_system        : Node = $Systems/SaveSystem
+@onready var progression_system : Node = $Systems/ProgressionSystem
 
-# ── XP / LEVEL ────────────────────────────────────────────────────────────────
-var current_level      : int   = 1
-var total_xp           : int   = 0   ## Toplam tamamlanan sipariş sayısı
 var _pending_offline_earnings : float = 0.0
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
@@ -91,9 +89,8 @@ func _wire_systems() -> void:
 	offline_system.economy_system = economy_system
 	offline_system.upgrade_system = upgrade_system
 
-	customer_system.order_manager    = order_manager
-	customer_system.customer_parent  = customer_container
-	customer_system.current_level    = current_level
+	customer_system.order_manager   = order_manager
+	customer_system.customer_parent = customer_container
 
 	## HUD bağlantısı
 	if hud_bar:
@@ -105,7 +102,8 @@ func _wire_systems() -> void:
 
 
 func _connect_signals() -> void:
-	EventBus.xp_gained.connect(_on_xp_gained)
+	EventBus.xp_gained.connect(_on_xp_gained_hud)
+	EventBus.level_up.connect(_on_level_up_scene)
 	EventBus.coin_earned.connect(_on_coin_earned_for_float)
 	EventBus.screen_transition_requested.connect(_on_screen_transition)
 
@@ -129,10 +127,12 @@ func _load_save() -> void:
 		economy_system.coins = data.get("coins", 0.0)
 		economy_system.gems  = data.get("gems",  0)
 
-	## XP / Level
-	total_xp      = data.get("total_xp",  0)
-	current_level = data.get("level",     1)
-	_apply_level(current_level, false)
+	## XP / Level — migration: eski kayıtlarda flat key'ler vardı
+	var prog_data : Dictionary = data.get("progression", {
+		"level":        data.get("level",    1),
+		"total_orders": data.get("total_xp", 0),
+	})
+	progression_system.deserialize(prog_data)
 
 	## Upgrade
 	if upgrade_system and data.has("upgrades"):
@@ -146,11 +146,10 @@ func _save_game() -> void:
 	var offline_data := offline_system.save_close_data(hourly) if offline_system else {}
 
 	var data := {
-		"coins":    economy_system.coins if economy_system else 0.0,
-		"gems":     economy_system.gems  if economy_system else 0,
-		"total_xp": total_xp,
-		"level":    current_level,
-		"upgrades": upgrade_system.serialize() if upgrade_system else {},
+		"coins":       economy_system.coins if economy_system else 0.0,
+		"gems":        economy_system.gems  if economy_system else 0,
+		"progression": progression_system.serialize() if progression_system else {},
+		"upgrades":    upgrade_system.serialize() if upgrade_system else {},
 	}
 	data.merge(offline_data)
 	save_system.save(data)
@@ -175,7 +174,7 @@ func _check_offline_earnings() -> void:
 			earnings,
 			result.get("elapsed_hours", 0.0),
 			result.get("storage_full", false),
-			current_level
+			progression_system.current_level
 		)
 		welcome_modal.collect_pressed.connect(_on_offline_collect)
 		welcome_modal.watch_ad_pressed.connect(_on_offline_2x)
@@ -199,62 +198,43 @@ func _on_offline_2x() -> void:
 
 # ── START GAME ────────────────────────────────────────────────────────────────
 func _start_game() -> void:
-	customer_system.current_level = current_level
+	customer_system.current_level = progression_system.current_level
 	## Müşteri spawn döngüsü CustomerSystem._process içinde otomatik başlar
 
 	## İlk balance render
 	if hud_bar:
-		hud_bar.set_level(current_level)
-		hud_bar.update_xp_bar(_xp_ratio())
+		hud_bar.set_level(progression_system.current_level)
+		hud_bar.update_xp_bar(progression_system.get_xp_ratio())
 
 
 # ── XP / LEVEL ────────────────────────────────────────────────────────────────
-func _on_xp_gained(amount: int, _total: int) -> void:
-	total_xp += amount
-
-	var next_threshold := _get_level_threshold(current_level + 1)
-	if next_threshold > 0 and total_xp >= next_threshold:
-		_level_up()
-
+## xp_gained sinyali gelince sadece HUD XP barını günceller.
+## Level hesabı ProgressionSystem tarafından yapılır.
+func _on_xp_gained_hud(_amount: int, _total: int) -> void:
 	if hud_bar:
-		hud_bar.update_xp_bar(_xp_ratio())
+		hud_bar.update_xp_bar(progression_system.get_xp_ratio())
 
 
-func _level_up() -> void:
-	current_level += 1
-	_apply_level(current_level, true)
-	EventBus.level_up.emit(current_level)
-	EventBus.toast_requested.emit("🎉 Level %d! Yeni içerikler açıldı!" % current_level, "reward")
-
-
-func _apply_level(level: int, is_new: bool) -> void:
-	customer_system.current_level = level
+## ProgressionSystem level_up emit edince UI ve bağlı sistemleri günceller.
+##
+## Args:
+##   new_level: Ulaşılan yeni level.
+func _on_level_up_scene(new_level: int) -> void:
+	customer_system.current_level = new_level
 	if hud_bar:
-		hud_bar.set_level(level)
-
-	## Cafe transition check — GDD §12.2
-	if is_new and level >= 5 and total_xp >= Constants.LEVEL_THRESHOLDS[5]:
+		hud_bar.set_level(new_level)
+		hud_bar.update_xp_bar(progression_system.get_xp_ratio())
+	EventBus.toast_requested.emit("Level %d! Yeni icerikler acildi!" % new_level, "reward")
+	if new_level >= 5:
 		_check_cafe_transition()
 
 
 func _check_cafe_transition() -> void:
-	if economy_system.coins >= Constants.CAFE_TRANSITION_COST:
+	if economy_system and economy_system.coins >= Constants.CAFE_TRANSITION_COST:
 		EventBus.toast_requested.emit(
-			"🏪 Kafe'ye geçmeye hazırsın! Upgrade ekranını kontrol et.",
+			"Kafe'ye gecmeye hazirsin! Upgrade ekranini kontrol et.",
 			"reward"
 		)
-
-
-func _get_level_threshold(level: int) -> int:
-	return Constants.LEVEL_THRESHOLDS.get(level, -1)
-
-
-func _xp_ratio() -> float:
-	var current_threshold := _get_level_threshold(current_level)
-	var next_threshold    := _get_level_threshold(current_level + 1)
-	if next_threshold < 0 or next_threshold <= current_threshold:
-		return 1.0
-	return float(total_xp - current_threshold) / float(next_threshold - current_threshold)
 
 
 # ── CHEF / STOVE VISUALS ──────────────────────────────────────────────────────
@@ -311,4 +291,4 @@ func _hide_all_panels() -> void:
 
 func _refresh_upgrade_ui() -> void:
 	if upgrade_panel and upgrade_panel.has_method("refresh"):
-		upgrade_panel.refresh(current_level)
+		upgrade_panel.refresh(progression_system.current_level)
