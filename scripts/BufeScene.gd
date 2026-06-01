@@ -95,10 +95,6 @@ func _wire_systems() -> void:
 	customer_system.order_manager   = order_manager
 	customer_system.customer_parent = customer_container
 
-	## HUD bağlantısı
-	if hud_bar:
-		hud_bar.connect_to_economy(economy_system)
-
 	## Upgrade/MenuPanel referansları
 	if upgrade_panel and upgrade_panel.has_method("setup"):
 		upgrade_panel.setup(upgrade_system, economy_system)
@@ -110,13 +106,10 @@ func _connect_signals() -> void:
 	EventBus.coin_earned.connect(_on_coin_earned_for_float)
 	EventBus.screen_transition_requested.connect(_on_screen_transition)
 
-	if chef_system:
-		chef_system.slot_started_cooking.connect(_on_slot_cooking)
-		chef_system.slot_finished.connect(_on_slot_finished)
-		chef_system.boost_tick.connect(_on_boost_tick)
-
-	if upgrade_system:
-		upgrade_system.upgrade_ui_refresh_needed.connect(_refresh_upgrade_ui)
+	EventBus.chef_slot_started_cooking.connect(_on_slot_cooking)
+	EventBus.chef_slot_finished.connect(_on_slot_finished)
+	EventBus.chef_boost_tick.connect(_on_boost_tick)
+	EventBus.upgrade_purchased.connect(func(_id: String) -> void: _refresh_upgrade_ui())
 
 
 # ── SAVE SYSTEM ───────────────────────────────────────────────────────────────

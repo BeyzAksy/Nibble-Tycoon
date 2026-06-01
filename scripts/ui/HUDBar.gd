@@ -15,7 +15,7 @@ extends Control
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
-	## EconomySystem directly connected (by BufeScene)
+	EventBus.balance_changed.connect(_on_balance_changed)
 	EventBus.xp_gained.connect(_on_xp_gained)
 	EventBus.level_up.connect(_on_level_up)
 
@@ -25,9 +25,6 @@ func _ready() -> void:
 	## Initial render
 	_refresh_display(0.0, 0)
 
-
-func connect_to_economy(economy: Node) -> void:
-	economy.balance_changed.connect(_on_balance_changed)
 
 
 # ── UPDATES ───────────────────────────────────────────────────────────────────

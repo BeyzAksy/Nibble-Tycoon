@@ -25,9 +25,9 @@ func test_earn_coins_accumulates() -> void:
 	assert_almost_eq(economy.coins, 125.0, 0.01)
 
 func test_earn_coins_emits_signal() -> void:
-	watch_signals(economy)
+	watch_signals(EventBus)
 	economy.earn_coins(200.0, "order")
-	assert_signal_emitted(economy, "balance_changed",
+	assert_signal_emitted(EventBus, "balance_changed",
 		"balance_changed signal must fire when coins are earned")
 
 func test_earn_coins_zero_does_not_change_balance() -> void:
@@ -60,9 +60,9 @@ func test_spend_coins_exact_balance() -> void:
 
 func test_spend_coins_emits_signal_on_success() -> void:
 	economy.coins = 1000.0
-	watch_signals(economy)
+	watch_signals(EventBus)
 	economy.spend_coins(500.0)
-	assert_signal_emitted(economy, "balance_changed")
+	assert_signal_emitted(EventBus, "balance_changed")
 
 # ── GEM EARN ──────────────────────────────────────────────────────────────────
 
