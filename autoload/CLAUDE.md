@@ -51,7 +51,6 @@ const BOOST_MULTIPLIER := 0.5   ## cooking time ×0.5 (halved)
 | Yapı | Açıklama | Öncelik |
 |------|---------|---------|
 | `CUSTOMER_TYPES` dict | Tüm müşteri tipleri (şu an inline Constants sabitleri) | Yüksek |
-| `ACHIEVEMENTS` dict | Achievement tanımları (GDD §11) | Orta |
 | `STAGE_TRANSITIONS` dict | Geçiş koşulları her aşama için | Kafe öncesi |
 
 ### Düzenleme Yasağı
@@ -114,7 +113,6 @@ signal achievement_unlocked(achievement_id: String)
 
 | Sinyal | Açıklama | Eklenme zamanı |
 |--------|---------|----------------|
-| `achievement_unlocked(id)` | Achievement sistemi implementasyonunda | AchievementSystem |
 | `stage_transition_ready(from, to)` | Kafe geçişi implementasyonunda | Kafe öncesi |
 | `ad_reward_granted(reward_type, value)` | ReklamSystem kurulumunda | Büfe sonu |
 | `daily_special_changed(item_id)` | Günün Özelliği Level 5 | Level 5 |

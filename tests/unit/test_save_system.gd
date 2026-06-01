@@ -166,20 +166,27 @@ func test_migrate_v0_adds_permanent_bonuses() -> void:
 	assert_true(bonuses.is_empty(), "permanent_bonuses boş dict olmalı")
 
 
-func test_migrate_v0_sets_version_to_1() -> void:
+func test_migrate_v0_sets_version_to_current() -> void:
 	var data : Dictionary = {"coins": 100.0}
 	var result : Dictionary = save_sys.migrate(data)
-	assert_eq(int(result.get("version", -1)), 1,
-		"v0 migrate sonrası version=1 olmalı")
+	assert_eq(int(result.get("version", -1)), Constants.CURRENT_SAVE_VERSION,
+		"v0 migrate sonrası version CURRENT_SAVE_VERSION olmalı")
 
 
-func test_migrate_v1_is_noop() -> void:
+func test_migrate_v1_upgrades_to_v2() -> void:
 	var data : Dictionary = {"version": 1, "coins": 250.0, "permanent_bonuses": {"ach_05": true}}
 	var result : Dictionary = save_sys.migrate(data)
-	assert_eq(result.get("version", -1), 1)
+	assert_eq(result.get("version", -1), 2)
 	var bonuses : Dictionary = result.get("permanent_bonuses", {})
 	assert_true(bonuses.has("ach_05"),
-		"Güncel versiyonda permanent_bonuses dokunulmamalı")
+		"Migration sonrası permanent_bonuses korunmalı")
+
+
+func test_migrate_v1_adds_achievements_field() -> void:
+	var data : Dictionary = {"version": 1, "coins": 100.0, "permanent_bonuses": {}}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_true(result.has("achievements"),
+		"v1→v2 migration achievements field eklemeli")
 
 
 func test_migrate_preserves_existing_data() -> void:

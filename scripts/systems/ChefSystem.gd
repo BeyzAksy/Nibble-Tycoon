@@ -12,6 +12,7 @@ extends Node
 # ── STATE ─────────────────────────────────────────────────────────────────────
 var speed_multiplier : float = 1.0
 var chef_quality     : int   = 1
+var tea_cook_mult    : float = 1.0   ## ACH_06 kalıcı bonus: çay pişirme −%10 → 0.9
 var slot_count       : int   = 1   ## Upgrade ile 2'ye çıkar
 var priority_bump_active : bool = false   ## CHF_04 ile aktif
 
@@ -97,7 +98,13 @@ func _calc_cook_time(base_time: float, item_id: String) -> float:
 	if _boost_active:
 		mult *= (1.0 / BOOST_MULTIPLIER)
 
-	return base_time / mult
+	var effective : float = base_time / mult
+
+	## ACH_06: çay için kalıcı pişirme süresi bonusu
+	if item_id == "tea":
+		effective *= tea_cook_mult
+
+	return effective
 
 
 # ── SPEED BOOST ───────────────────────────────────────────────────────────────
