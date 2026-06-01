@@ -153,11 +153,13 @@ func _save_game() -> void:
 	var offline_data := offline_system.save_close_data(hourly) if offline_system else {}
 
 	var data := {
-		"coins":        economy_system.coins if economy_system else 0.0,
-		"gems":         economy_system.gems  if economy_system else 0,
-		"progression":  progression_system.serialize()   if progression_system   else {},
-		"satisfaction": satisfaction_system.serialize()  if satisfaction_system  else {},
-		"upgrades":     upgrade_system.serialize()       if upgrade_system       else {},
+		"version":        Constants.CURRENT_SAVE_VERSION,
+		"permanent_bonuses": {},   ## AchievementSystem scaffold — ACH_05/06 dolduracak
+		"coins":          economy_system.coins if economy_system else 0.0,
+		"gems":           economy_system.gems  if economy_system else 0,
+		"progression":    progression_system.serialize()  if progression_system  else {},
+		"satisfaction":   satisfaction_system.serialize() if satisfaction_system else {},
+		"upgrades":       upgrade_system.serialize()      if upgrade_system      else {},
 	}
 	data.merge(offline_data)
 	save_system.save(data)

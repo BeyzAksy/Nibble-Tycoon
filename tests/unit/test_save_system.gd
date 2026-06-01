@@ -153,3 +153,53 @@ func test_load_returns_empty_on_corrupted_json() -> void:
 	var loaded := _load()
 	assert_true(loaded.is_empty(),
 		"Corrupted JSON → must return empty dictionary without crash")
+
+
+# ── MIGRATION ─────────────────────────────────────────────────────────────────
+
+func test_migrate_v0_adds_permanent_bonuses() -> void:
+	var data : Dictionary = {"coins": 500.0}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_true(result.has("permanent_bonuses"),
+		"v0 save migrate sonrası permanent_bonuses içermeli")
+	var bonuses : Dictionary = result.get("permanent_bonuses", {"_sentinel": true})
+	assert_true(bonuses.is_empty(), "permanent_bonuses boş dict olmalı")
+
+
+func test_migrate_v0_sets_version_to_1() -> void:
+	var data : Dictionary = {"coins": 100.0}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_eq(int(result.get("version", -1)), 1,
+		"v0 migrate sonrası version=1 olmalı")
+
+
+func test_migrate_v1_is_noop() -> void:
+	var data : Dictionary = {"version": 1, "coins": 250.0, "permanent_bonuses": {"ach_05": true}}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_eq(result.get("version", -1), 1)
+	var bonuses : Dictionary = result.get("permanent_bonuses", {})
+	assert_true(bonuses.has("ach_05"),
+		"Güncel versiyonda permanent_bonuses dokunulmamalı")
+
+
+func test_migrate_preserves_existing_data() -> void:
+	var data : Dictionary = {"coins": 1234.5, "gems": 7, "level": 3}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_almost_eq(float(result.get("coins", 0.0)), 1234.5, 0.01,
+		"Migration sonrası coins korunmalı")
+	assert_eq(int(result.get("gems",  0)), 7, "gems korunmalı")
+	assert_eq(int(result.get("level", 0)), 3, "level korunmalı")
+
+
+func test_migrate_idempotent_permanent_bonuses() -> void:
+	var data : Dictionary = {"coins": 50.0, "permanent_bonuses": {"ach_06": true}}
+	var result : Dictionary = save_sys.migrate(data)
+	var bonuses : Dictionary = result.get("permanent_bonuses", {})
+	assert_true(bonuses.has("ach_06"), "Mevcut permanent_bonuses korunmalı")
+
+
+func test_migrate_future_version_returns_empty() -> void:
+	var data : Dictionary = {"version": 999, "coins": 100.0}
+	var result : Dictionary = save_sys.migrate(data)
+	assert_true(result.is_empty(),
+		"version > current → boş dict dönmeli (fresh save)")
