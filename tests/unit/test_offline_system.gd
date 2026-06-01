@@ -4,15 +4,18 @@
 
 extends GutTest
 
-var offline : Node
-var economy : Node
+const EconomySystem = preload("res://scripts/systems/EconomySystem.gd")
+const OfflineSystem = preload("res://scripts/systems/OfflineSystem.gd")
+
+var offline : OfflineSystem
+var economy : EconomySystem
 
 func before_each() -> void:
-	economy = preload("res://scripts/systems/EconomySystem.gd").new()
+	economy = EconomySystem.new()
 	add_child_autofree(economy)
 	economy.coins = 0.0
 
-	offline = preload("res://scripts/systems/OfflineSystem.gd").new()
+	offline = OfflineSystem.new()
 	add_child_autofree(offline)
 	offline.economy_system     = economy
 	offline.max_offline_hours  = 4.0

@@ -3,15 +3,18 @@
 
 extends GutTest
 
-var upgrade : Node
-var economy : Node
+const EconomySystem = preload("res://scripts/systems/EconomySystem.gd")
+const UpgradeSystem = preload("res://scripts/systems/UpgradeSystem.gd")
+
+var upgrade : UpgradeSystem
+var economy : EconomySystem
 
 func before_each() -> void:
-	economy = preload("res://scripts/systems/EconomySystem.gd").new()
+	economy = EconomySystem.new()
 	add_child_autofree(economy)
 	economy.coins = 99999.0
 
-	upgrade = preload("res://scripts/systems/UpgradeSystem.gd").new()
+	upgrade = UpgradeSystem.new()
 	add_child_autofree(upgrade)
 	upgrade.economy_system = economy
 

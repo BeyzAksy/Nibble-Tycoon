@@ -208,6 +208,7 @@ Bir issue "Done" sayılmadan önce tüm maddeler geçmeli:
 
 - [ ] Tüm AC'ler karşılandı
 - [ ] GUT testi yazıldı (public fonksiyonlar için)
+- [ ] `make test` çalıştırıldı — tüm testler geçiyor (0 failure, 0 risky)
 - [ ] Linter hatasız (`gdlint` veya Godot parser)
 - [ ] Magic number yok, her sayı `Constants.gd`'de
 - [ ] Direkt sistem çağrısı yok (EventBus kullanıldı)

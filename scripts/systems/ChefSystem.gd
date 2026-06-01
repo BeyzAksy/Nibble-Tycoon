@@ -130,4 +130,7 @@ func is_slot_busy(slot_index: int) -> bool:
 
 
 func get_slot_order_id(slot_index: int) -> int:
-	return _cooking_slots[slot_index] if slot_index < slot_count else -1
+	if slot_index >= slot_count:
+		return -1
+	var val = _cooking_slots[slot_index]
+	return val if val != null else -1

@@ -3,10 +3,12 @@
 
 extends GutTest
 
-var progression : Node
+const ProgressionSystem = preload("res://scripts/systems/ProgressionSystem.gd")
+
+var progression : ProgressionSystem
 
 func before_each() -> void:
-	progression = preload("res://scripts/systems/ProgressionSystem.gd").new()
+	progression = ProgressionSystem.new()
 	add_child_autofree(progression)
 	progression.current_level = 1
 	progression.total_orders  = 0

@@ -58,6 +58,16 @@ Senior Godot/GDScript game developer. Tek kişiyle (operatör) partner olarak ç
 - `scripts/systems/` — 8 core sistem
 - `docs/bufe_asama_gdd.md` — tasarım kaynağı
 
+## Test Kuralı
+
+Her geliştirme sonunda **tüm testler çalıştırılır ve geçmesi zorunludur:**
+
+```
+make test   # 161/161 — hepsi geçmeli
+```
+
+Tek bir test bile başarısız olursa commit yapılmaz, önce düzeltilir.
+
 ## Yasak Davranışlar
 
 - ❌ Magic number — her sayı `Constants.gd`'de
@@ -68,7 +78,7 @@ Senior Godot/GDScript game developer. Tek kişiyle (operatör) partner olarak ç
 - ❌ Global state (autoload dışında)
 - ❌ Upgrade efektini `_apply_effect()` dışında uygulamak
 - ❌ Türkçe kod identifier
-- ❌ Test geçmiyorken commit
+- ❌ Test geçmiyorken commit (`make test` temiz olmadan commit yok)
 
 ## Açık Kararlar
 
