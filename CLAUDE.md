@@ -86,7 +86,6 @@ Tek bir test bile başarısız olursa commit yapılmaz, önce düzeltilir.
 |------|-------|
 | Kafe aşaması mimarisi | Taslak yok |
 | AchievementSystem | GDD §11 var, kod yok |
-| SatisfactionSystem | Sinyal var, implementation yok |
 | ReklamSystem / AdMob | GDD §9 var, kod yok |
 | IAP sistemi | GDD §5.1 fiyatlar var, kod yok |
 | Günün Özelliği mekanizması | Constants'ta placeholder |
