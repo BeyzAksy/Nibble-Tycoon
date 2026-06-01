@@ -60,6 +60,7 @@ extends Node2D
 @onready var save_system        : Node = $Systems/SaveSystem
 @onready var progression_system    : Node = $Systems/ProgressionSystem
 @onready var satisfaction_system   : Node = $Systems/SatisfactionSystem
+@onready var achievement_system    : Node = $Systems/AchievementSystem
 
 var _pending_offline_earnings : float = 0.0
 
@@ -94,6 +95,11 @@ func _wire_systems() -> void:
 
 	customer_system.order_manager   = order_manager
 	customer_system.customer_parent = customer_container
+
+	if achievement_system:
+		achievement_system.economy_system = economy_system
+		achievement_system.chef_system    = chef_system
+		achievement_system.offline_system = offline_system
 
 	## Upgrade/MenuPanel referansları
 	if upgrade_panel and upgrade_panel.has_method("setup"):
@@ -134,6 +140,10 @@ func _load_save() -> void:
 	if satisfaction_system:
 		satisfaction_system.deserialize(data.get("satisfaction", {}))
 
+	## Achievements (deserialize kalıcı bonusları da uygular)
+	if achievement_system:
+		achievement_system.deserialize(data.get("achievements", {}))
+
 	## Upgrade
 	if upgrade_system and data.has("upgrades"):
 		upgrade_system.deserialize(data["upgrades"])
@@ -145,14 +155,16 @@ func _save_game() -> void:
 	var hourly := economy_system.calculate_hourly_rate(upgrade_system) if economy_system else 0.0
 	var offline_data := offline_system.save_close_data(hourly) if offline_system else {}
 
+	var ach_data := achievement_system.serialize() if achievement_system else {}
 	var data := {
-		"version":        Constants.CURRENT_SAVE_VERSION,
-		"permanent_bonuses": {},   ## AchievementSystem scaffold — ACH_05/06 dolduracak
-		"coins":          economy_system.coins if economy_system else 0.0,
-		"gems":           economy_system.gems  if economy_system else 0,
-		"progression":    progression_system.serialize()  if progression_system  else {},
-		"satisfaction":   satisfaction_system.serialize() if satisfaction_system else {},
-		"upgrades":       upgrade_system.serialize()      if upgrade_system      else {},
+		"version":           Constants.CURRENT_SAVE_VERSION,
+		"achievements":      ach_data,
+		"permanent_bonuses": ach_data.get("permanent_bonuses", {}),
+		"coins":             economy_system.coins if economy_system else 0.0,
+		"gems":              economy_system.gems  if economy_system else 0,
+		"progression":       progression_system.serialize()  if progression_system  else {},
+		"satisfaction":      satisfaction_system.serialize() if satisfaction_system else {},
+		"upgrades":          upgrade_system.serialize()      if upgrade_system      else {},
 	}
 	data.merge(offline_data)
 	save_system.save(data)
@@ -165,6 +177,11 @@ func _check_offline_earnings() -> void:
 		return
 
 	var result := offline_system.calculate_earnings(saved)
+
+	## ACH_05: 2 saat offline bekleme koşulu
+	if achievement_system:
+		achievement_system.notify_offline_sleep(result.get("elapsed_hours", 0.0))
+
 	var earnings : float = result.get("earnings", 0.0)
 	if earnings <= 0.0:
 		return

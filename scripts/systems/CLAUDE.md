@@ -136,7 +136,8 @@ SEATED → CANCELLED_ANGRY
 - `save(data: Dictionary)` → user://lezzet_save.json
 - `load_data()` → migrate(data) sonrası Dictionary; dosya yoksa {}
 - `migrate(data: Dictionary) -> Dictionary` → CURRENT_SAVE_VERSION'a yükseltir
-- `_migrate_v0_to_v1(data)` → permanent_bonuses: {} ekler (AchievementSystem scaffold)
+- `_migrate_v0_to_v1(data)` → permanent_bonuses: {} ekler
+- `_migrate_v1_to_v2(data)` → achievements: {} ekler (LI-55)
 - `delete_save()` → sıfırlama
 
 **Versiyonlama kuralı:** Yeni save field eklenince `Constants.CURRENT_SAVE_VERSION` arttırılır,
@@ -179,6 +180,28 @@ SEATED → CANCELLED_ANGRY
 
 ---
 
+### AchievementSystem.gd — GDD §11
+**Sorumluluk:** Achievement kilit açma ve kalıcı bonus yönetimi.
+
+- `_on_order_completed()` → sipariş sayısı + ACH_01/03/04 kontrolü
+- `_on_order_cancelled()` → ACH_04 streak sıfırla
+- `_on_order_ready(item_id)` → tea sayımı + ACH_06 kontrolü
+- `_on_upgrade_purchased()` → ACH_02 kontrolü
+- `notify_offline_sleep(hours)` → BufeScene'den çağrılır, ACH_05 kontrolü
+- `_check_and_unlock(ach_id)` → idempotent unlock + ödül + kalıcı bonus
+- `serialize()` / `deserialize()` → save entegrasyonu; deserialize kalıcı bonusları yeniden uygular
+
+**Inject edilenler (BufeScene._wire_systems):**
+- `economy_system` → coin/gem ödülleri için
+- `chef_system` → ACH_06: `tea_cook_mult = 0.9`
+- `offline_system` → ACH_05: `permanent_offline_mult = 1.05`
+
+**Extension noktaları:**
+- ACH_07–ACH_10 → `_is_condition_met` match'e yeni case, gerekirse yeni sinyal
+- Yeni kalıcı bonus tipi → `_apply_permanent_bonus` match'e case + ilgili sisteme inject
+
+---
+
 ### SatisfactionSystem.gd — GDD §2.2
 **Sorumluluk:** Müşteri memnuniyet skoru (0–100) takibi.
 
@@ -206,6 +229,9 @@ UpgradeSystem       →[inject]→  CustomerSystem (capacity)
 UpgradeSystem       →[inject]→  OfflineSystem (efficiency)
 OfflineSystem       →[inject]→  EconomySystem
 SatisfactionSystem  →[sinyal]→  (bağımsız — EventBus dinler, inject yok)
+AchievementSystem   →[inject]→  EconomySystem (ödül)
+AchievementSystem   →[inject]→  ChefSystem    (ACH_06 tea_cook_mult)
+AchievementSystem   →[inject]→  OfflineSystem (ACH_05 permanent_offline_mult)
 ```
 
 Inject = BufeScene._ready() içinde `system.ref = other_system`.

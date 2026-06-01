@@ -99,7 +99,7 @@ const SPLASH_DURATION      := 2.5   ## Saniye — sonra main scene'e geç
 const SPLASH_FADE_DURATION := 0.4   ## Fade-out süresi
 
 # ── SAVE VERSIONING ───────────────────────────────────────────────────────────
-const CURRENT_SAVE_VERSION := 1
+const CURRENT_SAVE_VERSION := 2
 
 # ── BUFFET STAGE CONSTANTS (GDD §14) ─────────────────────────────────────────
 
@@ -172,6 +172,70 @@ const LEVEL_THRESHOLDS := {
 ## Kafe geçiş koşulu
 const CAFE_TRANSITION_COST := 5000
 
+# ── ACHIEVEMENT SYSTEM (GDD §11) ─────────────────────────────────────────────
+
+## Achievement tanımları — AchievementSystem ve AchievementPanel paylaşır
+const ACHIEVEMENT_DEFS := {
+	"ACH_01": {
+		"name": "İlk Sipariş", "desc": "1 sipariş tamamla",
+		"reward": "100₺ + rozet", "hidden": false, "icon": "🍽️",
+	},
+	"ACH_02": {
+		"name": "İlk Yükseltme", "desc": "İlk upgrade'i satın al",
+		"reward": "200₺ + 2💎", "hidden": false, "icon": "⬆️",
+	},
+	"ACH_03": {
+		"name": "Hızlı Aşçı", "desc": "5 siparişi 3 dakikada servis et",
+		"reward": "300₺", "hidden": false, "icon": "⚡", "max": 5,
+	},
+	"ACH_04": {
+		"name": "Sıfır İptal", "desc": "20 siparişi iptalsiz tamamla",
+		"reward": "500₺ + dekor", "hidden": false, "icon": "🎯", "max": 20,
+	},
+	"ACH_05": {
+		"name": "İlk Uyku", "desc": "2 saat offline bekle",
+		"reward": "1💎 + offline+%5", "hidden": false, "icon": "🌙",
+	},
+	"ACH_06": {
+		"name": "Çay Ustası", "desc": "50 çay servis et",
+		"reward": "300₺ + çay−%10", "hidden": false, "icon": "🫖", "max": 50,
+	},
+	"ACH_07": {
+		"name": "Tam Dolu", "desc": "Tüm tabure + sıra aynı anda dolu",
+		"reward": "500₺", "hidden": false, "icon": "💯",
+	},
+	"ACH_08": {
+		"name": "Menü Tamamlandı", "desc": "4 menü itemını aç",
+		"reward": "1.000₺ + 5💎", "hidden": false, "icon": "📋",
+	},
+	"ACH_09": {
+		"name": "Büfe Emektarı", "desc": "500 sipariş tamamla",
+		"reward": "2.000₺ + unvan", "hidden": false, "icon": "🏅", "max": 500,
+	},
+	"ACH_10": {
+		"name": "Gece Kuşu", "desc": "???",
+		"reward": "Gizli kostüm", "hidden": true, "icon": "🌙",
+	},
+}
+
+## Achievement koşulları (GDD §11)
+const ACH_01_ORDER_THRESHOLD    := 1      ## İlk Sipariş: kaç sipariş
+const ACH_03_ORDER_COUNT        := 5      ## Hızlı Aşçı: penceredeki sipariş sayısı
+const ACH_03_TIME_WINDOW_SEC    := 180.0  ## Hızlı Aşçı: pencere genişliği (saniye)
+const ACH_04_STREAK             := 20     ## Sıfır İptal: arka arkaya iptalsiz sipariş
+const ACH_05_MIN_OFFLINE_HOURS  := 2.0    ## İlk Uyku: minimum offline süre (saat)
+const ACH_05_OFFLINE_BONUS_MULT := 1.05   ## İlk Uyku: offline kazanç kalıcı çarpanı
+const ACH_06_TEA_COUNT          := 50     ## Çay Ustası: kaç çay servis edilmeli
+const ACH_06_TEA_COOK_MULT      := 0.9    ## Çay Ustası: çay pişirme süresi çarpanı (−%10)
+
+## Achievement coin/gem ödülleri (GDD §11)
+const ACH_01_REWARD_COINS  := 100.0
+const ACH_02_REWARD_COINS  := 200.0
+const ACH_02_REWARD_GEMS   := 2
+const ACH_04_REWARD_COINS  := 500.0
+const ACH_05_REWARD_GEMS   := 1
+const ACH_06_REWARD_COINS  := 300.0
+
 # ── HELPER FUNCTIONS ──────────────────────────────────────────────────────────
 
 ## Sabır oranına göre renk döndürür
@@ -189,7 +253,8 @@ static func calc_order_value(base_price: int, chef_quality: int) -> float:
 
 ## Bahşiş hesapla
 static func calc_tip(base_price: int, patience_ratio: float, chef_quality: int) -> float:
-	return base_price * patience_ratio * TIP_PATIENCE_MULT + chef_quality * TIP_QUALITY_MULT
+	return base_price * patience_ratio * TIP_PATIENCE_MULT \
+		+ chef_quality * TIP_QUALITY_MULT
 
 ## Offline kazanç hesapla
 static func calc_offline_earnings(

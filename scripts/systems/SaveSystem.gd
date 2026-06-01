@@ -72,15 +72,26 @@ func migrate(data: Dictionary) -> Dictionary:
 	if version < 1:
 		_migrate_v0_to_v1(data)
 
+	if version < 2:
+		_migrate_v1_to_v2(data)
+
 	return data
 
 
-## v0 → v1: permanent_bonuses field eklenir (AchievementSystem scaffold).
+## v0 → v1: permanent_bonuses field eklenir.
 ## Zaten varsa dokunulmaz (idempotent).
 func _migrate_v0_to_v1(data: Dictionary) -> void:
 	if not data.has("permanent_bonuses"):
 		data["permanent_bonuses"] = {}
 	data["version"] = 1
+
+
+## v1 → v2: achievements field eklenir (AchievementSystem).
+## Zaten varsa dokunulmaz (idempotent).
+func _migrate_v1_to_v2(data: Dictionary) -> void:
+	if not data.has("achievements"):
+		data["achievements"] = {}
+	data["version"] = 2
 
 
 # ── RESET ─────────────────────────────────────────────────────────────────────

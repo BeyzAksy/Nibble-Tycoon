@@ -4,8 +4,9 @@
 extends Node
 
 # ── STATE ─────────────────────────────────────────────────────────────────────
-var max_offline_hours   : float = 4.0
-var offline_efficiency  : float = Constants.MIN_OFFLINE_EFFICIENCY
+var max_offline_hours        : float = 4.0
+var offline_efficiency       : float = Constants.MIN_OFFLINE_EFFICIENCY
+var permanent_offline_mult   : float = 1.0   ## ACH_05 kalıcı bonus: offline kazanç ×1.05
 
 ## Referanslar
 var economy_system  : Node = null
@@ -40,6 +41,9 @@ func calculate_earnings(save_data: Dictionary) -> Dictionary:
 		max_hours,
 		efficiency
 	)
+
+	## ACH_05: kalıcı offline bonus çarpanı
+	earnings *= permanent_offline_mult
 
 	## Depo doluysa uyarı (GDD §8 — "⚠ Depo doldu" mesajı)
 	var storage_full : bool = elapsed_hours > max_hours

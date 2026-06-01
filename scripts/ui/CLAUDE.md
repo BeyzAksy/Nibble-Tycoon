@@ -155,10 +155,12 @@ func _build_menu_list() -> void:
 
 **Sorumluluk:** Achievement listesini göster.
 
-**Durum:** `AchievementSystem.gd` henüz implement edilmedi. Panel bu sisteme bağlanacak.
+**Durum:** `AchievementSystem.gd` implement edildi (LI-55). Panel sisteme bağlı.
 
-**Dinleyecek sinyal (ileride):**
-- `EventBus.achievement_unlocked(achievement_id)` → rozet animasyon + liste güncelle
+**ACHIEVEMENT_DEFS:** `Constants.ACHIEVEMENT_DEFS`'ten okunur — panelde lokal kopya yok.
+
+**Dinlediği sinyal:**
+- `EventBus.achievement_unlocked(achievement_id)` → `_unlocked` dict güncelle + liste yenile
 
 ---
 

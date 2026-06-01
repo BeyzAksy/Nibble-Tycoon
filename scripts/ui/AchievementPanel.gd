@@ -6,19 +6,6 @@ extends Control
 @onready var list_container : VBoxContainer = $ScrollContainer/ListContainer
 @onready var points_label   : Label         = $Header/PointsLabel
 
-const ACHIEVEMENT_DEFS := {
-	"ACH_01": {"name":"İlk Sipariş",    "desc":"1 sipariş tamamla",                 "reward":"100₺ + rozet",      "hidden":false, "icon":"🍽️"},
-	"ACH_02": {"name":"İlk Yükseltme",  "desc":"İlk upgrade'i satın al",            "reward":"200₺ + 2💎",        "hidden":false, "icon":"⬆️"},
-	"ACH_03": {"name":"Hızlı Aşçı",     "desc":"5 siparişi 3 dakikada servis et",   "reward":"300₺",              "hidden":false, "icon":"⚡", "max":5},
-	"ACH_04": {"name":"Sıfır İptal",    "desc":"20 siparişi iptalsiz tamamla",      "reward":"500₺ + dekor",      "hidden":false, "icon":"🎯", "max":20},
-	"ACH_05": {"name":"İlk Uyku",       "desc":"2 saat offline bekle",              "reward":"1💎 + offline+%5", "hidden":false, "icon":"🌙"},
-	"ACH_06": {"name":"Çay Ustası",     "desc":"50 çay servis et",                  "reward":"300₺ + çay−%10",   "hidden":false, "icon":"🫖", "max":50},
-	"ACH_07": {"name":"Tam Dolu",       "desc":"Tüm tabure + sıra aynı anda dolu", "reward":"500₺",              "hidden":false, "icon":"💯"},
-	"ACH_08": {"name":"Menü Tamamlandı","desc":"4 menü itemını aç",                 "reward":"1.000₺ + 5💎",     "hidden":false, "icon":"📋"},
-	"ACH_09": {"name":"Büfe Emektarı",  "desc":"500 sipariş tamamla",               "reward":"2.000₺ + unvan",   "hidden":false, "icon":"🏅", "max":500},
-	"ACH_10": {"name":"Gece Kuşu",      "desc":"???",                               "reward":"Gizli kostüm",     "hidden":true,  "icon":"🌙"},
-}
-
 var _unlocked  : Dictionary = {}   ## achievement_id → bool
 var _progress  : Dictionary = {}   ## achievement_id → int (ilerleme)
 var _total_pts : int        = 0
@@ -40,7 +27,7 @@ func _on_achievement_unlocked(ach_id: String) -> void:
 
 func update_progress(ach_id: String, value: int) -> void:
 	_progress[ach_id] = value
-	var def : Dictionary = ACHIEVEMENT_DEFS.get(ach_id, {})
+	var def : Dictionary = Constants.ACHIEVEMENT_DEFS.get(ach_id, {})
 	if value >= def.get("max", 1) and not _unlocked.get(ach_id, false):
 		EventBus.achievement_unlocked.emit(ach_id)
 
@@ -49,8 +36,8 @@ func _build_list() -> void:
 	for child in list_container.get_children():
 		child.queue_free()
 
-	for ach_id in ACHIEVEMENT_DEFS:
-		var def     : Dictionary = ACHIEVEMENT_DEFS[ach_id]
+	for ach_id in Constants.ACHIEVEMENT_DEFS:
+		var def     : Dictionary = Constants.ACHIEVEMENT_DEFS[ach_id]
 		var done    : bool       = _unlocked.get(ach_id, false)
 		var prog    : int        = _progress.get(ach_id, 0)
 		var hidden  : bool       = def.get("hidden", false)

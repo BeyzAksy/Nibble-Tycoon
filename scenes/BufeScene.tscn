@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bufe_main"]
+[gd_scene load_steps=12 format=3 uid="uid://bufe_main"]
 
 [ext_resource type="Script" path="res://scripts/BufeScene.gd"              id="1_bufe"]
 [ext_resource type="Script" path="res://scripts/ui/HUDBar.gd"              id="2_hud"]
@@ -10,7 +10,8 @@
 [ext_resource type="Script" path="res://scripts/systems/UpgradeSystem.gd"  id="8_upg"]
 [ext_resource type="Script" path="res://scripts/systems/OfflineSystem.gd"  id="9_offline"]
 [ext_resource type="Script" path="res://scripts/systems/SaveSystem.gd"        id="10_save"]
-[ext_resource type="Script" path="res://scripts/systems/ProgressionSystem.gd" id="11_prog"]
+[ext_resource type="Script" path="res://scripts/systems/ProgressionSystem.gd"  id="11_prog"]
+[ext_resource type="Script" path="res://scripts/systems/AchievementSystem.gd" id="12_ach"]
 
 [node name="BufeScene" type="Node2D"]
 script = ExtResource("1_bufe")
@@ -175,3 +176,6 @@ script = ExtResource("10_save")
 
 [node name="ProgressionSystem" type="Node" parent="Systems"]
 script = ExtResource("11_prog")
+
+[node name="AchievementSystem" type="Node" parent="Systems"]
+script = ExtResource("12_ach")
