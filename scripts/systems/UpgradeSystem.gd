@@ -4,6 +4,96 @@
 
 extends Node
 
+# ── UPGRADE DEFINITIONS ───────────────────────────────────────────────────────
+## Her upgrade: id, maliyet, unlock_level, unlock_cond (opsiyonel), efekt
+const UPGRADE_DEFS := {
+	## KITCHEN
+	"KIT_01": {
+		"category": "kitchen", "name": "Ocak Hızı 1",
+		"cost": 300, "unlock_level": 1, "effect": "speed",
+	},
+	"KIT_02": {
+		"category": "kitchen", "name": "Ocak Hızı 2",
+		"cost": 1200, "unlock_level": 2, "requires": "KIT_01", "effect": "speed",
+	},
+	"KIT_03": {
+		"category": "kitchen", "name": "2. Ocak Slotu",
+		"cost": 3500, "unlock_level": 3, "requires": "KIT_02", "effect": "slot",
+	},
+	"KIT_04": {
+		"category": "kitchen", "name": "Malzeme Kalitesi 1",
+		"cost": 8000, "unlock_level": 4, "effect": "tip",
+	},
+	"KIT_05": {
+		"category": "kitchen", "name": "Özel Tarif",
+		"cost": 20000, "unlock_level": 5, "effect": "price",
+	},
+	## COUNTER
+	"CNT_01": {
+		"category": "counter", "name": "2. Tabure",
+		"cost": 250, "unlock_level": 1, "effect": "stool",
+	},
+	"CNT_02": {
+		"category": "counter", "name": "3. Tabure",
+		"cost": 900, "unlock_level": 2, "requires": "CNT_01", "effect": "stool",
+	},
+	"CNT_03": {
+		"category": "counter", "name": "Sıra Genişletme 1",
+		"cost": 700, "unlock_level": 2, "effect": "queue",
+	},
+	"CNT_04": {
+		"category": "counter", "name": "Sıra Genişletme 2",
+		"cost": 4000, "unlock_level": 4, "requires": "CNT_03", "effect": "queue",
+	},
+	## CHEF
+	"CHF_01": {
+		"category": "chef", "name": "Şef Deneyimi 1",
+		"cost": 400, "unlock_level": 1, "effect": "quality",
+	},
+	"CHF_02": {
+		"category": "chef", "name": "Şef Deneyimi 2",
+		"cost": 1500, "unlock_level": 2, "requires": "CHF_01", "effect": "quality",
+	},
+	"CHF_03": {
+		"category": "chef", "name": "Şef Deneyimi 3",
+		"cost": 4000, "unlock_level": 3, "requires": "CHF_02", "effect": "quality",
+	},
+	"CHF_04": {
+		"category": "chef", "name": "Şef Deneyimi 4",
+		"cost": 10000, "unlock_level": 4, "requires": "CHF_03",
+		"effect": "quality_priority",
+	},
+	"CHF_05": {
+		"category": "chef", "name": "Şef Ustalaşma",
+		"cost": 25000, "unlock_level": 5, "requires": "CHF_04", "effect": "mastery",
+	},
+	## IDLE
+	"IDL_01": {
+		"category": "idle", "name": "Offline Paketi 1",
+		"cost": 500, "unlock_level": 2, "effect": "offline_hours",
+	},
+	"IDL_02": {
+		"category": "idle", "name": "Offline Paketi 2",
+		"cost": 2000, "unlock_level": 3, "requires": "IDL_01", "effect": "offline_hours_eff",
+	},
+	"IDL_03": {
+		"category": "idle", "name": "Offline Verim 1",
+		"cost": 3000, "unlock_level": 3, "effect": "offline_eff",
+	},
+	"IDL_04": {
+		"category": "idle", "name": "Offline Paketi 3",
+		"cost": 7000, "unlock_level": 4, "requires": "IDL_02", "effect": "offline_hours",
+	},
+	"IDL_05": {
+		"category": "idle", "name": "Offline Paketi 4",
+		"cost": 15000, "unlock_level": 5, "requires": "IDL_04", "effect": "offline_hours_eff",
+	},
+	"IDL_06": {
+		"category": "idle", "name": "Offline Verim 2",
+		"cost": 12000, "unlock_level": 5, "effect": "offline_eff",
+	},
+}
+
 # ── CURRENT STATS ─────────────────────────────────────────────────────────────
 var speed_multiplier  : float = 1.00
 var chef_quality      : int   = 1
@@ -20,36 +110,6 @@ var purchased : Dictionary = {}
 var economy_system  : Node = null
 var offline_system  : Node = null
 var customer_system : Node = null
-
-
-# ── UPGRADE DEFINITIONS ───────────────────────────────────────────────────────
-## Her upgrade: id, maliyet, unlock_level, unlock_cond (opsiyonel), efekt
-const UPGRADE_DEFS := {
-	## KITCHEN
-	"KIT_01": {"category":"kitchen","name":"Ocak Hızı 1",       "cost":300,    "unlock_level":1, "effect":"speed"},
-	"KIT_02": {"category":"kitchen","name":"Ocak Hızı 2",       "cost":1200,   "unlock_level":2, "requires":"KIT_01","effect":"speed"},
-	"KIT_03": {"category":"kitchen","name":"2. Ocak Slotu",      "cost":3500,   "unlock_level":3, "requires":"KIT_02","effect":"slot"},
-	"KIT_04": {"category":"kitchen","name":"Malzeme Kalitesi 1", "cost":8000,   "unlock_level":4, "effect":"tip"},
-	"KIT_05": {"category":"kitchen","name":"Özel Tarif",         "cost":20000,  "unlock_level":5, "effect":"price"},
-	## COUNTER
-	"CNT_01": {"category":"counter","name":"2. Tabure",          "cost":250,    "unlock_level":1, "effect":"stool"},
-	"CNT_02": {"category":"counter","name":"3. Tabure",          "cost":900,    "unlock_level":2, "requires":"CNT_01","effect":"stool"},
-	"CNT_03": {"category":"counter","name":"Sıra Genişletme 1",  "cost":700,    "unlock_level":2, "effect":"queue"},
-	"CNT_04": {"category":"counter","name":"Sıra Genişletme 2",  "cost":4000,   "unlock_level":4, "requires":"CNT_03","effect":"queue"},
-	## CHEF
-	"CHF_01": {"category":"chef",   "name":"Şef Deneyimi 1",     "cost":400,    "unlock_level":1, "effect":"quality"},
-	"CHF_02": {"category":"chef",   "name":"Şef Deneyimi 2",     "cost":1500,   "unlock_level":2, "requires":"CHF_01","effect":"quality"},
-	"CHF_03": {"category":"chef",   "name":"Şef Deneyimi 3",     "cost":4000,   "unlock_level":3, "requires":"CHF_02","effect":"quality"},
-	"CHF_04": {"category":"chef",   "name":"Şef Deneyimi 4",     "cost":10000,  "unlock_level":4, "requires":"CHF_03","effect":"quality_priority"},
-	"CHF_05": {"category":"chef",   "name":"Şef Ustalaşma",      "cost":25000,  "unlock_level":5, "requires":"CHF_04","effect":"mastery"},
-	## IDLE
-	"IDL_01": {"category":"idle",  "name":"Offline Paketi 1",   "cost":500,    "unlock_level":2, "effect":"offline_hours"},
-	"IDL_02": {"category":"idle",  "name":"Offline Paketi 2",   "cost":2000,   "unlock_level":3, "requires":"IDL_01","effect":"offline_hours_eff"},
-	"IDL_03": {"category":"idle",  "name":"Offline Verim 1",    "cost":3000,   "unlock_level":3, "effect":"offline_eff"},
-	"IDL_04": {"category":"idle",  "name":"Offline Paketi 3",   "cost":7000,   "unlock_level":4, "requires":"IDL_02","effect":"offline_hours"},
-	"IDL_05": {"category":"idle",  "name":"Offline Paketi 4",   "cost":15000,  "unlock_level":5, "requires":"IDL_04","effect":"offline_hours_eff"},
-	"IDL_06": {"category":"idle",  "name":"Offline Verim 2",    "cost":12000,  "unlock_level":5, "effect":"offline_eff"},
-}
 
 # ── PURCHASE ──────────────────────────────────────────────────────────────────
 func try_purchase(upgrade_id: String, current_level: int) -> bool:
@@ -91,7 +151,7 @@ func try_purchase(upgrade_id: String, current_level: int) -> bool:
 	return true
 
 
-func _apply_effect(id: String, def: Dictionary) -> void:
+func _apply_effect(_id: String, def: Dictionary) -> void:
 	match def.get("effect", ""):
 		"speed":
 			speed_multiplier += 0.15

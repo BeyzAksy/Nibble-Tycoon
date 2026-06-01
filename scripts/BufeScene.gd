@@ -36,6 +36,8 @@
 
 extends Node2D
 
+var _pending_offline_earnings : float = 0.0
+
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
 @onready var customer_container : Node    = $GameWorld/CustomerContainer
 @onready var chef_sprite        : Node    = $GameWorld/ChefSprite
@@ -61,8 +63,6 @@ extends Node2D
 @onready var progression_system    : Node = $Systems/ProgressionSystem
 @onready var satisfaction_system   : Node = $Systems/SatisfactionSystem
 @onready var achievement_system    : Node = $Systems/AchievementSystem
-
-var _pending_offline_earnings : float = 0.0
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -258,7 +258,7 @@ func _check_cafe_transition() -> void:
 
 
 # ── CHEF / STOVE VISUALS ──────────────────────────────────────────────────────
-func _on_slot_cooking(slot_index: int, order_id: int, item_id: String, cook_time: float) -> void:
+func _on_slot_cooking(slot_index: int, _order_id: int, item_id: String, cook_time: float) -> void:
 	## Update the StoveSlot node
 	var slot := stove_slots.get_child(slot_index) if stove_slots else null
 	if slot and slot.has_method("start_cooking"):

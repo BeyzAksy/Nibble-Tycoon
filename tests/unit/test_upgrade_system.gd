@@ -148,7 +148,7 @@ func test_deserialize_restores_purchased() -> void:
 	upgrade.try_purchase("KIT_01", 1)
 	var data := upgrade.serialize()
 
-	var upgrade2 := preload("res://scripts/systems/UpgradeSystem.gd").new()
+	var upgrade2 := UpgradeSystem.new()
 	add_child_autofree(upgrade2)
 	upgrade2.deserialize(data)
 	assert_true(upgrade2.purchased.has("KIT_01"),
@@ -158,7 +158,7 @@ func test_deserialize_restores_speed_multiplier() -> void:
 	upgrade.try_purchase("KIT_01", 1)
 	var data := upgrade.serialize()
 
-	var upgrade2 := preload("res://scripts/systems/UpgradeSystem.gd").new()
+	var upgrade2 := UpgradeSystem.new()
 	add_child_autofree(upgrade2)
 	upgrade2.deserialize(data)
 	assert_almost_eq(upgrade2.speed_multiplier, 1.15, 0.001,

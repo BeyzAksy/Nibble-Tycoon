@@ -13,13 +13,13 @@
 
 extends Node2D
 
-# ── NODE REFERENCES ───────────────────────────────────────────────────────────
-@onready var flame_particles : GPUParticles2D    = $FlameParticles
-@onready var item_label      : Label             = $ItemLabel
-@onready var timer_label     : Label             = $TimerLabel
-@onready var cook_bar        : TextureProgressBar= $CookBar
-@onready var ready_light     : PointLight2D      = $ReadyLight
-@onready var stove_sprite    : Sprite2D          = $OcakSprite
+# ── ITEM → EMOJI MAP ──────────────────────────────────────────────────────────
+const ITEM_EMOJI := {
+	"tea":     "🫖",
+	"pastry":  "🥐",
+	"sandwich":"🍞",
+	"sausage": "🌭",
+}
 
 # ── STATE ─────────────────────────────────────────────────────────────────────
 var _cooking      : bool  = false
@@ -28,13 +28,13 @@ var _elapsed      : float = 0.0
 var _item_id      : String = ""
 var _ready_tween  : Tween
 
-# ── ITEM → EMOJI MAP ──────────────────────────────────────────────────────────
-const ITEM_EMOJI := {
-	"tea":     "🫖",
-	"pastry":  "🥐",
-	"sandwich":"🍞",
-	"sausage": "🌭",
-}
+# ── NODE REFERENCES ───────────────────────────────────────────────────────────
+@onready var flame_particles : GPUParticles2D    = $FlameParticles
+@onready var item_label      : Label             = $ItemLabel
+@onready var timer_label     : Label             = $TimerLabel
+@onready var cook_bar        : TextureProgressBar= $CookBar
+@onready var ready_light     : PointLight2D      = $ReadyLight
+@onready var stove_sprite    : Sprite2D          = $OcakSprite
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:

@@ -7,9 +7,13 @@ extends Node
 @export var customer_scene : PackedScene   ## res://scenes/CustomerNode.tscn
 
 # ── STATE ─────────────────────────────────────────────────────────────────────
-var max_stools   : int = 2
-var max_queue    : int = 3
-var current_level: int = 1
+var max_stools    : int = 2
+var max_queue     : int = 3
+var current_level : int = 1
+
+## Referanslar
+var order_manager   : Node = null
+var customer_parent : Node = null   ## CustomerContainer node'u
 
 var _customers   : Dictionary = {}   ## customer_id → CustomerNode
 var _next_id     : int        = 1
@@ -20,10 +24,6 @@ var _seated_ids  : Array      = []   ## Oturan customer_id'ler
 var _timer_regular   : float = 0.0
 var _timer_impatient : float = 0.0
 var _timer_tourist   : float = 0.0
-
-## Referanslar
-var order_manager   : Node = null
-var customer_parent : Node = null   ## CustomerContainer node'u
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -179,7 +179,7 @@ func _remove_customer(customer_id: int, reason: String) -> void:
 
 
 # ── EventBus connections ──────────────────────────────────────────────────────
-func _on_order_seated(customer_id: int) -> void:
+func _on_order_seated(_customer_id: int) -> void:
 	pass  ## CustomerNode kendi durumunu yönetiyor
 
 
@@ -190,7 +190,7 @@ func _on_order_served(customer_id: int) -> void:
 	_try_seat_next()
 
 
-func _on_order_cancelled(customer_id: int, _reason: String) -> void:
+func _on_order_cancelled(_customer_id: int, _reason: String) -> void:
 	pass  ## _on_patience_timeout zaten halletti
 
 

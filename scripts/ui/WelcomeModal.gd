@@ -24,6 +24,8 @@ extends Control
 signal collect_pressed()
 signal watch_ad_pressed()
 
+var _base_earnings : float = 0.0
+
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
 @onready var chef_label       : Label             = $ModalPanel/VBox/ChefLabel
 @onready var title_label      : Label             = $ModalPanel/VBox/TitleLabel
@@ -36,8 +38,6 @@ signal watch_ad_pressed()
 @onready var xp_label_right   : Label             = $ModalPanel/VBox/XPLabels/RightLabel
 @onready var collect_btn      : Button            = $ModalPanel/VBox/CollectBtn
 @onready var watch_ad_btn     : Button            = $ModalPanel/VBox/WatchAdBtn
-
-var _base_earnings : float = 0.0
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:

@@ -4,18 +4,6 @@
 
 extends Control
 
-# ── NODE REFERENCES ───────────────────────────────────────────────────────────
-@onready var sheet_container : Control    = $SheetContainer
-@onready var drag_handle     : Control    = $SheetContainer/DragHandle
-@onready var tab_bar         : HBoxContainer = $SheetContainer/TabBar
-@onready var list_container  : VBoxContainer = $SheetContainer/ScrollContainer/ListContainer
-
-# ── STATE ─────────────────────────────────────────────────────────────────────
-var _upgrade_system  : Node = null
-var _economy_system  : Node = null
-var _current_level   : int  = 1
-var _active_category : String = "kitchen"
-
 const CATEGORIES := ["kitchen", "counter", "chef", "idle"]
 const CAT_LABELS  := {
 	"kitchen": "🍳 Mutfak",
@@ -23,6 +11,18 @@ const CAT_LABELS  := {
 	"chef":    "👨‍🍳 Şef",
 	"idle":    "💤 Idle",
 }
+
+# ── STATE ─────────────────────────────────────────────────────────────────────
+var _upgrade_system  : Node   = null
+var _economy_system  : Node   = null
+var _current_level   : int    = 1
+var _active_category : String = "kitchen"
+
+# ── NODE REFERENCES ───────────────────────────────────────────────────────────
+@onready var sheet_container : Control       = $SheetContainer
+@onready var drag_handle     : Control       = $SheetContainer/DragHandle
+@onready var tab_bar         : HBoxContainer = $SheetContainer/TabBar
+@onready var list_container  : VBoxContainer = $SheetContainer/ScrollContainer/ListContainer
 
 # ── SETUP ─────────────────────────────────────────────────────────────────────
 func setup(upgrade_system: Node, economy_system: Node) -> void:
@@ -162,7 +162,7 @@ func _build_card(id: String, def: Dictionary, status: String) -> PanelContainer:
 	return card
 
 
-func _build_tag(id: String, status: String, def: Dictionary) -> Label:
+func _build_tag(_id: String, status: String, def: Dictionary) -> Label:
 	var tag := Label.new()
 	tag.add_theme_font_size_override("font_size", 20)
 	match status:

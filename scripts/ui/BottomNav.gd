@@ -8,15 +8,15 @@ extends Control
 # ── ENUM ─────────────────────────────────────────────────────────────────────
 enum Tab { RESTAURANT, MENU, UPGRADE, ACHIEVEMENT }
 
+# ── STATE ─────────────────────────────────────────────────────────────────────
+var _active_tab : Tab = Tab.RESTAURANT
+
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
 @onready var tab_restaurant : Button = $HBox/TabRestoran
 @onready var tab_menu       : Button = $HBox/TabMenu
 @onready var tab_upgrade    : Button = $HBox/TabUpgrade
 @onready var tab_achievement: Button = $HBox/TabBasarim
 @onready var upgrade_dot    : Control = $HBox/TabUpgrade/NewDot  ## Mint nokta
-
-# ── STATE ─────────────────────────────────────────────────────────────────────
-var _active_tab : Tab = Tab.RESTAURANT
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:

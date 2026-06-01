@@ -6,28 +6,29 @@
 
 extends Node
 
+const BOOST_DURATION   := 300.0   ## 5 dakika
+const BOOST_MULTIPLIER := 0.5     ## Pişirme süresi ×0.5 (yarıya iner)
+
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 @export var check_interval : float = 0.5   ## Kaç saniyede bir sıra kontrol edilir
 
 # ── STATE ─────────────────────────────────────────────────────────────────────
-var speed_multiplier : float = 1.0
-var chef_quality     : int   = 1
-var tea_cook_mult    : float = 1.0   ## ACH_06 kalıcı bonus: çay pişirme −%10 → 0.9
-var slot_count       : int   = 1   ## Upgrade ile 2'ye çıkar
-var priority_bump_active : bool = false   ## CHF_04 ile aktif
+var speed_multiplier     : float = 1.0
+var chef_quality         : int   = 1
+var tea_cook_mult        : float = 1.0   ## ACH_06 kalıcı bonus: çay pişirme −%10 → 0.9
+var slot_count           : int   = 1     ## Upgrade ile 2'ye çıkar
+var priority_bump_active : bool  = false ## CHF_04 ile aktif
+
+## Referanslar
+var order_manager : Node = null
 
 ## Her slot: null ya da pişirilen order_id
 var _cooking_slots : Array = [null, null]
 var _check_timer   : float = 0.0
 
 ## Speed boost state
-var _boost_active      : bool  = false
-var _boost_remaining   : float = 0.0
-const BOOST_DURATION   := 300.0   ## 5 dakika
-const BOOST_MULTIPLIER := 0.5     ## Pişirme süresi ×0.5 (yarıya iner)
-
-## Referanslar
-var order_manager : Node = null
+var _boost_active    : bool  = false
+var _boost_remaining : float = 0.0
 
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────

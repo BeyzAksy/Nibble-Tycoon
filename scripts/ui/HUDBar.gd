@@ -46,7 +46,7 @@ func _animate_coin_update(coins: float) -> void:
 	coin_label.text = _format_coins(coins)
 
 
-func _on_xp_gained(_amount: int, total: int) -> void:
+func _on_xp_gained(_amount: int, _total: int) -> void:
 	## XP barını güncelle (BufeScene'den gelen toplam XP ile)
 	pass   ## BufeScene _on_xp_gained'da hesaplı yüzde ile çağırır
 
@@ -97,6 +97,6 @@ func _on_settings_pressed() -> void:
 func _format_coins(amount: float) -> String:
 	if amount >= 1_000_000:
 		return "%.1fM" % (amount / 1_000_000.0)
-	elif amount >= 1_000:
+	if amount >= 1_000:
 		return "%.1fK" % (amount / 1_000.0)
 	return str(int(amount))

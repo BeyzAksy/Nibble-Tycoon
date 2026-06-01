@@ -45,14 +45,14 @@ class Order:
 		base_price    = Constants.MENU_ITEMS.get(p_item_id, {}).get("price", 0)
 		created_at    = Time.get_ticks_msec() / 1000.0
 
-# ── STATE ─────────────────────────────────────────────────────────────────────
-var _orders       : Dictionary = {}   ## order_id → Order
-var _order_queue  : Array      = []   ## QUEUED olanların id listesi (FIFO)
-var _next_order_id: int        = 1
-
 ## Referanslar
-var chef_system   : Node = null
-var economy_system: Node = null
+var chef_system    : Node = null
+var economy_system : Node = null
+
+# ── STATE ─────────────────────────────────────────────────────────────────────
+var _orders        : Dictionary = {}   ## order_id → Order
+var _order_queue   : Array      = []   ## QUEUED olanların id listesi (FIFO)
+var _next_order_id : int        = 1
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -163,7 +163,9 @@ func get_next_order_for_chef(chef_level: int) -> Order:
 	if chef_level >= 4:
 		for id in _orders:
 			var o : Order = _orders[id]
-			if o and o.state == OrderState.SEATED and o.customer_type == "impatient" and o.food_patience_ratio < 0.25:
+			if o and o.state == OrderState.SEATED \
+					and o.customer_type == "impatient" \
+					and o.food_patience_ratio < 0.25:
 				return o
 
 	## Default FIFO — _orders preserves insertion order in Godot 4

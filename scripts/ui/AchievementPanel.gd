@@ -3,12 +3,12 @@
 
 extends Control
 
-@onready var list_container : VBoxContainer = $ScrollContainer/ListContainer
-@onready var points_label   : Label         = $Header/PointsLabel
-
 var _unlocked  : Dictionary = {}   ## achievement_id → bool
 var _progress  : Dictionary = {}   ## achievement_id → int (ilerleme)
 var _total_pts : int        = 0
+
+@onready var list_container : VBoxContainer = $ScrollContainer/ListContainer
+@onready var points_label   : Label         = $Header/PointsLabel
 
 func _ready() -> void:
 	EventBus.achievement_unlocked.connect(_on_achievement_unlocked)
@@ -44,7 +44,9 @@ func _build_list() -> void:
 		list_container.add_child(_make_card(ach_id, def, done, prog, hidden))
 
 
-func _make_card(ach_id: String, def: Dictionary, done: bool, prog: int, hidden: bool) -> PanelContainer:
+func _make_card(
+		ach_id: String, def: Dictionary,
+		done: bool, prog: int, hidden: bool) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.custom_minimum_size = Vector2(0, 100)
 

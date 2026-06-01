@@ -4,11 +4,11 @@
 
 extends Control
 
-@onready var list_container : VBoxContainer = $ScrollContainer/ListContainer
+var _current_level  : int  = 1
+var _upgrade_system : Node = null
+var _economy_system : Node = null
 
-var _current_level    : int  = 1
-var _upgrade_system   : Node = null
-var _economy_system   : Node = null
+@onready var list_container : VBoxContainer = $ScrollContainer/ListContainer
 
 func setup(upgrade_sys: Node, economy_sys: Node, level: int) -> void:
 	_upgrade_system = upgrade_sys
@@ -109,7 +109,8 @@ func _make_item_card(item_id: String, item: Dictionary, unlocked: bool) -> Panel
 	var price_lbl := Label.new()
 	price_lbl.text = "%d ₺" % item.get("price", 0)
 	price_lbl.add_theme_font_size_override("font_size", 36)
-	price_lbl.add_theme_color_override("font_color", Constants.BUTTER_DEEP if unlocked else Constants.INK_SOFT)
+	var color := Constants.BUTTER_DEEP if unlocked else Constants.INK_SOFT
+	price_lbl.add_theme_color_override("font_color", color)
 	hbox.add_child(price_lbl)
 
 	## Unlock button (if locked)

@@ -148,8 +148,14 @@ const TIP_MULT_TOURIST    := 1.30
 const MENU_ITEMS := {
 	"tea":          {"name": "Çay",            "price": 25, "cook_time":  8, "unlock_level": 1},
 	"pastry":       {"name": "Poğaça",          "price": 40, "cook_time": 12, "unlock_level": 1},
-	"sandwich":     {"name": "Tost",            "price": 65, "cook_time": 15, "unlock_level": 2, "unlock_cost": 600},
-	"sausage":      {"name": "Sosisli Sandviç", "price": 75, "cook_time": 14, "unlock_level": 3, "unlock_cost": 2000},
+	"sandwich": {
+		"name": "Tost", "price": 65, "cook_time": 15,
+		"unlock_level": 2, "unlock_cost": 600,
+	},
+	"sausage": {
+		"name": "Sosisli Sandviç", "price": 75, "cook_time": 14,
+		"unlock_level": 3, "unlock_cost": 2000,
+	},
 	"daily_special":{"name": "Günün Özelliği",  "price": 0,  "cook_time":  0, "unlock_level": 5},
 }
 
@@ -242,10 +248,9 @@ const ACH_06_REWARD_COINS  := 300.0
 static func get_patience_color(ratio: float) -> Color:
 	if ratio >= PATIENCE_HAPPY_THRESHOLD:
 		return PATIENCE_HIGH
-	elif ratio >= PATIENCE_NEUTRAL_THRESHOLD:
+	if ratio >= PATIENCE_NEUTRAL_THRESHOLD:
 		return PATIENCE_MID
-	else:
-		return PATIENCE_LOW
+	return PATIENCE_LOW
 
 ## Sipariş değeri hesapla
 static func calc_order_value(base_price: int, chef_quality: int) -> float:
