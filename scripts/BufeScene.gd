@@ -120,7 +120,7 @@ func _connect_signals() -> void:
 
 # ── SAVE SYSTEM ───────────────────────────────────────────────────────────────
 func _load_save() -> void:
-	var data := save_system.load_data()
+	var data : Dictionary = save_system.load_data()
 	if data.is_empty():
 		return
 
@@ -152,10 +152,10 @@ func _load_save() -> void:
 
 
 func _save_game() -> void:
-	var hourly := economy_system.calculate_hourly_rate(upgrade_system) if economy_system else 0.0
-	var offline_data := offline_system.save_close_data(hourly) if offline_system else {}
+	var hourly : float      = economy_system.calculate_hourly_rate(upgrade_system) if economy_system else 0.0
+	var offline_data : Dictionary = offline_system.save_close_data(hourly) if offline_system else {}
 
-	var ach_data := achievement_system.serialize() if achievement_system else {}
+	var ach_data : Dictionary = achievement_system.serialize() if achievement_system else {}
 	var data := {
 		"version":           Constants.CURRENT_SAVE_VERSION,
 		"achievements":      ach_data,
@@ -172,11 +172,11 @@ func _save_game() -> void:
 
 # ── OFFLINE CHECK ─────────────────────────────────────────────────────────────
 func _check_offline_earnings() -> void:
-	var saved := save_system.load_data()
+	var saved : Dictionary = save_system.load_data()
 	if not saved.has("close_timestamp"):
 		return
 
-	var result := offline_system.calculate_earnings(saved)
+	var result : Dictionary = offline_system.calculate_earnings(saved)
 
 	## ACH_05: 2 saat offline bekleme koşulu
 	if achievement_system:
@@ -260,13 +260,13 @@ func _check_cafe_transition() -> void:
 # ── CHEF / STOVE VISUALS ──────────────────────────────────────────────────────
 func _on_slot_cooking(slot_index: int, _order_id: int, item_id: String, cook_time: float) -> void:
 	## Update the StoveSlot node
-	var slot := stove_slots.get_child(slot_index) if stove_slots else null
+	var slot : Node = stove_slots.get_child(slot_index) if stove_slots else null
 	if slot and slot.has_method("start_cooking"):
 		slot.start_cooking(item_id, cook_time)
 
 
 func _on_slot_finished(slot_index: int, _order_id: int) -> void:
-	var slot := stove_slots.get_child(slot_index) if stove_slots else null
+	var slot : Node = stove_slots.get_child(slot_index) if stove_slots else null
 	if slot and slot.has_method("finish_cooking"):
 		slot.finish_cooking()
 
