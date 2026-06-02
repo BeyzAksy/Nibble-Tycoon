@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bufe_main"]
+[gd_scene load_steps=13 format=3 uid="uid://bufe_main"]
 
 [ext_resource type="Script" path="res://scripts/BufeScene.gd"              id="1_bufe"]
 [ext_resource type="Script" path="res://scripts/ui/HUDBar.gd"              id="2_hud"]
@@ -6,12 +6,13 @@
 [ext_resource type="Script" path="res://scripts/systems/CustomerSystem.gd" id="4_cust"]
 [ext_resource type="Script" path="res://scripts/systems/OrderManager.gd"   id="5_order"]
 [ext_resource type="Script" path="res://scripts/systems/ChefSystem.gd"     id="6_chef"]
-[ext_resource type="Script" path="res://scripts/systems/EkonomiSystem.gd"  id="7_ekono"]
+[ext_resource type="Script" path="res://scripts/systems/EconomySystem.gd"  id="7_ekono"]
 [ext_resource type="Script" path="res://scripts/systems/UpgradeSystem.gd"  id="8_upg"]
 [ext_resource type="Script" path="res://scripts/systems/OfflineSystem.gd"  id="9_offline"]
 [ext_resource type="Script" path="res://scripts/systems/SaveSystem.gd"        id="10_save"]
 [ext_resource type="Script" path="res://scripts/systems/ProgressionSystem.gd"  id="11_prog"]
 [ext_resource type="Script" path="res://scripts/systems/AchievementSystem.gd" id="12_ach"]
+[ext_resource type="Script" path="res://scripts/systems/SatisfactionSystem.gd" id="13_satis"]
 
 [node name="BufeScene" type="Node2D"]
 script = ExtResource("1_bufe")
@@ -162,7 +163,7 @@ script = ExtResource("5_order")
 [node name="ChefSystem" type="Node" parent="Systems"]
 script = ExtResource("6_chef")
 
-[node name="EkonomiSystem" type="Node" parent="Systems"]
+[node name="EconomySystem" type="Node" parent="Systems"]
 script = ExtResource("7_ekono")
 
 [node name="UpgradeSystem" type="Node" parent="Systems"]
@@ -179,3 +180,6 @@ script = ExtResource("11_prog")
 
 [node name="AchievementSystem" type="Node" parent="Systems"]
 script = ExtResource("12_ach")
+
+[node name="SatisfactionSystem" type="Node" parent="Systems"]
+script = ExtResource("13_satis")
