@@ -42,6 +42,10 @@ ui_accept={
 ]
 }
 
+[gdscript]
+
+warnings/unused_signal=0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
