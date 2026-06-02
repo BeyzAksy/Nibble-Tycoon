@@ -5,13 +5,14 @@
 extends Control
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
-@onready var coin_label  : Label = $HBox/CoinChip/CoinHBox/CoinLabel
-@onready var gem_label   : Label = $HBox/GemChip/GemHBox/GemLabel
-@onready var level_label : Label = $HBox/LevelBadge/LvHBox/LevelLabel
-@onready var xp_bar      : TextureProgressBar = $HBox/LevelBadge/LvHBox/XPVBox/XPBar
-@onready var settings_btn: Button = $HBox/SettingsBtn
-@onready var coin_chip   : PanelContainer = $HBox/CoinChip
-@onready var boost_badge : Label = $BoostBadge   ## Speed boost timer display
+@onready var coin_label    : Label              = $HBox/CoinChip/CoinHBox/CoinLabel
+@onready var gem_label     : Label              = $HBox/GemChip/GemHBox/GemLabel
+@onready var level_label   : Label              = $HBox/LevelBadge/LvHBox/LevelLabel
+@onready var xp_level_lbl  : Label              = $HBox/LevelBadge/LvHBox/XPVBox/XPLbl
+@onready var xp_bar        : TextureProgressBar = $HBox/LevelBadge/LvHBox/XPVBox/XPBar
+@onready var settings_btn  : Button             = $HBox/SettingsBtn
+@onready var coin_chip     : PanelContainer     = $HBox/CoinChip
+@onready var boost_badge   : Label              = $BoostBadge
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -54,6 +55,8 @@ func _on_xp_gained(_amount: int, _total: int) -> void:
 func _on_level_up(new_level: int) -> void:
 	if level_label:
 		level_label.text = "Lv.%d" % new_level
+	if xp_level_lbl:
+		xp_level_lbl.text = "LV %d" % new_level
 	## Level up flash effect
 	var t := create_tween().set_ease(Tween.EASE_OUT)
 	t.tween_property(self, "modulate", Color(1.2, 1.1, 0.8, 1.0), 0.15)
@@ -68,6 +71,8 @@ func update_xp_bar(ratio: float) -> void:
 func set_level(level: int) -> void:
 	if level_label:
 		level_label.text = "Lv.%d" % level
+	if xp_level_lbl:
+		xp_level_lbl.text = "LV %d" % level
 
 
 func _refresh_display(coins: float, gems: int) -> void:

@@ -52,12 +52,16 @@ signal satisfaction_changed(score: int, delta: int)
 
 # ── LEVEL / PROGRESS ──────────────────────────────────────────────────────────
 signal level_up(new_level: int)
+@warning_ignore("unused_signal")
 signal xp_gained(amount: int, total: int)
 signal achievement_unlocked(achievement_id: String)
 
 # ── OFFLINE ───────────────────────────────────────────────────────────────────
+@warning_ignore("unused_signal")
 signal offline_earnings_ready(amount: float, elapsed_hours: float)
 
 # ── UI SIGNALS ────────────────────────────────────────────────────────────────
+@warning_ignore("unused_signal")
 signal toast_requested(message: String, type: String)  ## type: "reward"|"success"|"warning"|"error"
+@warning_ignore("unused_signal")
 signal screen_transition_requested(target_scene: String)

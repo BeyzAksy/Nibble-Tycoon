@@ -40,7 +40,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="TabRestoran" type="Button" parent="HBox" unique_id=168207604]
+[node name="TabRestaurant" type="Button" parent="HBox" unique_id=168207604]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -70,16 +70,14 @@ theme_override_styles/normal = SubResource("SB_tab_empty")
 theme_override_styles/hover = SubResource("SB_tab_empty")
 theme_override_styles/pressed = SubResource("SB_tab_empty")
 
-## Yeni upgrade badge noktası
 [node name="NewDot" type="Control" parent="HBox/TabUpgrade" unique_id=887262440]
 layout_mode = 0
 offset_right = 14.0
 offset_bottom = 14.0
 anchor_left = 1.0
 anchor_right = 1.0
-## ColorRect daire — editörde eklenecek, yeşil mint noktası
 
-[node name="TabBasarim" type="Button" parent="HBox" unique_id=1704229318]
+[node name="TabAchievement" type="Button" parent="HBox" unique_id=1704229318]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
