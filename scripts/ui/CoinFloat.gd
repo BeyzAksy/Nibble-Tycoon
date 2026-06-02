@@ -2,6 +2,7 @@
 ## Sipariş tamamlandığında tezgahtan HUD'a uçan coin efekti.
 ## GDD §6 — Coin float animasyonu
 
+class_name CoinFloat
 extends Label
 
 ## Quadratic Bezier ile yay çizer: başlangıç → kontrol noktası → hedef
