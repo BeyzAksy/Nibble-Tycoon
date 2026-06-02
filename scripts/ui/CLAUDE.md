@@ -2,6 +2,9 @@
 
 > UI bileşenleri görüntüleme ve input yapar. İş mantığı içermez.
 > EventBus'tan güncellenir, sistemlere direkt referans almaz.
+>
+> **Stil kararı:** Flat/overlay UI — izometrik oyun dünyasından görsel olarak ayrı katman.
+> Renk sistemi `Constants.gd`'de. Sprite kuralları `.claude/rules/visual.md`'de.
 
 ---
 

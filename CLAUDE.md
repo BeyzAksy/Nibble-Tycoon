@@ -50,6 +50,15 @@ Senior Godot/GDScript game developer. Tek kişiyle (operatör) partner olarak ç
 [OfflineSystem]  → EconomySystem ← SaveSystem
 ```
 
+## Görsel Sistem
+
+**Stil:** İzometrik 2.5D — tile 128×64 px, Y-sort aktif.
+**Asset:** Şu an Kenney ücretsiz paketleri, ileride özel asset. Swap = sadece `Constants.SPRITES` dict path'i değişir.
+**UI:** Flat/overlay — izometrik dünyadan bağımsız katman, mevcut coral/mint/butter sistemi.
+**Detay:** `docs/gorsel_sistem.md` | Kodlama kuralları: `.claude/rules/visual.md`
+
+---
+
 ## Aktif Aşama: Büfe
 
 **Kritik dosyalar:**
