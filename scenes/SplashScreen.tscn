@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://splash_lezzet"]
+[gd_scene format=3 uid="uid://tqq45h4e1el85"]
 
 [ext_resource type="Script" path="res://scripts/SplashScreen.gd" id="1_splash"]
 [ext_resource type="FontFile" path="res://assets/fonts/Fredoka-SemiBold.ttf" id="2_fredoka"]
@@ -77,7 +77,7 @@ fill_to = Vector2(1.0, 0.5)
 width = 64
 height = 4
 
-[node name="SplashScreen" type="Control"]
+[node name="SplashScreen" type="Control" unique_id=335786362]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,7 +86,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_splash")
 
-[node name="BGGradient" type="TextureRect" parent="."]
+[node name="BGGradient" type="TextureRect" parent="." unique_id=1947605088]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -98,7 +98,7 @@ texture = SubResource("GradientTexture2D_bg")
 expand_mode = 1
 stretch_mode = 0
 
-[node name="DecoCircle1" type="Panel" parent="."]
+[node name="DecoCircle1" type="Panel" parent="." unique_id=704838644]
 layout_mode = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -111,7 +111,7 @@ offset_bottom = 600.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_deco1")
 
-[node name="DecoCircle2" type="Panel" parent="."]
+[node name="DecoCircle2" type="Panel" parent="." unique_id=155776238]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
@@ -124,7 +124,7 @@ offset_bottom = 90.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_deco2")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2054132105]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -133,19 +133,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=2009190524]
 layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 0
 mouse_filter = 2
 
-[node name="LogoWrapper" type="Control" parent="CenterContainer/VBox"]
+[node name="LogoWrapper" type="Control" parent="CenterContainer/VBox" unique_id=985100532]
 layout_mode = 2
 custom_minimum_size = Vector2(300, 300)
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="LogoLabel" type="Panel" parent="CenterContainer/VBox/LogoWrapper"]
+[node name="LogoLabel" type="Panel" parent="CenterContainer/VBox/LogoWrapper" unique_id=253478151]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
@@ -158,7 +158,7 @@ offset_bottom = 150.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_logo")
 
-[node name="EmojiLabel" type="Label" parent="CenterContainer/VBox/LogoWrapper/LogoLabel"]
+[node name="EmojiLabel" type="Label" parent="CenterContainer/VBox/LogoWrapper/LogoLabel" unique_id=975587743]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -171,12 +171,12 @@ vertical_alignment = 1
 text = "🍽️"
 theme_override_font_sizes/font_size = 120
 
-[node name="SpacerA" type="Control" parent="CenterContainer/VBox"]
+[node name="SpacerA" type="Control" parent="CenterContainer/VBox" unique_id=762248932]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 36)
 mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBox" unique_id=1870643070]
 layout_mode = 2
 size_flags_horizontal = 1
 horizontal_alignment = 1
@@ -186,12 +186,12 @@ theme_override_font_sizes/font_size = 72
 theme_override_colors/font_color = Color(0.243, 0.196, 0.216, 1.0)
 mouse_filter = 2
 
-[node name="SpacerB" type="Control" parent="CenterContainer/VBox"]
+[node name="SpacerB" type="Control" parent="CenterContainer/VBox" unique_id=1286558933]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 15)
 mouse_filter = 2
 
-[node name="SubLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="SubLabel" type="Label" parent="CenterContainer/VBox" unique_id=1119957257]
 layout_mode = 2
 size_flags_horizontal = 1
 horizontal_alignment = 1
@@ -201,12 +201,12 @@ theme_override_font_sizes/font_size = 34
 theme_override_colors/font_color = Color(0.541, 0.494, 0.518, 1.0)
 mouse_filter = 2
 
-[node name="SpacerC" type="Control" parent="CenterContainer/VBox"]
+[node name="SpacerC" type="Control" parent="CenterContainer/VBox" unique_id=1522932182]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 60)
 mouse_filter = 2
 
-[node name="LoadBarBG" type="Panel" parent="CenterContainer/VBox"]
+[node name="LoadBarBG" type="Panel" parent="CenterContainer/VBox" unique_id=2082310382]
 layout_mode = 2
 custom_minimum_size = Vector2(570, 30)
 size_flags_horizontal = 4
@@ -214,7 +214,7 @@ clip_children = 1
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_barBG")
 
-[node name="LoadBarFill" type="ColorRect" parent="CenterContainer/VBox/LoadBarBG"]
+[node name="LoadBarFill" type="ColorRect" parent="CenterContainer/VBox/LoadBarBG" unique_id=845222964]
 layout_mode = 1
 anchors_preset = 0
 anchor_top = 0.0
@@ -226,12 +226,12 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1.0, 0.541, 0.420, 1.0)
 
-[node name="SpacerD" type="Control" parent="CenterContainer/VBox"]
+[node name="SpacerD" type="Control" parent="CenterContainer/VBox" unique_id=1956891183]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 15)
 mouse_filter = 2
 
-[node name="LoadLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="LoadLabel" type="Label" parent="CenterContainer/VBox" unique_id=204287913]
 layout_mode = 2
 size_flags_horizontal = 1
 horizontal_alignment = 1
@@ -241,18 +241,18 @@ theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.541, 0.494, 0.518, 1.0)
 mouse_filter = 2
 
-[node name="SpacerE" type="Control" parent="CenterContainer/VBox"]
+[node name="SpacerE" type="Control" parent="CenterContainer/VBox" unique_id=1542969229]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 48)
 mouse_filter = 2
 
-[node name="VersionPill" type="PanelContainer" parent="CenterContainer/VBox"]
+[node name="VersionPill" type="PanelContainer" parent="CenterContainer/VBox" unique_id=1941966374]
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
 
-[node name="VersionLabel" type="Label" parent="CenterContainer/VBox/VersionPill"]
+[node name="VersionLabel" type="Label" parent="CenterContainer/VBox/VersionPill" unique_id=1170518415]
 layout_mode = 2
 horizontal_alignment = 1
 text = "v1.0 · Büfe Aşaması"
@@ -261,7 +261,7 @@ theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.541, 0.494, 0.518, 1.0)
 mouse_filter = 2
 
-[node name="BottomLine" type="TextureRect" parent="."]
+[node name="BottomLine" type="TextureRect" parent="." unique_id=676584896]
 layout_mode = 1
 anchor_left = 0.0
 anchor_top = 1.0

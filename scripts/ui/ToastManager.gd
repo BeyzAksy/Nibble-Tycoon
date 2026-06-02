@@ -15,12 +15,12 @@ const FADE_OUT_SEC     := 0.40
 const ACHIEVEMENT_BANNER_HEIGHT := 64
 
 # ── Toast color map ───────────────────────────────────────────────────────────
-const TOAST_COLORS := {
-	"reward":  {"border": Constants.BUTTER_DEEP,  "icon": "🎉"},
-	"success": {"border": Constants.MINT_DEEP,    "icon": "✅"},
-	"warning": {"border": Constants.BUTTER_DEEP,  "icon": "⚠️"},
-	"error":   {"border": Constants.CORAL_DEEP,   "icon": "❌"},
-	"idle":    {"border": Constants.SKY_DEEP,     "icon": "💤"},
+var TOAST_COLORS : Dictionary = {
+	"reward":  {"border": Constants.BUTTER_DEEP,  "icon": "[!]"},
+	"success": {"border": Constants.MINT_DEEP,    "icon": "[+]"},
+	"warning": {"border": Constants.BUTTER_DEEP,  "icon": "[?]"},
+	"error":   {"border": Constants.CORAL_DEEP,   "icon": "[x]"},
+	"idle":    {"border": Constants.SKY_DEEP,     "icon": "[z]"},
 }
 
 ## Max concurrent toasts (z-order rule — GDD §6)

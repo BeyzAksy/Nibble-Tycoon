@@ -1,111 +1,90 @@
-[gd_scene load_steps=13 format=3 uid="uid://bufe_main"]
+[gd_scene format=3 uid="uid://ckfjexd6rixg1"]
 
-[ext_resource type="Script" path="res://scripts/BufeScene.gd"              id="1_bufe"]
-[ext_resource type="Script" path="res://scripts/ui/HUDBar.gd"              id="2_hud"]
-[ext_resource type="Script" path="res://scripts/ui/ToastManager.gd"        id="3_toast"]
-[ext_resource type="Script" path="res://scripts/systems/CustomerSystem.gd" id="4_cust"]
-[ext_resource type="Script" path="res://scripts/systems/OrderManager.gd"   id="5_order"]
-[ext_resource type="Script" path="res://scripts/systems/ChefSystem.gd"     id="6_chef"]
-[ext_resource type="Script" path="res://scripts/systems/EconomySystem.gd"  id="7_ekono"]
-[ext_resource type="Script" path="res://scripts/systems/UpgradeSystem.gd"  id="8_upg"]
-[ext_resource type="Script" path="res://scripts/systems/OfflineSystem.gd"  id="9_offline"]
-[ext_resource type="Script" path="res://scripts/systems/SaveSystem.gd"        id="10_save"]
-[ext_resource type="Script" path="res://scripts/systems/ProgressionSystem.gd"  id="11_prog"]
-[ext_resource type="Script" path="res://scripts/systems/AchievementSystem.gd" id="12_ach"]
-[ext_resource type="Script" path="res://scripts/systems/SatisfactionSystem.gd" id="13_satis"]
+[ext_resource type="Script" uid="uid://dcunl8i8ym43h" path="res://scripts/BufeScene.gd" id="1_bufe"]
+[ext_resource type="PackedScene" uid="uid://hud_bar" path="res://scenes/ui/HUDBar.tscn" id="2_hud_scene"]
+[ext_resource type="Script" uid="uid://ux7eyie2fj8p" path="res://scripts/ui/ToastManager.gd" id="3_toast"]
+[ext_resource type="Script" uid="uid://dqscrmvxc0agm" path="res://scripts/systems/CustomerSystem.gd" id="4_cust"]
+[ext_resource type="Script" uid="uid://kijf1p0j2ux6" path="res://scripts/systems/OrderManager.gd" id="5_order"]
+[ext_resource type="Script" uid="uid://bh20qbn3rxgu6" path="res://scripts/systems/ChefSystem.gd" id="6_chef"]
+[ext_resource type="Script" uid="uid://dhu85w0wdml4r" path="res://scripts/systems/EconomySystem.gd" id="7_ekono"]
+[ext_resource type="Script" uid="uid://bl3g5srqy8lyn" path="res://scripts/systems/UpgradeSystem.gd" id="8_upg"]
+[ext_resource type="Script" uid="uid://byd4vafk5f7es" path="res://scripts/systems/OfflineSystem.gd" id="9_offline"]
+[ext_resource type="Script" uid="uid://b7qbfx6bwi17h" path="res://scripts/systems/SaveSystem.gd" id="10_save"]
+[ext_resource type="Script" uid="uid://chtmljgpu3ak5" path="res://scripts/systems/ProgressionSystem.gd" id="11_prog"]
+[ext_resource type="Script" uid="uid://xafpu2oy6ax7" path="res://scripts/systems/AchievementSystem.gd" id="12_ach"]
+[ext_resource type="Script" uid="uid://bwipguv6ocwul" path="res://scripts/systems/SatisfactionSystem.gd" id="13_satis"]
+[ext_resource type="PackedScene" uid="uid://bottom_nav" path="res://scenes/ui/BottomNav.tscn" id="14_bottom_nav"]
+[ext_resource type="PackedScene" uid="uid://welcome_modal" path="res://scenes/ui/WelcomeModal.tscn" id="15_welcome_modal"]
 
 [node name="BufeScene" type="Node2D"]
 script = ExtResource("1_bufe")
 
-# ── GAME WORLD ───────────────────────────────────────────────────────────────
-[node name="GameWorld" type="Node2D" parent="."]
+[node name="GameWorld" type="Node2D" parent="." unique_id=755963995]
 
-[node name="TileMap" type="TileMap" parent="GameWorld"]
-## TileSet editörde atanacak — res://theme/BufeTileSet.tres
-## Zemin deseni: bej/beyaz kirpi seramik, 32px tile
+[node name="TileMap" type="TileMap" parent="GameWorld" unique_id=589731382]
 
-[node name="WallSprite" type="Sprite2D" parent="GameWorld"]
-## Arka duvar sprite — res://assets/sprites/world/wall_bufe.png
+[node name="WallSprite" type="Sprite2D" parent="GameWorld" unique_id=1733318893]
 position = Vector2(540, 100)
 
-[node name="CounterBody" type="StaticBody2D" parent="GameWorld"]
+[node name="CounterBody" type="StaticBody2D" parent="GameWorld" unique_id=1395458557]
 position = Vector2(540, 400)
 
-[node name="CounterSprite" type="Sprite2D" parent="GameWorld/CounterBody"]
-## Counter sprite — res://assets/sprites/world/counter.png
+[node name="CounterSprite" type="Sprite2D" parent="GameWorld/CounterBody" unique_id=583406522]
 
-[node name="CollisionShape" type="CollisionShape2D" parent="GameWorld/CounterBody"]
-## Şekil editörde ayarlanacak
+[node name="CollisionShape" type="CollisionShape2D" parent="GameWorld/CounterBody" unique_id=883209769]
 
-[node name="ChefSprite" type="AnimatedSprite2D" parent="GameWorld"]
+[node name="ChefSprite" type="AnimatedSprite2D" parent="GameWorld" unique_id=951431462]
 position = Vector2(540, 350)
-## SpriteFrames editörde atanacak
-## Animasyonlar: idle, cooking, victory
-## Idle: 2sn döngü, hafif "breathing" scale ±2%
 
-[node name="OcakContainer" type="Node2D" parent="GameWorld"]
+[node name="OcakContainer" type="Node2D" parent="GameWorld" unique_id=1007077005]
 
-[node name="OcakSlot1" type="Node2D" parent="GameWorld/OcakContainer"]
+[node name="OcakSlot1" type="Node2D" parent="GameWorld/OcakContainer" unique_id=1238944958]
 position = Vector2(400, 360)
-## OcakSlot script'i editörde atanacak
 
-[node name="OcakSlot2" type="Node2D" parent="GameWorld/OcakContainer"]
+[node name="OcakSlot2" type="Node2D" parent="GameWorld/OcakContainer" unique_id=168445540]
 position = Vector2(680, 360)
-visible = false   ## Slot 2: KIT_03 upgrade ile aktif olur
+visible = false
 
-[node name="StoolContainer" type="Node2D" parent="GameWorld"]
-## Tabureler: 2-4 arası (CNT_01/02 upgrade ile artar)
+[node name="StoolContainer" type="Node2D" parent="GameWorld" unique_id=1465605612]
 
-[node name="Stool1" type="Sprite2D" parent="GameWorld/StoolContainer"]
+[node name="Stool1" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=854682242]
 position = Vector2(300, 480)
 
-[node name="Stool2" type="Sprite2D" parent="GameWorld/StoolContainer"]
+[node name="Stool2" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=1570412576]
 position = Vector2(430, 480)
 
-[node name="Stool3" type="Sprite2D" parent="GameWorld/StoolContainer"]
+[node name="Stool3" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=645426897]
 position = Vector2(560, 480)
-visible = false   ## CNT_01 ile açılır
+visible = false
 
-[node name="Stool4" type="Sprite2D" parent="GameWorld/StoolContainer"]
+[node name="Stool4" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=787844510]
 position = Vector2(690, 480)
-visible = false   ## CNT_02 ile açılır
+visible = false
 
-[node name="QueueArea" type="Node2D" parent="GameWorld"]
-## Müşteri sırasının spawn pozisyonları — CustomerSystem bu node'un altına ekler
+[node name="QueueArea" type="Node2D" parent="GameWorld" unique_id=710391217]
 
-[node name="CustomerContainer" type="Node2D" parent="GameWorld"]
-## CustomerNode'lar buraya eklenir
+[node name="CustomerContainer" type="Node2D" parent="GameWorld" unique_id=1739990023]
 
-# ── UI LAYER ─────────────────────────────────────────────────────────────────
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=363654519]
 layer = 10
 
-[node name="HUDBar" type="Control" parent="UILayer"]
+[node name="HUDBar" parent="UILayer" instance=ExtResource("2_hud_scene") unique_id=2087346533]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
 offset_bottom = 80.0
-script = ExtResource("2_hud")
-## Alt nodelar editörde oluşturulacak:
-## HBox > CoinChip > CoinLabel
-##      > GemChip  > GemLabel
-##      > LevelBadge > LevelLabel + XPBar
-##      > SettingsBtn
-## BoostBadge (üst sağ)
 
-[node name="BottomNav" type="Control" parent="UILayer"]
+[node name="BottomNav" parent="UILayer" instance=ExtResource("14_bottom_nav") unique_id=1644078049]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -120.0
-## BottomNav script editörde atanacak
-## 4 tab: Restoran | Menü | Upgrade | Başarım
 
-[node name="ToastContainer" type="VBoxContainer" parent="UILayer"]
+[node name="ToastContainer" type="VBoxContainer" parent="UILayer" unique_id=984229941]
 layout_mode = 3
 anchors_preset = 4
 anchor_left = 0.0
@@ -116,70 +95,64 @@ offset_bottom = 500.0
 theme_override_constants/separation = 8
 script = ExtResource("3_toast")
 
-[node name="CoinFloatLayer" type="Node2D" parent="UILayer"]
-## CoinFloat.spawn() çıktıları buraya eklenir
+[node name="CoinFloatLayer" type="Node2D" parent="UILayer" unique_id=1842679077]
 
-[node name="UpgradePanel" type="Control" parent="UILayer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-visible = false
-## UpgradePanel.gd editörde atanacak
-## Bottom-sheet: 65% ekran, 4 kategori tab
-
-[node name="MenuPanel" type="Control" parent="UILayer"]
+[node name="UpgradePanel" type="Control" parent="UILayer" unique_id=778668089]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 visible = false
 
-[node name="AchievementPanel" type="Control" parent="UILayer"]
+[node name="MenuPanel" type="Control" parent="UILayer" unique_id=1805802769]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 visible = false
 
-[node name="WelcomeModal" type="Control" parent="UILayer"]
+[node name="AchievementPanel" type="Control" parent="UILayer" unique_id=765385218]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 visible = false
-## WelcomeModal.gd editörde atanacak
-## Offline reward ekranı
 
-# ── SİSTEMLER ────────────────────────────────────────────────────────────────
-[node name="Systems" type="Node" parent="."]
+[node name="WelcomeModal" parent="UILayer" instance=ExtResource("15_welcome_modal") unique_id=310054447]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
 
-[node name="CustomerSystem" type="Node" parent="Systems"]
+[node name="Systems" type="Node" parent="." unique_id=1908964184]
+
+[node name="CustomerSystem" type="Node" parent="Systems" unique_id=1239773267]
 script = ExtResource("4_cust")
 
-[node name="OrderManager" type="Node" parent="Systems"]
+[node name="OrderManager" type="Node" parent="Systems" unique_id=826686355]
 script = ExtResource("5_order")
 
-[node name="ChefSystem" type="Node" parent="Systems"]
+[node name="ChefSystem" type="Node" parent="Systems" unique_id=287034076]
 script = ExtResource("6_chef")
 
-[node name="EconomySystem" type="Node" parent="Systems"]
+[node name="EconomySystem" type="Node" parent="Systems" unique_id=1569245574]
 script = ExtResource("7_ekono")
 
-[node name="UpgradeSystem" type="Node" parent="Systems"]
+[node name="UpgradeSystem" type="Node" parent="Systems" unique_id=995463481]
 script = ExtResource("8_upg")
 
-[node name="OfflineSystem" type="Node" parent="Systems"]
+[node name="OfflineSystem" type="Node" parent="Systems" unique_id=1077337787]
 script = ExtResource("9_offline")
 
-[node name="SaveSystem" type="Node" parent="Systems"]
+[node name="SaveSystem" type="Node" parent="Systems" unique_id=752413227]
 script = ExtResource("10_save")
 
-[node name="ProgressionSystem" type="Node" parent="Systems"]
+[node name="ProgressionSystem" type="Node" parent="Systems" unique_id=216172587]
 script = ExtResource("11_prog")
 
-[node name="AchievementSystem" type="Node" parent="Systems"]
+[node name="AchievementSystem" type="Node" parent="Systems" unique_id=1452031469]
 script = ExtResource("12_ach")
 
-[node name="SatisfactionSystem" type="Node" parent="Systems"]
+[node name="SatisfactionSystem" type="Node" parent="Systems" unique_id=347615345]
 script = ExtResource("13_satis")

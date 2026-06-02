@@ -30,7 +30,7 @@ func _build_list() -> void:
 
 	for item_id in Constants.MENU_ITEMS:
 		var item : Dictionary = Constants.MENU_ITEMS[item_id]
-		var unlocked := _current_level >= item.get("unlock_level", 1)
+		var unlocked : bool = _current_level >= item.get("unlock_level", 1)
 
 		if item_id == "daily_special":
 			continue  ## Ayrı bölümde
@@ -44,7 +44,7 @@ func _build_list() -> void:
 
 	for item_id in Constants.MENU_ITEMS:
 		var item : Dictionary = Constants.MENU_ITEMS[item_id]
-		var unlocked := _current_level >= item.get("unlock_level", 1)
+		var unlocked : bool = _current_level >= item.get("unlock_level", 1)
 		if not unlocked:
 			list_container.add_child(_make_item_card(item_id, item, false))
 
@@ -115,7 +115,7 @@ func _make_item_card(item_id: String, item: Dictionary, unlocked: bool) -> Panel
 
 	## Unlock button (if locked)
 	if not unlocked:
-		var cost := item.get("unlock_cost", 0)
+		var cost : int = item.get("unlock_cost", 0)
 		if cost > 0:
 			var btn := Button.new()
 			btn.text = "Aç · %d 🪙" % cost

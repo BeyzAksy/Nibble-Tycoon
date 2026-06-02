@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://hud_bar"]
+[gd_scene format=3 uid="uid://7enj7t3a6rns8"]
 
 [ext_resource type="Script" path="res://scripts/ui/HUDBar.gd" id="1_hud"]
 
@@ -46,7 +46,7 @@ corner_radius_top_right = 999
 corner_radius_bottom_right = 999
 corner_radius_bottom_left = 999
 
-[node name="HUDBar" type="Control"]
+[node name="HUDBar" type="Control" unique_id=1454007300]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 0.0
@@ -56,7 +56,7 @@ offset_bottom = 80.0
 theme_override_styles/panel = SubResource("SB_hud")
 script = ExtResource("1_hud")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1705956953]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,89 +68,89 @@ offset_bottom = -8.0
 alignment = 1
 theme_override_constants/separation = 10
 
-[node name="CoinChip" type="PanelContainer" parent="HBox"]
+[node name="CoinChip" type="PanelContainer" parent="HBox" unique_id=198028835]
 layout_mode = 2
 theme_override_styles/panel = SubResource("SB_coin")
 
-[node name="CoinHBox" type="HBoxContainer" parent="HBox/CoinChip"]
+[node name="CoinHBox" type="HBoxContainer" parent="HBox/CoinChip" unique_id=309850219]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="CoinEmoji" type="Label" parent="HBox/CoinChip/CoinHBox"]
+[node name="CoinEmoji" type="Label" parent="HBox/CoinChip/CoinHBox" unique_id=1800638301]
 layout_mode = 2
 text = "🪙"
 theme_override_font_sizes/font_size = 28
 
-[node name="CoinLabel" type="Label" parent="HBox/CoinChip/CoinHBox"]
+[node name="CoinLabel" type="Label" parent="HBox/CoinChip/CoinHBox" unique_id=195610575]
 layout_mode = 2
 text = "0"
 theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.949, 0.718, 0.020, 1.0)
 
-[node name="GemChip" type="PanelContainer" parent="HBox"]
+[node name="GemChip" type="PanelContainer" parent="HBox" unique_id=637818867]
 layout_mode = 2
 theme_override_styles/panel = SubResource("SB_gem")
 
-[node name="GemHBox" type="HBoxContainer" parent="HBox/GemChip"]
+[node name="GemHBox" type="HBoxContainer" parent="HBox/GemChip" unique_id=1791945017]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="GemEmoji" type="Label" parent="HBox/GemChip/GemHBox"]
+[node name="GemEmoji" type="Label" parent="HBox/GemChip/GemHBox" unique_id=985466321]
 layout_mode = 2
 text = "💎"
 theme_override_font_sizes/font_size = 26
 
-[node name="GemLabel" type="Label" parent="HBox/GemChip/GemHBox"]
+[node name="GemLabel" type="Label" parent="HBox/GemChip/GemHBox" unique_id=240469817]
 layout_mode = 2
 text = "0"
 theme_override_font_sizes/font_size = 26
 theme_override_colors/font_color = Color(0.608, 0.435, 0.769, 1.0)
 
-[node name="Spacer" type="Control" parent="HBox"]
+[node name="Spacer" type="Control" parent="HBox" unique_id=1608998935]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LevelBadge" type="PanelContainer" parent="HBox"]
+[node name="LevelBadge" type="PanelContainer" parent="HBox" unique_id=2095311649]
 layout_mode = 2
 theme_override_styles/panel = SubResource("SB_level")
 
-[node name="LvHBox" type="HBoxContainer" parent="HBox/LevelBadge"]
+[node name="LvHBox" type="HBoxContainer" parent="HBox/LevelBadge" unique_id=323135453]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="LvCircle" type="PanelContainer" parent="HBox/LevelBadge/LvHBox"]
+[node name="LvCircle" type="PanelContainer" parent="HBox/LevelBadge/LvHBox" unique_id=2059538179]
 layout_mode = 2
 custom_minimum_size = Vector2(36, 36)
 
-[node name="LevelLabel" type="Label" parent="HBox/LevelBadge/LvHBox"]
+[node name="LevelLabel" type="Label" parent="HBox/LevelBadge/LvHBox" unique_id=293321003]
 layout_mode = 2
 text = "Lv.1"
 theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.949, 0.718, 0.020, 1.0)
 
-[node name="XPVBox" type="VBoxContainer" parent="HBox/LevelBadge/LvHBox"]
+[node name="XPVBox" type="VBoxContainer" parent="HBox/LevelBadge/LvHBox" unique_id=2017418323]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="XPLbl" type="Label" parent="HBox/LevelBadge/LvHBox/XPVBox"]
+[node name="XPLbl" type="Label" parent="HBox/LevelBadge/LvHBox/XPVBox" unique_id=723846531]
 layout_mode = 2
 text = "LV 1"
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.949, 0.718, 0.020, 1.0)
 
-[node name="XPBar" type="TextureProgressBar" parent="HBox/LevelBadge/LvHBox/XPVBox"]
+[node name="XPBar" type="TextureProgressBar" parent="HBox/LevelBadge/LvHBox/XPVBox" unique_id=359760272]
 layout_mode = 2
 custom_minimum_size = Vector2(64, 6)
 value = 0.0
 
-[node name="SettingsBtn" type="Button" parent="HBox"]
+[node name="SettingsBtn" type="Button" parent="HBox" unique_id=674900780]
 layout_mode = 2
 custom_minimum_size = Vector2(52, 52)
 text = "⚙️"
 theme_override_font_sizes/font_size = 26
 pressed.connect = [  ]
 
-[node name="BoostBadge" type="Label" parent="."]
+[node name="BoostBadge" type="Label" parent="." unique_id=286195938]
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 36.0

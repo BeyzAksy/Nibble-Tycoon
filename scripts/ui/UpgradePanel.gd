@@ -73,7 +73,7 @@ func _update_tab_styles() -> void:
 	if not tab_bar: return
 	for i in tab_bar.get_child_count():
 		var btn : Button = tab_bar.get_child(i)
-		var is_active := CATEGORIES[i] == _active_category
+		var is_active : bool = CATEGORIES[i] == _active_category
 		btn.add_theme_color_override(
 			"font_color",
 			Constants.CARD if is_active else Constants.INK_SOFT

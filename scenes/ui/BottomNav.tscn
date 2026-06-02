@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bottom_nav"]
+[gd_scene format=3 uid="uid://qrqdd6aooedts"]
 
 [ext_resource type="Script" path="res://scripts/ui/BottomNav.gd" id="1_bn"]
 
@@ -24,7 +24,7 @@ corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxEmpty" id="SB_tab_empty"]
 
-[node name="BottomNav" type="Control"]
+[node name="BottomNav" type="Control" unique_id=1830379382]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
@@ -34,13 +34,13 @@ offset_top = -120.0
 theme_override_styles/panel = SubResource("SB_nav")
 script = ExtResource("1_bn")
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1221205290]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="TabRestoran" type="Button" parent="HBox"]
+[node name="TabRestoran" type="Button" parent="HBox" unique_id=168207604]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -50,7 +50,7 @@ theme_override_styles/normal = SubResource("SB_tab_active")
 theme_override_styles/hover = SubResource("SB_tab_active")
 theme_override_styles/pressed = SubResource("SB_tab_active")
 
-[node name="TabMenu" type="Button" parent="HBox"]
+[node name="TabMenu" type="Button" parent="HBox" unique_id=1644737733]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -60,7 +60,7 @@ theme_override_styles/normal = SubResource("SB_tab_empty")
 theme_override_styles/hover = SubResource("SB_tab_empty")
 theme_override_styles/pressed = SubResource("SB_tab_empty")
 
-[node name="TabUpgrade" type="Button" parent="HBox"]
+[node name="TabUpgrade" type="Button" parent="HBox" unique_id=1331093416]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -71,7 +71,7 @@ theme_override_styles/hover = SubResource("SB_tab_empty")
 theme_override_styles/pressed = SubResource("SB_tab_empty")
 
 ## Yeni upgrade badge noktası
-[node name="NewDot" type="Control" parent="HBox/TabUpgrade"]
+[node name="NewDot" type="Control" parent="HBox/TabUpgrade" unique_id=887262440]
 layout_mode = 0
 offset_right = 14.0
 offset_bottom = 14.0
@@ -79,7 +79,7 @@ anchor_left = 1.0
 anchor_right = 1.0
 ## ColorRect daire — editörde eklenecek, yeşil mint noktası
 
-[node name="TabBasarim" type="Button" parent="HBox"]
+[node name="TabBasarim" type="Button" parent="HBox" unique_id=1704229318]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

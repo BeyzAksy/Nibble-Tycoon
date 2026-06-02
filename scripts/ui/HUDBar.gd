@@ -5,10 +5,10 @@
 extends Control
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
-@onready var coin_label  : Label = $HBox/CoinChip/CoinLabel
-@onready var gem_label   : Label = $HBox/GemChip/GemLabel
-@onready var level_label : Label = $HBox/LevelBadge/LevelLabel
-@onready var xp_bar      : TextureProgressBar = $HBox/LevelBadge/XPBar
+@onready var coin_label  : Label = $HBox/CoinChip/CoinHBox/CoinLabel
+@onready var gem_label   : Label = $HBox/GemChip/GemHBox/GemLabel
+@onready var level_label : Label = $HBox/LevelBadge/LvHBox/LevelLabel
+@onready var xp_bar      : TextureProgressBar = $HBox/LevelBadge/LvHBox/XPVBox/XPBar
 @onready var settings_btn: Button = $HBox/SettingsBtn
 @onready var coin_chip   : PanelContainer = $HBox/CoinChip
 @onready var boost_badge : Label = $BoostBadge   ## Speed boost timer display

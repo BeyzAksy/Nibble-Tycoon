@@ -36,6 +36,8 @@
 
 extends Node2D
 
+const CoinFloat = preload("res://scripts/ui/CoinFloat.gd")
+
 var _pending_offline_earnings : float = 0.0
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
@@ -284,7 +286,7 @@ func _on_coin_earned_for_float(amount: float, source: String) -> void:
 		return
 	## Spawn coin float — pozisyon counter'dan alınacak (şimdilik merkez)
 	var world_pos := Vector2(540, 600)
-	CoinFloat.spawn(coin_float_layer, world_pos, amount, source == "tip")
+	CoinFloat.new().play(coin_float_layer, world_pos, amount, source == "tip")
 
 
 # ── PANEL NAVIGATION ──────────────────────────────────────────────────────────

@@ -43,8 +43,8 @@ var _base_position  : Vector2
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
 @onready var sprite          : AnimatedSprite2D = $Sprite
-@onready var status_icon     : Label            = $OrderBubble/StatusIcon
-@onready var timer_label     : Label            = $OrderBubble/TimerLabel
+@onready var status_icon     : Label            = $OrderBubble/BubbleBG/HBox/StatusIcon
+@onready var timer_label     : Label            = $OrderBubble/BubbleBG/HBox/TimerLabel
 @onready var queue_bar       : TextureProgressBar = $PatienceBarContainer/QueueBar
 @onready var food_bar        : TextureProgressBar = $PatienceBarContainer/FoodBar
 @onready var emotion_label   : Label            = $EmotionLabel
@@ -64,7 +64,7 @@ func setup(
 	_base_position  = position
 
 	## CUSTOMER_TYPES dict'inden sabır sürelerini oku
-	var def    := Constants.CUSTOMER_TYPES.get(
+	var def : Dictionary = Constants.CUSTOMER_TYPES.get(
 			customer_type, Constants.CUSTOMER_TYPES["regular"])
 	_queue_max = def["patience_queue"]
 	_food_max  = def["patience_food"]

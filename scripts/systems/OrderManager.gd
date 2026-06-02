@@ -6,6 +6,7 @@
 ##   QUEUED → CANCELLED_QUEUE   (sıra sabrı bitti)
 ##   SEATED → CANCELLED_ANGRY   (yemek sabrı bitti)
 
+class_name OrderManager
 extends Node
 
 # ── ENUM ─────────────────────────────────────────────────────────────────────

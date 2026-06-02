@@ -20,10 +20,10 @@ var _active_tab : Tab = Tab.RESTAURANT
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
-	tab_restaurant.pressed.connect(func(): _switch(Tab.RESTAURANT))
-	tab_menu.pressed.connect(func():       _switch(Tab.MENU))
-	tab_upgrade.pressed.connect(func():    _switch(Tab.UPGRADE))
-	tab_achievement.pressed.connect(func(): _switch(Tab.ACHIEVEMENT))
+	if tab_restaurant:   tab_restaurant.pressed.connect(func(): _switch(Tab.RESTAURANT))
+	if tab_menu:         tab_menu.pressed.connect(func(): _switch(Tab.MENU))
+	if tab_upgrade:      tab_upgrade.pressed.connect(func(): _switch(Tab.UPGRADE))
+	if tab_achievement:  tab_achievement.pressed.connect(func(): _switch(Tab.ACHIEVEMENT))
 
 	EventBus.upgrade_purchased.connect(func(_id): _hide_upgrade_dot())
 
@@ -55,7 +55,7 @@ func _refresh_visuals() -> void:
 	for tab in buttons:
 		var btn : Button = buttons[tab]
 		if not btn: continue
-		var is_active := tab == _active_tab
+		var is_active : bool = tab == _active_tab
 		btn.add_theme_color_override("font_color",
 			Constants.CORAL if is_active else Constants.INK_SOFT)
 
