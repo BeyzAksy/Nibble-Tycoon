@@ -36,6 +36,8 @@
 
 extends Node2D
 
+const CoinFloat = preload("res://scripts/ui/CoinFloat.gd")
+
 var _pending_offline_earnings : float = 0.0
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
