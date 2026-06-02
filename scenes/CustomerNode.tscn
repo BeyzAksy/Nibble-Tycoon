@@ -1,6 +1,7 @@
-[gd_scene format=3 uid="uid://uq1pm5jbud026"]
+[gd_scene format=3 uid="uid://bf0douw11dnbd"]
 
-[ext_resource type="Script" path="res://scripts/CustomerNode.gd" id="1_cust"]
+[ext_resource type="Script" uid="uid://b2ib508d1kklb" path="res://scripts/CustomerNode.gd" id="1_cust"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/characters/customer_spriteframes.tres" id="2_oyukr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 bg_color = Color(1, 1, 1, 1)
@@ -8,71 +9,74 @@ border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.310, 0.659, 0.875, 1)
+border_color = Color(0.31, 0.659, 0.875, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="CustomerNode" type="Node2D"]
+[node name="CustomerNode" type="Node2D" unique_id=855407129]
 script = ExtResource("1_cust")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1245196397]
+sprite_frames = ExtResource("2_oyukr")
+animation = &"walk_left"
 
-[node name="OrderBubble" type="Control" parent="."]
-layout_mode = 0
+[node name="OrderBubble" type="Control" parent="." unique_id=924347670]
+layout_mode = 3
+anchors_preset = 0
 offset_left = -40.0
 offset_top = -80.0
 offset_right = 40.0
 offset_bottom = -52.0
 
-[node name="BubbleBG" type="PanelContainer" parent="OrderBubble"]
+[node name="BubbleBG" type="PanelContainer" parent="OrderBubble" unique_id=20373839]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bubble")
 
-[node name="HBox" type="HBoxContainer" parent="OrderBubble/BubbleBG"]
+[node name="HBox" type="HBoxContainer" parent="OrderBubble/BubbleBG" unique_id=1746981659]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="StatusIcon" type="Label" parent="OrderBubble/BubbleBG/HBox"]
+[node name="StatusIcon" type="Label" parent="OrderBubble/BubbleBG/HBox" unique_id=1925621376]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "⏳"
-theme_override_font_sizes/font_size = 18
 
-[node name="TimerLabel" type="Label" parent="OrderBubble/BubbleBG/HBox"]
+[node name="TimerLabel" type="Label" parent="OrderBubble/BubbleBG/HBox" unique_id=1993759387]
 layout_mode = 2
-text = "Sırada"
+theme_override_colors/font_color = Color(0.31, 0.659, 0.875, 1)
 theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.310, 0.659, 0.875, 1)
+text = "Sırada"
 
-[node name="PatienceBarContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
+[node name="PatienceBarContainer" type="VBoxContainer" parent="." unique_id=1288358069]
 offset_left = -26.0
 offset_top = -100.0
 offset_right = 26.0
 offset_bottom = -88.0
 theme_override_constants/separation = 3
 
-[node name="QueueBar" type="TextureProgressBar" parent="PatienceBarContainer"]
-layout_mode = 2
+[node name="QueueBar" type="TextureProgressBar" parent="PatienceBarContainer" unique_id=1487821365]
 custom_minimum_size = Vector2(52, 6)
+layout_mode = 2
 value = 100.0
 
-[node name="FoodBar" type="TextureProgressBar" parent="PatienceBarContainer"]
-layout_mode = 2
-custom_minimum_size = Vector2(52, 6)
-value = 100.0
+[node name="FoodBar" type="TextureProgressBar" parent="PatienceBarContainer" unique_id=216649901]
 visible = false
+custom_minimum_size = Vector2(52, 6)
+layout_mode = 2
+value = 100.0
 
-[node name="EmotionLabel" type="Label" parent="."]
-layout_mode = 0
+[node name="EmotionLabel" type="Label" parent="." unique_id=688165409]
 offset_left = -14.0
 offset_top = -118.0
 offset_right = 14.0
 offset_bottom = -100.0
-text = "😊"
 theme_override_font_sizes/font_size = 22
+text = "😊"
 horizontal_alignment = 1

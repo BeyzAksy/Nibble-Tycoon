@@ -37,6 +37,10 @@ var _is_eating      : bool  = false
 var _order_manager  : Node  = null
 var _customer_system: Node  = null
 
+## Yürüme yönü — walk_down / walk_up / walk_left / walk_right
+## Hareket sistemi eklenince set_facing() çağrılır, animasyon otomatik değişir.
+var facing_dir      : String = "walk_down"
+
 ## Shake animation state
 var _shake_tween    : Tween = null
 var _base_position  : Vector2
@@ -240,12 +244,18 @@ func _update_emotion() -> void:
 	t.tween_property(emotion_label, "scale", Vector2(1.0, 1.0), 0.04)
 
 
+## Yönü günceller ve animasyonu oynatır.
+## Hareket sistemi bu metodu çağırır — başka yerden çağrılmaz.
+func set_facing(dir: String) -> void:
+	facing_dir = dir
+	_update_sprite()
+
+
 func _update_sprite() -> void:
 	if not sprite:
 		return
-	var anim : String = customer_type + "_idle"
-	if sprite.sprite_frames and sprite.sprite_frames.has_animation(anim):
-		sprite.play(anim)
+	if sprite.sprite_frames and sprite.sprite_frames.has_animation(facing_dir):
+		sprite.play(facing_dir)
 
 
 # ── SHAKE ANIMATION ───────────────────────────────────────────────────────────
