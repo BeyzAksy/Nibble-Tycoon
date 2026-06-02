@@ -37,9 +37,9 @@ var _is_eating      : bool  = false
 var _order_manager  : Node  = null
 var _customer_system: Node  = null
 
-## Yürüme yönü — walk_down / walk_up / walk_left / walk_right
+## Yürüme yönü — walk_se / walk_sw / walk_ne / walk_nw
 ## Hareket sistemi eklenince set_facing() çağrılır, animasyon otomatik değişir.
-var facing_dir      : String = "walk_down"
+var facing_dir      : String = "walk_se"
 
 ## Shake animation state
 var _shake_tween    : Tween = null
