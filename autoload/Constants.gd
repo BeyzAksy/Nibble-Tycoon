@@ -101,6 +101,31 @@ const SPLASH_FADE_DURATION := 0.4   ## Fade-out süresi
 # ── SAVE VERSIONING ───────────────────────────────────────────────────────────
 const CURRENT_SAVE_VERSION := 2
 
+# ── SPRITES ───────────────────────────────────────────────────────────────────
+## Tüm sprite path'leri buradan okunur — script içinde hardcode yok.
+## Kullanım: load(Constants.SPRITES["counter"])
+## Animasyon frame'leri (iso-walk) SpriteFrames resource ile yönetilir, buraya girmez.
+const SPRITES := {
+	## Environment
+	"counter":      "res://assets/sprites/environment/counter.png",
+	"floor":        "res://assets/sprites/environment/floor.png",
+	"wall":         "res://assets/sprites/environment/wall.png",
+	"wall_doorway": "res://assets/sprites/environment/wall_doorway.png",
+	"chair_stool":  "res://assets/sprites/environment/chair_stool.png",
+	"door_b":       "res://assets/sprites/environment/door_b.png",
+	"plate":        "res://assets/sprites/environment/plate.png",
+	"stove":        "res://assets/sprites/environment/stove.png",
+
+	## Character portraits
+	"portrait_neutral":   "res://assets/sprites/characters/portraits/neutral.png",
+	"portrait_beg":       "res://assets/sprites/characters/portraits/beg.png",
+	"portrait_cross":     "res://assets/sprites/characters/portraits/cross.png",
+	"portrait_facepalm":  "res://assets/sprites/characters/portraits/facepalm.png",
+	"portrait_giggle":    "res://assets/sprites/characters/portraits/giggle.png",
+	"portrait_surprized": "res://assets/sprites/characters/portraits/surprized.png",
+	"portrait_tongue":    "res://assets/sprites/characters/portraits/tongue.png",
+}
+
 # ── BUFFET STAGE CONSTANTS (GDD §14) ─────────────────────────────────────────
 
 ## Kapasite

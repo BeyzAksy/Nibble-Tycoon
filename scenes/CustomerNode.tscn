@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bf0douw11dnbd"]
 
 [ext_resource type="Script" uid="uid://b2ib508d1kklb" path="res://scripts/CustomerNode.gd" id="1_cust"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/characters/customer_spriteframes.tres" id="2_oyukr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 bg_color = Color(1, 1, 1, 1)
@@ -18,6 +19,9 @@ corner_radius_bottom_left = 10
 script = ExtResource("1_cust")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1245196397]
+sprite_frames = ExtResource("2_oyukr")
+animation = &"walk_ne"
+frame_progress = 0.16537279
 
 [node name="OrderBubble" type="Control" parent="." unique_id=924347670]
 layout_mode = 3
