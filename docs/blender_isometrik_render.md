@@ -1,7 +1,10 @@
 # Blender — İzometrik Sprite Render Kurulumu
 
-> Oyundaki kamera: **Orthographic, X: 54.74°, Z: 45°**
+> Oyundaki kamera: **Orthographic, X: 60°, Z: 45°, Sensor Fit: Horizontal**
 > Bu dokümandaki tüm ayarlar o açıyla eşleşecek şekilde yapılandırılmıştır.
+>
+> **Kamera geometrisi + canvas için tek kaynak:** `docs/sprite_render_sozlesmesi.md`
+> (256×512 canvas, 2:1 diamond, offset -95). Bu dosya ışık kurulumu + workflow içindir.
 >
 > Bu workflow'un projedeki yeri: `docs/gorsel_sistem.md` §Pre-Rendered 3D Workflow
 
@@ -13,23 +16,28 @@ Blender renderı oyunun izometrik görüşüyle örtüşmeli — aksi halde spri
 
 ```
 Kamera tipi:  Orthographic  (Perspective değil)
-X rotasyon:   54.74°        (izometrik dikey açı — arccos(1/√3))
+X rotasyon:   60°           (game isometric — 2:1 diamond verir)
 Z rotasyon:   45°           (izometrik yatay yön)
-Ortho Scale:  nesne sığana kadar ayarla — değerin önemi yok
+Sensor Fit:   Horizontal    (ortho scale'i genişliğe kilitler)
+Ortho Scale:  tile_boyutu × √2  (4 birim tile → 5.6569)
 ```
 
 **Blender'da hızlı ayarlama:**
 1. Kamera seç → Properties → Object Data Properties
-2. Type: Orthographic
-3. Sağ panelde rotasyon: `X = 54.74`, `Z = 45`
-4. Numpad `0` → kamera görüşüne gir → nesne ortada kalana kadar `Ortho Scale` ayarla
+2. Type: Orthographic, Sensor Fit: Horizontal
+3. Sağ panelde rotasyon: `X = 60`, `Z = 45`
+4. Ortho Scale = tile_boyutu × √2
 
-> **Neden 54.74°?** Gerçek izometrik açı, dikey eksenle `arccos(1/√3) ≈ 54.74°` yapar.
-> Bu açıda X/Y/Z eksenleri ekranda eşit uzunlukta görünür — tile'ların 128×64 px oranıyla örtüşür.
+> **Neden 60° (54.74° değil)?** 60° game isometric'tir: diamond tam 2:1 (256×128px)
+> çıkar — `ISO_TILE_HALF_W = ISO_TILE_HALF_H × 2` ile örtüşür. 54.74° "true isometric"tir
+> (3 eksen eşit), 1.73:1 diamond verir — bu kod için YANLIŞTIR ve tile'ları üst üste bindirir.
 
 ### Ortho Scale ve Ortalama
 
-**Ortho Scale değeri objeye göre değişebilir** — büyük obje için 6, küçük için 2 olması sorun değil. Render çıktısı her zaman 256×256 px olduğu sürece tutarlılık bozulmaz. Oyun içi boyut Godot'ta Sprite2D `scale` ile ayarlanır.
+**Ortho Scale = tile_boyutu × √2** — tüm asset'lerde sabit kalmalı (4 birim tile için 5.6569).
+Render çıktısı **256×512 px** olduğu sürece tutarlılık bozulmaz. Sensor Fit Horizontal
+sayesinde yükseklik 512 olsa da diamond genişliği 256px kalır. Oyun içi boyut Godot'ta
+Sprite2D `scale` (0.5) ile ayarlanır.
 
 **Objeyi merkeze almanın en kolay yolu — G kullanma:**
 ```
@@ -94,7 +102,7 @@ Güç:   0.4
 
 ```
 Render Engine:   Cycles  (veya EEVEE Next — daha hızlı, kalite yeterli)
-Resolution:      256 × 256   (environment obje)
+Resolution:      256 × 512   (environment obje — genişlik 256, yükseklik 512)
                  128 × 192   (karakter — dikey uzun)
 Samples:         Cycles: 128 / EEVEE: 32
 Background:      Film → Transparent: ✓
@@ -108,14 +116,15 @@ Color:           RGBA  (alpha şart — sprite overlay için)
 
 | Nesne | Render Çözünürlüğü | Godot'ta Boyut | Not |
 |-------|-------------------|----------------|-----|
-| Zemin tile (floor) | 256 × 256 | TileMap'te tile_size ile otomatik | KayKit referans: 256×256 |
-| Duvar (wall) | 256 × 256 | Sprite2D scale ile ayarla | KayKit referans: 256×256 |
-| Orta obje (tezgah, sandalye) | 256 × 256 | Sprite2D scale ile ayarla | KayKit referans: 256×256 |
-| Küçük obje (bardak, tabak) | 256 × 256 | Küçük scale | UI icon olarak da kullanılabilir |
-| Büyük obje (ocak, dolap) | 256 × 256 | Büyük scale | Gerekirse 512×512 |
-| Karakter | 256 × 256 | Karakter boyutuna göre scale | Animasyon frame'leri aynı boyut |
+| Zemin tile (floor) | 256 × 512 | Sprite2D scale 0.5 | diamond 256×128, sözleşme |
+| Duvar (wall) | 256 × 512 | Sprite2D scale 0.5 | gövde üst boşlukta uzar |
+| Orta obje (tezgah, sandalye) | 256 × 512 | Sprite2D scale 0.5 | aynı sözleşme |
+| Küçük obje (bardak, tabak) | 256 × 512 | Küçük scale | UI icon olarak da kullanılabilir |
+| Büyük obje (ocak, dolap) | 256 × 512 | Sprite2D scale 0.5 | gerekirse daha yüksek canvas |
+| Karakter | 128 × 192 | Karakter boyutuna göre scale | Animasyon frame'leri aynı boyut |
 
-> **KayKit standardı 256×256.** Kendi Blender render'larını da bu boyutta al — set tutarlı kalır.
+> **Environment standardı 256×512** (`sprite_render_sozlesmesi.md`). Genişlik 256 diamond'ı
+> doldurur, yükseklik 512 yüksek nesnelere yer açar — tüm set tutarlı kalır.
 
 ---
 
@@ -131,7 +140,7 @@ stretch/aspect: expand
 ```
 
 `canvas_items` modu Godot'un tüm sprite'ları ekran boyutuna göre otomatik scale etmesi demek.
-Sen 256×256 sprite koy, Godot iPhone SE'de de Galaxy S24'te de doğru boyutta gösterir.
+Sen 256×512 sprite koy, Godot iPhone SE'de de Galaxy S24'te de doğru boyutta gösterir.
 
 ---
 
@@ -139,7 +148,7 @@ Sen 256×256 sprite koy, Godot iPhone SE'de de Galaxy S24'te de doğru boyutta g
 
 ```
 1. Nesneyi sahneye al (import / model)
-2. Kamera: Orthographic, X=54.74°, Z=45°
+2. Kamera: Orthographic, X=60°, Z=45°, Sensor Fit Horizontal
 3. Işıkları yukardaki ayarlarla ekle
 4. Film → Transparent: açık
 5. Çözünürlüğü nesne tipine göre ayarla
@@ -170,8 +179,8 @@ Sen 256×256 sprite koy, Godot iPhone SE'de de Galaxy S24'te de doğru boyutta g
 
 Render'dan önce şunu kontrol et:
 
-- [ ] Kamera tipi Orthographic
-- [ ] X: 54.74°, Z: 45°
+- [ ] Kamera tipi Orthographic, Sensor Fit Horizontal
+- [ ] X: 60°, Z: 45° (54.74° DEĞİL)
 - [ ] Transparent background açık
 - [ ] Key light sol-üstte, gölge sağ-alta düşüyor
 - [ ] Output format: PNG + RGBA

@@ -59,8 +59,8 @@ Midjourney / DALL-E
       ↓
 Trellis (Microsoft) — tek image'dan 3D mesh + PBR texture üretir
       ↓
-Blender — izometrik kamera (orthographic, X: 54.74°, Z: 45°)
-          render → transparent background PNG
+Blender — izometrik kamera (orthographic, X: 60°, Z: 45°, Sensor Fit Horizontal)
+          256×512 canvas, render → transparent background PNG
       ↓
 assets/sprites/environment/[obje].png
       ↓

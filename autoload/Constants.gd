@@ -111,6 +111,7 @@ const SPRITES := {
 	"floor":        "res://assets/sprites/environment/floor.png",
 	"wall":         "res://assets/sprites/environment/wall.png",
 	"wall_doorway": "res://assets/sprites/environment/wall_doorway.png",
+	"wall_side":    "res://assets/sprites/environment/wall_side.png",
 	"chair_stool":  "res://assets/sprites/environment/chair_stool.png",
 	"door_b":       "res://assets/sprites/environment/door_b.png",
 	"plate":        "res://assets/sprites/environment/plate.png",
@@ -125,6 +126,62 @@ const SPRITES := {
 	"portrait_surprized": "res://assets/sprites/characters/portraits/surprized.png",
 	"portrait_tongue":    "res://assets/sprites/characters/portraits/tongue.png",
 }
+
+# ── ISOMETRIC GRID & VISUAL ALIGNMENT ────────────────────────────────────────
+## Tüm environment sprite pozisyonları bu değerlerden türetilir.
+## Detay: .claude/rules/visual.md — Asset Hizalama Kuralları
+
+## Canvas 256×512, ölçülen iso diamond 256×128px (unscaled, 2:1) — sözleşmeye uygun
+## Ekran adımı = HALF × ENV_SPRITE_SCALE.x — iso_to_screen() bu çarpımı yapar
+## docs/sprite_render_sozlesmesi.md sözleşmesi: 256×512 canvas, diamond tam 256×128px
+const ISO_TILE_HALF_W  : int = 128   ## diamond 256px / 2
+const ISO_TILE_HALF_H  : int = 64    ## diamond 128px / 2
+
+## Izometrik origin — col=0, row=0 noktasının ekran koordinatı (1080×1920 viewport)
+const ISO_ORIGIN_X     : int = 540
+const ISO_ORIGIN_Y     : int = 420
+
+## Büfe grid boyutu — GDD §4
+const BUFFET_GRID_COLS : int = 4
+const BUFFET_GRID_ROWS : int = 8
+
+## Tüm duvar sprite'ları bu yükseklikte olmalı — farklı asset gelirse crop/resize
+## Gerçek değer Godot'ta asset ölçülerek netleştirilir
+const WALL_HEIGHT_PX   : int = 96    ## placeholder — asset bağımlı
+
+## Environment sprite scale — tüm env sprite'ları bu değeri kullanır
+## 256px diamond × 0.5 → ekranda 128×64 iso diamond (ISO_TILE_HALF_W/H ile tutarlı)
+const ENV_SPRITE_SCALE := Vector2(0.5, 0.5)
+
+## Col/row grid koordinatını ekran pozisyonuna çevirir.
+## Tüm environment spawn noktaları bu fonksiyondan geçer — magic number yok.
+static func iso_to_screen(col: int, row: int) -> Vector2:
+	var hw : float = ISO_TILE_HALF_W * ENV_SPRITE_SCALE.x
+	var hh : float = ISO_TILE_HALF_H * ENV_SPRITE_SCALE.y
+	return Vector2(
+		ISO_ORIGIN_X + col * hw - row * hw,
+		ISO_ORIGIN_Y + col * hh + row * hh
+	)
+
+## Sprite pivot offset'leri — zemin temas noktasını node pozisyonuna hizalar.
+## 256×512 canvas: tüm asset'ler aynı kamerayla render edildiği için Blender origin
+## (0,0,0) her asset'te aynı piksele (y=351) düşer. Texture merkezi y=256.
+## offset.y = -(temas_y - canvas_merkezi_y) = -(351 - 256) = -95
+## Tüm environment asset'leri 256×512 sözleşmesinde — kamera sabit, temas noktası y=351.
+const SPRITE_OFFSET_FLOOR   := Vector2(0, -95)
+const SPRITE_OFFSET_WALL    := Vector2(0, -95)
+const SPRITE_OFFSET_WALL_SIDE := Vector2(0, -95)
+const SPRITE_OFFSET_COUNTER := Vector2(0, -95)
+const SPRITE_OFFSET_STOOL   := Vector2(0, -95)
+
+## Kamera zoom seviyeleri (BufeScene.gd dinamik zoom için kullanır)
+## Tetikleyiciler: bufe_scene_tasarim.md — Kamera Ayarları
+const CAMERA_ZOOM_START := Vector2(1.3, 1.3)    ## başlangıç: 2 tabure, 1 ocak
+const CAMERA_ZOOM_MID   := Vector2(1.1, 1.1)    ## CNT_02 veya KIT_03 sonrası
+const CAMERA_ZOOM_MAX   := Vector2(0.9, 0.9)    ## Level 5, tüm upgrade'ler
+
+## Zoom tween süresi (sn)
+const CAMERA_ZOOM_TWEEN_SEC := 0.5
 
 # ── BUFFET STAGE CONSTANTS (GDD §14) ─────────────────────────────────────────
 
