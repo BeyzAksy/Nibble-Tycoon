@@ -53,6 +53,110 @@ Başka dosyaya **dokunma**.
 
 ---
 
+## Asset Hizalama Kuralları
+
+### 1. Zemin Referans Noktası (Pivot)
+
+Tüm environment sprite'larının pivot noktası **izometrik ayak izinin ön-merkezi**nde
+olmalıdır — yani nesnenin zemine temas ettiği nokta. Sprite'ın üst köşesi değil.
+
+```
+İzometrik tile'ın "zemin temas noktası":
+
+        /▔▔▔\
+       /  ×  \    ← × = pivot noktası (sprite.offset ile ayarlanır)
+       \     /
+        \▄▄▄/
+
+Sprite2D.offset: genellikle (0, -sprite_height/2) değil,
+sprite'ın "ayak" noktasına göre ayarlanır.
+```
+
+**Kural:** Aynı tipteki tüm sprite'lar (tüm duvarlar, tüm tezgahlar, tüm tabureler)
+**aynı offset değerini** kullanır. Birinden farklı offset = görsel boşluk veya yükseklik farkı.
+
+```gdscript
+## WRONG — her sprite farklı offset
+wall_a.offset = Vector2(0, -45)
+wall_b.offset = Vector2(0, -48)   ## 3px fark = boşluk görünür
+
+## CORRECT — sabit, tüm duvarlar aynı
+const WALL_OFFSET := Vector2(0, -Constants.WALL_SPRITE_HALF_HEIGHT)
+wall_a.offset = WALL_OFFSET
+wall_b.offset = WALL_OFFSET
+```
+
+---
+
+### 2. Grid Hizalaması — Zorunlu
+
+Her environment objesi izometrik grid'e snap'lenmeli. Pozisyon hesabı:
+
+```gdscript
+## Tek doğru yol — magic number yok
+func iso_to_screen(col: int, row: int) -> Vector2:
+    return Vector2(
+        Constants.ISO_ORIGIN_X + col * Constants.ISO_TILE_HALF_W - row * Constants.ISO_TILE_HALF_W,
+        Constants.ISO_ORIGIN_Y + col * Constants.ISO_TILE_HALF_H + row * Constants.ISO_TILE_HALF_H
+    )
+
+## Kullanım
+wall_sprite.position = iso_to_screen(col, row)
+```
+
+Sub-pixel offset (örn. `position = iso_to_screen(...) + Vector2(0.5, 0)`) **yasak** —
+bitişik tile'lar arasında 1px boşluk açar.
+
+---
+
+### 3. Duvar Yüksekliği Tutarlılığı
+
+Tüm duvar sprite'ları aynı piksel yüksekliğinde olmalı. Farklı yükseklik =
+duvarlar arasında görsel kopukluk.
+
+```gdscript
+## Constants.gd'de tanımlanır
+const WALL_HEIGHT_PX : int = 96    ## tüm duvar sprite'larının yüksekliği
+```
+
+Yeni asset eklenirken bu değere göre crop/resize yapılır.
+Kod tarafında scale ile kompanse etmek **yasak**.
+
+---
+
+### 4. Birleşik Obje Boşluksuzluğu
+
+Counter, duvar gibi yan yana gelen parçalar arasında boşluk **olamaz**:
+
+```gdscript
+## WRONG — 0.5px fazla offset = gözle görülür dikiş
+counter_m.position = iso_to_screen(1, 2) + Vector2(0.5, 0)
+
+## CORRECT
+counter_l.position = iso_to_screen(0, 2)
+counter_m.position = iso_to_screen(1, 2)
+counter_r.position = iso_to_screen(2, 2)
+```
+
+Bitişik parçalar her zaman ardışık (col, col+1, col+2) grid pozisyonlarında olur.
+Aralarında ek offset **yasak**.
+
+---
+
+### 5. Scale Tekliği
+
+Aynı kategorideki tüm sprite'lar aynı scale değerini kullanır:
+
+```gdscript
+## Constants.gd
+const ENV_SPRITE_SCALE := Vector2(1.0, 1.0)   ## veya proje genelinde kararlaştırılan değer
+```
+
+Tek bir sprite'ı büyütmek/küçültmek için scale kullanmak **yasak**.
+Farklı boyut gerekiyorsa ayrı bir asset kullanılır.
+
+---
+
 ## İzometrik TileMap Kuralları
 
 ```gdscript

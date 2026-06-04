@@ -88,16 +88,21 @@ Her müşterinin **iki bağımsız sabır sayacı** vardır:
 ## 4. Mekan Yerleşimi
 
 ```
-[KAPISI]  ← müşteriler soldan girer
-[ SİRA ]  → sağa uzanır (max 7 kişi)
+[ŞEF] [OCAK 1] [OCAK 2]  ← kuzey duvarı (arka)
 [TEZGAH / COUNTER]
-[ŞEF] [OCAK 1] [OCAK 2]  ← counter arkasında
+[●][●][●][●]              ← bar tabureleri (counter önü)
+[KAPISI] ←── güney duvarının batı ucunda (ekranda alt-sol)
+· ○ · ○ · ○ ·             ← dağınık bekleme (dışarıda, kapı önü)
 ```
 
+- **Yön:** Kuzey=arka(mutfak) Güney=ön(kamera) Batı=sol Doğu=sağ
 - **Counter önü:** 2–4 bar taburesi (upgrade ile artar, max 4)
-- **Sıra:** Counter'ın solunda dışarıya uzanır (max 7 kişi)
-- **Görünüm:** Top-down view, sokak büfesi tarzı
-- **Zemin:** Kirpi desenli seramik, bej/beyaz TileMap 32px
+- **Kapı:** Güney duvarının batı ucunda — müşteriler batı/soldan gelir
+- **Sıra:** Kapı önünde dışarıda, dağınık pozisyonlarda (sıra değil) — max 7 kişi
+- **Sıra doluysa:** Yeni müşteri durmadan geçer (BYPASSED) — coin kaybı yok, fırsat kaybı
+- **Sabır dolan müşteri:** Döner, kapıdan çıkar, gider
+- **Görünüm:** İzometrik 2.5D, sokak büfesi tarzı, kuzey/batı/doğu duvarları görünür
+- **Zemin:** Kirpi desenli seramik, bej/beyaz TileMap
 - **Dekor:** Saksı bitki, duvarda çerçeveli tablo, tabela
 
 ---
@@ -154,9 +159,16 @@ patience_ratio = kalan_sabir / max_sabir   # 0.0 → 1.0
 ## 6. Sipariş Durum Makinası
 
 ```
-QUEUED (sırada bekliyor)
-    ├─ tabure boşaldı              → SEATED
-    └─ sıra sabrı bitti            → CANCELLED_QUEUE   # kayıp yok
+SPAWN (müşteri kaldırımda yürüyor)
+    ├─ boş Q_slot var              → slot al → QUEUED
+    └─ tüm Q_slot'lar dolu         → durmadan geçer → BYPASSED   # sinyal yok, coin kaybı yok
+
+BYPASSED (sıra dolu, müşteri geçti)
+    → ekran dışı, queue_free()     # görsel baskı: oyuncuyu sıra upgrade'ine iter
+
+QUEUED (kapı önünde dışarıda bekliyor — dağınık pozisyon)
+    ├─ tabure boşaldı              → slot bırak, kapıdan içeri gir → SEATED
+    └─ sıra sabrı bitti            → slot bırak, döner, çıkar → CANCELLED_QUEUE   # kayıp yok
 
 SEATED (oturdu, sipariş otomatik gönderildi)
     ├─ şef slotu müsait            → COOKING

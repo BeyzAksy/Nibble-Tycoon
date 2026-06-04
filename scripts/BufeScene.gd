@@ -2,51 +2,28 @@
 ## Büfe aşamasının ana koordinatör scripti.
 ## Tüm sistemleri bağlar, save/load yönetir, XP/Level takip eder.
 ##
-## Sahne yapısı (BufeScene.tscn):
-##   BufeScene (Node2D)
-##   ├── GameWorld (Node2D)
-##   │   ├── TileMap (TileMap)            ← zemin deseni
-##   │   ├── WallSprite (Sprite2D)
-##   │   ├── CounterBody (StaticBody2D)
-##   │   ├── ChefSprite (AnimatedSprite2D)
-##   │   ├── OcakContainer (Node2D)
-##   │   │   ├── StoveSlot1 (Node2D)
-##   │   │   └── StoveSlot2 (Node2D)
-##   │   ├── StoolContainer (Node2D)
-##   │   └── CustomerContainer (Node2D)
-##   ├── UILayer (CanvasLayer)
-##   │   ├── HUDBar (Control)
-##   │   ├── BottomNav (Control)
-##   │   ├── ToastContainer (VBoxContainer) ← ToastManager
-##   │   ├── CoinFloatLayer (Node2D)
-##   │   ├── UpgradePanel (Control)         ← başta gizli
-##   │   ├── MenuPanel (Control)            ← başta gizli
-##   │   ├── AchievementPanel (Control)     ← başta gizli
-##   │   └── WelcomeModal (Control)         ← offline reward
-##   └── Systems (Node)
-##       ├── CustomerSystem
-##       ├── OrderManager
-##       ├── ChefSystem
-##       ├── EconomySystem
-##       ├── UpgradeSystem
-##       ├── OfflineSystem
-##       ├── SaveSystem
-##       ├── ProgressionSystem
-##       └── SatisfactionSystem
+## Sahne yapısı (BufeScene.tscn): docs/bufe_scene_tasarim.md
 
 extends Node2D
 
 const CoinFloat = preload("res://scripts/ui/CoinFloat.gd")
 
 var _pending_offline_earnings : float = 0.0
+var _mid_zoom_unlocked        : bool  = false
 
 # ── NODE REFERENCES ───────────────────────────────────────────────────────────
+@onready var camera             : Camera2D = $Camera2D
 @onready var customer_container : Node    = $GameWorld/CustomerContainer
 @onready var chef_sprite        : Node    = $GameWorld/ChefSprite
 @onready var stove_slots        : Node    = $GameWorld/OcakContainer
+@onready var floor_container    : Node    = $GameWorld/FloorContainer
+@onready var wall_container     : Node    = $GameWorld/WallContainer
+@onready var stool_container    : Node    = $GameWorld/StoolContainer
+@onready var queue_area         : Node    = $GameWorld/QueueArea
 
 @onready var hud_bar            : Control = $UILayer/HUDBar
 @onready var bottom_nav         : Control = $UILayer/BottomNav
+@onready var right_side_panel   : Control = $UILayer/RightSidePanel
 @onready var toast_manager      : Node    = $UILayer/ToastContainer
 @onready var coin_float_layer   : Node    = $UILayer/CoinFloatLayer
 @onready var upgrade_panel      : Control = $UILayer/UpgradePanel
@@ -68,8 +45,10 @@ var _pending_offline_earnings : float = 0.0
 
 # ── LIFECYCLE ─────────────────────────────────────────────────────────────────
 func _ready() -> void:
+	_setup_environment()
 	_wire_systems()
 	_connect_signals()
+	_connect_right_panel()
 	_load_save()
 	_check_offline_earnings()
 	_start_game()
@@ -78,6 +57,79 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED:
 		_save_game()
+
+
+# ── ENVIRONMENT SETUP ─────────────────────────────────────────────────────────
+## Constants.SPRITES'tan texture yükler — path .tscn'e hardcode edilmez.
+func _setup_environment() -> void:
+	var floor_tex   := load(Constants.SPRITES["floor"])        as Texture2D
+	var wall_tex    := load(Constants.SPRITES["wall"])         as Texture2D
+	var door_tex    := load(Constants.SPRITES["wall_doorway"]) as Texture2D
+	var counter_tex := load(Constants.SPRITES["counter"])      as Texture2D
+	var stool_tex   := load(Constants.SPRITES["chair_stool"])  as Texture2D
+
+	if floor_container:
+		for col in Constants.BUFFET_GRID_COLS:
+			for row in range(1, Constants.BUFFET_GRID_ROWS):
+				var tile := Sprite2D.new()
+				tile.texture        = floor_tex
+				tile.scale          = Constants.ENV_SPRITE_SCALE
+				tile.offset         = Constants.SPRITE_OFFSET_FLOOR
+				tile.y_sort_enabled = true
+				tile.position       = Constants.iso_to_screen(col, row)
+				floor_container.add_child(tile)
+
+
+	var wall_side_tex := load(Constants.SPRITES["wall_side"]) as Texture2D
+
+	if wall_container:
+		for node in wall_container.get_children():
+			if not node is Sprite2D:
+				continue
+			if node.name.begins_with("BackWall") or node.name.begins_with("StoveWall"):
+				node.texture = wall_tex
+				node.flip_h  = false
+				node.offset  = Constants.SPRITE_OFFSET_WALL
+				node.scale   = Constants.ENV_SPRITE_SCALE
+			elif node.name.begins_with("LeftWall"):
+				node.texture = wall_side_tex
+				node.flip_h  = false
+				node.offset  = Constants.SPRITE_OFFSET_WALL_SIDE
+				node.scale   = Constants.ENV_SPRITE_SCALE
+			elif node.name.begins_with("RightWall"):
+				node.texture = wall_side_tex
+				node.flip_h  = true
+				node.offset  = Constants.SPRITE_OFFSET_WALL_SIDE
+				node.scale   = Constants.ENV_SPRITE_SCALE
+
+	var door_sprite := get_node_or_null("GameWorld/DoorArea/Door") as Sprite2D
+	if door_sprite:
+		door_sprite.texture = door_tex
+		door_sprite.scale   = Constants.ENV_SPRITE_SCALE
+		door_sprite.offset  = Constants.SPRITE_OFFSET_WALL
+
+	var counter_center := $GameWorld/CounterBody/CounterSprite as Sprite2D
+	if counter_center:
+		counter_center.texture = counter_tex
+		counter_center.scale   = Constants.ENV_SPRITE_SCALE
+		counter_center.offset  = Constants.SPRITE_OFFSET_COUNTER
+	var counter_l := $GameWorld/Counter_L as Sprite2D
+	if counter_l:
+		counter_l.texture = counter_tex
+		counter_l.scale   = Constants.ENV_SPRITE_SCALE
+		counter_l.offset  = Constants.SPRITE_OFFSET_COUNTER
+	var counter_r := $GameWorld/Counter_R as Sprite2D
+	if counter_r:
+		counter_r.texture = counter_tex
+		counter_r.scale   = Constants.ENV_SPRITE_SCALE
+		counter_r.offset  = Constants.SPRITE_OFFSET_COUNTER
+
+	if stool_container:
+		for node in stool_container.get_children():
+			if node is Sprite2D:
+				node.texture = stool_tex
+				node.scale   = Constants.ENV_SPRITE_SCALE
+				node.offset  = Constants.SPRITE_OFFSET_STOOL
 
 
 # ── SYSTEM WIRING ─────────────────────────────────────────────────────────────
@@ -117,7 +169,7 @@ func _connect_signals() -> void:
 	EventBus.chef_slot_started_cooking.connect(_on_slot_cooking)
 	EventBus.chef_slot_finished.connect(_on_slot_finished)
 	EventBus.chef_boost_tick.connect(_on_boost_tick)
-	EventBus.upgrade_purchased.connect(func(_id: String) -> void: _refresh_upgrade_ui())
+	EventBus.upgrade_purchased.connect(_on_upgrade_purchased_visual)
 
 
 # ── SAVE SYSTEM ───────────────────────────────────────────────────────────────
@@ -248,6 +300,7 @@ func _on_level_up_scene(new_level: int) -> void:
 		hud_bar.update_xp_bar(progression_system.get_xp_ratio())
 	EventBus.toast_requested.emit("Level %d! Yeni icerikler acildi!" % new_level, "reward")
 	if new_level >= 5:
+		_check_zoom_update()
 		_check_cafe_transition()
 
 
@@ -314,3 +367,75 @@ func _hide_all_panels() -> void:
 func _refresh_upgrade_ui() -> void:
 	if upgrade_panel and upgrade_panel.has_method("refresh"):
 		upgrade_panel.refresh(progression_system.current_level)
+
+
+# ── RIGHT SIDE PANEL ──────────────────────────────────────────────────────────
+func _connect_right_panel() -> void:
+	if not right_side_panel:
+		return
+	var mappings := {
+		"Btn_Restaurant": "game",
+		"Btn_Menu":       "menu",
+		"Btn_Upgrade":    "upgrade",
+		"Btn_Achievement":"achievement",
+	}
+	for btn_name in mappings:
+		var btn := right_side_panel.get_node_or_null(btn_name) as Button
+		if btn:
+			var target : String = mappings[btn_name]
+			btn.pressed.connect(func() -> void:
+				EventBus.screen_transition_requested.emit(target)
+			)
+
+
+# ── UPGRADE VISUALS & DYNAMIC ZOOM ───────────────────────────────────────────
+func _on_upgrade_purchased_visual(upgrade_id: String) -> void:
+	_apply_upgrade_visual(upgrade_id)
+	_refresh_upgrade_ui()
+	_check_zoom_update()
+
+
+## Upgrade satın alınınca ilgili node'u görünür yapar.
+func _apply_upgrade_visual(upgrade_id: String) -> void:
+	match upgrade_id:
+		"CNT_01":
+			var s := stool_container.get_node_or_null("Stool3") as Sprite2D
+			if s: s.visible = true
+		"CNT_02":
+			var s := stool_container.get_node_or_null("Stool4") as Sprite2D
+			if s: s.visible = true
+			_mid_zoom_unlocked = true
+		"CNT_03":
+			if queue_area:
+				for slot_name in ["QSlot_4", "QSlot_5"]:
+					var n := queue_area.get_node_or_null(slot_name)
+					if n: n.process_mode = Node.PROCESS_MODE_INHERIT
+		"CNT_04":
+			if queue_area:
+				for slot_name in ["QSlot_6", "QSlot_7"]:
+					var n := queue_area.get_node_or_null(slot_name)
+					if n: n.process_mode = Node.PROCESS_MODE_INHERIT
+		"KIT_03":
+			var ocak2 := stove_slots.get_node_or_null("OcakSlot2")
+			if ocak2: ocak2.visible = true
+			var stove_wall_2 := wall_container.get_node_or_null("StoveWall_2") as Sprite2D
+			if stove_wall_2: stove_wall_2.visible = true
+			_mid_zoom_unlocked = true
+
+
+## Mevcut state'e göre hedef zoom'u hesaplar ve tween uygular.
+func _check_zoom_update() -> void:
+	if not camera:
+		return
+	var is_level5 : bool = progression_system != null and progression_system.current_level >= 5
+	var target : Vector2
+	if is_level5:
+		target = Constants.CAMERA_ZOOM_MAX
+	elif _mid_zoom_unlocked:
+		target = Constants.CAMERA_ZOOM_MID
+	else:
+		target = Constants.CAMERA_ZOOM_START
+	if camera.zoom == target:
+		return
+	var tw := create_tween()
+	tw.tween_property(camera, "zoom", target, Constants.CAMERA_ZOOM_TWEEN_SEC)

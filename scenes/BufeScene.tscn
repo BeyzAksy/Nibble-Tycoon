@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckfjexd6rixg1"]
 
 [ext_resource type="Script" uid="uid://dcunl8i8ym43h" path="res://scripts/BufeScene.gd" id="1_bufe"]
-[ext_resource type="PackedScene" uid="uid://hud_bar" path="res://scenes/ui/HUDBar.tscn" id="2_hud_scene"]
+[ext_resource type="PackedScene" uid="uid://bhelieqan5nq4" path="res://scenes/ui/HUDBar.tscn" id="2_hud_scene"]
 [ext_resource type="Script" uid="uid://ux7eyie2fj8p" path="res://scripts/ui/ToastManager.gd" id="3_toast"]
 [ext_resource type="Script" uid="uid://dqscrmvxc0agm" path="res://scripts/systems/CustomerSystem.gd" id="4_cust"]
 [ext_resource type="Script" uid="uid://kijf1p0j2ux6" path="res://scripts/systems/OrderManager.gd" id="5_order"]
@@ -13,85 +13,247 @@
 [ext_resource type="Script" uid="uid://chtmljgpu3ak5" path="res://scripts/systems/ProgressionSystem.gd" id="11_prog"]
 [ext_resource type="Script" uid="uid://xafpu2oy6ax7" path="res://scripts/systems/AchievementSystem.gd" id="12_ach"]
 [ext_resource type="Script" uid="uid://bwipguv6ocwul" path="res://scripts/systems/SatisfactionSystem.gd" id="13_satis"]
-[ext_resource type="PackedScene" uid="uid://bottom_nav" path="res://scenes/ui/BottomNav.tscn" id="14_bottom_nav"]
-[ext_resource type="PackedScene" uid="uid://welcome_modal" path="res://scenes/ui/WelcomeModal.tscn" id="15_welcome_modal"]
+[ext_resource type="PackedScene" uid="uid://bb3u0xlofkusq" path="res://scenes/ui/BottomNav.tscn" id="14_bottom_nav"]
+[ext_resource type="PackedScene" uid="uid://bwudvgg0pjbnc" path="res://scenes/ui/WelcomeModal.tscn" id="15_welcome_modal"]
 
-[node name="BufeScene" type="Node2D"]
+[node name="BufeScene" type="Node2D" unique_id=1426358926]
 script = ExtResource("1_bufe")
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1507634401]
+position = Vector2(412, 560)
+zoom = Vector2(1.3, 1.3)
+
 [node name="GameWorld" type="Node2D" parent="." unique_id=755963995]
+y_sort_enabled = true
 
-[node name="TileMap" type="TileMap" parent="GameWorld" unique_id=589731382]
+[node name="Background" type="Node2D" parent="GameWorld" unique_id=117822308]
+z_index = -20
 
-[node name="WallSprite" type="Sprite2D" parent="GameWorld" unique_id=1733318893]
-position = Vector2(540, 100)
+[node name="SkyRect" type="ColorRect" parent="GameWorld/Background" unique_id=446237487]
+offset_left = -800.0
+offset_top = -300.0
+offset_right = 1600.0
+offset_bottom = 1300.0
+color = Color(0.08, 0.08, 0.15, 1)
+
+[node name="FloorContainer" type="Node2D" parent="GameWorld" unique_id=1112489540]
+y_sort_enabled = true
+
+[node name="WallContainer" type="Node2D" parent="GameWorld" unique_id=868281834]
+y_sort_enabled = true
+
+[node name="BackWall_0" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=75322160]
+y_sort_enabled = true
+position = Vector2(540, 420)
+scale = Vector2(0.7, 0.7)
+
+[node name="StoveWall_1" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=628205266]
+y_sort_enabled = true
+position = Vector2(604, 452)
+scale = Vector2(0.7, 0.7)
+
+[node name="BackWall_2" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=1223723492]
+y_sort_enabled = true
+position = Vector2(668, 484)
+scale = Vector2(0.7, 0.7)
+
+[node name="BackWall_3" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=1871572515]
+y_sort_enabled = true
+position = Vector2(732, 516)
+scale = Vector2(0.7, 0.7)
+
+[node name="LeftWall_0" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=2126456272]
+y_sort_enabled = true
+position = Vector2(476, 452)
+scale = Vector2(0.7, 0.7)
+
+[node name="LeftWall_1" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=1421282863]
+y_sort_enabled = true
+position = Vector2(412, 484)
+scale = Vector2(0.7, 0.7)
+
+[node name="LeftWall_2" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=430759888]
+y_sort_enabled = true
+position = Vector2(348, 516)
+scale = Vector2(0.7, 0.7)
+
+[node name="LeftWall_3" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=1898329014]
+y_sort_enabled = true
+position = Vector2(284, 548)
+scale = Vector2(0.7, 0.7)
+
+[node name="RightWall_0" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=562172992]
+y_sort_enabled = true
+position = Vector2(732, 580)
+scale = Vector2(0.7, 0.7)
+
+[node name="RightWall_1" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=42221949]
+y_sort_enabled = true
+position = Vector2(668, 612)
+scale = Vector2(0.7, 0.7)
+
+[node name="RightWall_2" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=1724575790]
+y_sort_enabled = true
+position = Vector2(604, 644)
+scale = Vector2(0.7, 0.7)
+
+[node name="RightWall_3" type="Sprite2D" parent="GameWorld/WallContainer" unique_id=797232653]
+y_sort_enabled = true
+position = Vector2(540, 676)
+scale = Vector2(0.7, 0.7)
+
+[node name="Counter_L" type="Sprite2D" parent="GameWorld" unique_id=362716097]
+y_sort_enabled = true
+position = Vector2(476, 516)
+scale = Vector2(0.7, 0.7)
 
 [node name="CounterBody" type="StaticBody2D" parent="GameWorld" unique_id=1395458557]
-position = Vector2(540, 400)
+y_sort_enabled = true
+position = Vector2(540, 548)
 
 [node name="CounterSprite" type="Sprite2D" parent="GameWorld/CounterBody" unique_id=583406522]
+scale = Vector2(0.7, 0.7)
 
 [node name="CollisionShape" type="CollisionShape2D" parent="GameWorld/CounterBody" unique_id=883209769]
 
+[node name="Counter_R" type="Sprite2D" parent="GameWorld" unique_id=1132258038]
+y_sort_enabled = true
+position = Vector2(604, 580)
+scale = Vector2(0.7, 0.7)
+
+[node name="DoorArea" type="Node2D" parent="GameWorld" unique_id=259470828]
+
+[node name="Door" type="Sprite2D" parent="GameWorld/DoorArea" unique_id=1718004683]
+y_sort_enabled = true
+position = Vector2(220, 580)
+scale = Vector2(0.7, 0.7)
+
 [node name="ChefSprite" type="AnimatedSprite2D" parent="GameWorld" unique_id=951431462]
-position = Vector2(540, 350)
+position = Vector2(604, 516)
 
 [node name="OcakContainer" type="Node2D" parent="GameWorld" unique_id=1007077005]
 
 [node name="OcakSlot1" type="Node2D" parent="GameWorld/OcakContainer" unique_id=1238944958]
-position = Vector2(400, 360)
+position = Vector2(604, 452)
 
 [node name="OcakSlot2" type="Node2D" parent="GameWorld/OcakContainer" unique_id=168445540]
-position = Vector2(680, 360)
 visible = false
+position = Vector2(668, 484)
 
 [node name="StoolContainer" type="Node2D" parent="GameWorld" unique_id=1465605612]
+y_sort_enabled = true
 
 [node name="Stool1" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=854682242]
-position = Vector2(300, 480)
+y_sort_enabled = true
+position = Vector2(348, 516)
+scale = Vector2(0.7, 0.7)
 
 [node name="Stool2" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=1570412576]
-position = Vector2(430, 480)
+y_sort_enabled = true
+position = Vector2(412, 548)
+scale = Vector2(0.7, 0.7)
 
 [node name="Stool3" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=645426897]
-position = Vector2(560, 480)
 visible = false
+y_sort_enabled = true
+position = Vector2(476, 580)
+scale = Vector2(0.7, 0.7)
 
 [node name="Stool4" type="Sprite2D" parent="GameWorld/StoolContainer" unique_id=787844510]
-position = Vector2(690, 480)
 visible = false
+y_sort_enabled = true
+position = Vector2(540, 612)
+scale = Vector2(0.7, 0.7)
 
 [node name="QueueArea" type="Node2D" parent="GameWorld" unique_id=710391217]
+
+[node name="QSlot_1" type="Marker2D" parent="GameWorld/QueueArea" unique_id=828835757]
+position = Vector2(220, 644)
+
+[node name="QSlot_2" type="Marker2D" parent="GameWorld/QueueArea" unique_id=1327152055]
+position = Vector2(92, 644)
+
+[node name="QSlot_3" type="Marker2D" parent="GameWorld/QueueArea" unique_id=596134944]
+position = Vector2(156, 612)
+
+[node name="QSlot_4" type="Marker2D" parent="GameWorld/QueueArea" unique_id=1564316811]
+position = Vector2(284, 676)
+
+[node name="QSlot_5" type="Marker2D" parent="GameWorld/QueueArea" unique_id=1077218318]
+position = Vector2(156, 676)
+
+[node name="QSlot_6" type="Marker2D" parent="GameWorld/QueueArea" unique_id=947969690]
+position = Vector2(220, 708)
+
+[node name="QSlot_7" type="Marker2D" parent="GameWorld/QueueArea" unique_id=616816221]
+position = Vector2(348, 708)
+
+[node name="StoolSlot_1" type="Marker2D" parent="GameWorld/QueueArea" unique_id=285925970]
+position = Vector2(348, 516)
+
+[node name="StoolSlot_2" type="Marker2D" parent="GameWorld/QueueArea" unique_id=19700419]
+position = Vector2(412, 548)
+
+[node name="StoolSlot_3" type="Marker2D" parent="GameWorld/QueueArea" unique_id=782572060]
+position = Vector2(476, 580)
+
+[node name="StoolSlot_4" type="Marker2D" parent="GameWorld/QueueArea" unique_id=644377462]
+position = Vector2(540, 612)
 
 [node name="CustomerContainer" type="Node2D" parent="GameWorld" unique_id=1739990023]
 
 [node name="UILayer" type="CanvasLayer" parent="." unique_id=363654519]
 layer = 10
 
-[node name="HUDBar" parent="UILayer" instance=ExtResource("2_hud_scene") unique_id=2087346533]
-layout_mode = 3
-anchors_preset = 12
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 0.0
-offset_bottom = 80.0
+[node name="HUDBar" parent="UILayer" unique_id=2087346533 instance=ExtResource("2_hud_scene")]
+anchors_preset = 10
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
 
-[node name="BottomNav" parent="UILayer" instance=ExtResource("14_bottom_nav") unique_id=1644078049]
-layout_mode = 3
-anchors_preset = 12
-anchor_top = 1.0
+[node name="RightSidePanel" type="VBoxContainer" parent="UILayer" unique_id=1815007322]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -120.0
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -160.0
+offset_bottom = 160.0
+grow_horizontal = 0
+theme_override_constants/separation = 8
+
+[node name="Btn_Restaurant" type="Button" parent="UILayer/RightSidePanel" unique_id=2064422759]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+text = "R"
+
+[node name="Btn_Menu" type="Button" parent="UILayer/RightSidePanel" unique_id=300053761]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+text = "M"
+
+[node name="Btn_Upgrade" type="Button" parent="UILayer/RightSidePanel" unique_id=21605938]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+text = "U"
+
+[node name="Btn_Achievement" type="Button" parent="UILayer/RightSidePanel" unique_id=1055028550]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+text = "A"
+
+[node name="BottomNav" parent="UILayer" unique_id=1644078049 instance=ExtResource("14_bottom_nav")]
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="ToastContainer" type="VBoxContainer" parent="UILayer" unique_id=984229941]
-layout_mode = 3
-anchors_preset = 4
-anchor_left = 0.0
-anchor_top = 0.0
+anchors_preset = -1
 anchor_right = 1.0
+anchor_bottom = 0.5
 offset_top = 90.0
 offset_bottom = 500.0
+grow_vertical = 2
 theme_override_constants/separation = 8
 script = ExtResource("3_toast")
 
@@ -102,28 +264,28 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-visible = false
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MenuPanel" type="Control" parent="UILayer" unique_id=1805802769]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-visible = false
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="AchievementPanel" type="Control" parent="UILayer" unique_id=765385218]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-visible = false
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="WelcomeModal" parent="UILayer" instance=ExtResource("15_welcome_modal") unique_id=310054447]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-visible = false
+[node name="WelcomeModal" parent="UILayer" unique_id=310054447 instance=ExtResource("15_welcome_modal")]
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Systems" type="Node" parent="." unique_id=1908964184]
 
